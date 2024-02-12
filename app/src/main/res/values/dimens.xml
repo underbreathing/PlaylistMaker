@@ -4,5 +4,8 @@
     <dimen name="primary_text_size">22sp</dimen>
     <dimen name="settings_items_text_size">16sp</dimen>
     <dimen name="setting_items_padding">16dp</dimen>
-    <dimen name="setting_items_height">61dp</dimen>
+    <dimen name="setting_items_height">64dp</dimen>
+    <dimen name="main_button_margin_bottom">24dp</dimen>
+    <dimen name="main_button_corner_radius">16dp</dimen>
+    <dimen name="main_button_layout_height">0dp</dimen>
 </resources>
