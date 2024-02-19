@@ -5,13 +5,26 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.FrameLayout
+import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+
+        val switchTheme = findViewById<SwitchCompat>(R.id.settings_switch_theme)
+        switchTheme.setOnCheckedChangeListener{ _,isChecked ->
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
         val buttonBack = findViewById<TextView>(R.id.settings_button_back)
         buttonBack.setOnClickListener {

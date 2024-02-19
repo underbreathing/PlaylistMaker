@@ -20,7 +20,9 @@
             android:text="@string/settings_theme_switch" />
 
         <!--Сделал ширину у switch 48dp,так как среда требует такую минимальную ширину -->
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
+            app:thumbTint="@color/main_background_color"
+            android:id="@+id/settings_switch_theme"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_gravity="end|center_vertical" />
