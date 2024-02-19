@@ -4,8 +4,6 @@ import android.content.Intent
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.View.OnClickListener
 import android.widget.Button
 
 
@@ -15,25 +13,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //установка обработчика нажатия для ПЕРВОЙ кнопки
-        val buttonSearch = findViewById<Button>(R.id.button_search)
-        val intentSearch = Intent(this, SearchActivity::class.java)
-        val buttonSearchOnClickListener = object : OnClickListener {
-            override fun onClick(p0: View?) {
-                startActivity(intentSearch)
-            }
+        val buttonSearch = findViewById<Button>(R.id.main_button_search)
+        buttonSearch.setOnClickListener {
+            val intentSearch = Intent(this, SearchActivity::class.java)
+            startActivity(intentSearch)
         }
-        buttonSearch.setOnClickListener(buttonSearchOnClickListener)
         //установка обработчика нажатия для ВТОРОЙ кнопки
-        val buttonMedia = findViewById<Button>(R.id.button_media)
+        val buttonMedia = findViewById<Button>(R.id.main_button_media)
         buttonMedia.setOnClickListener {
             val intentMedia = Intent(this, MediaLibraryActivity::class.java)
             startActivity(intentMedia)
         }
         //установка обработчика нажатия для ТРЕТЬЕЙ кнопки
-        val buttonSettings = findViewById<Button>(R.id.button_settings)
+        val buttonSettings = findViewById<Button>(R.id.main_button_settings)
         buttonSettings.setOnClickListener {
             val intentSettings = Intent(this, SettingsActivity::class.java)
             startActivity(intentSettings)
         }
+
     }
 }

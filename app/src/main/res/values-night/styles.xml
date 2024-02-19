@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="input_line" parent="Widget.AppCompat.EditText">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/secondary_text_size</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:inputType">text</item>
+        <item name="android:layout_marginVertical">8dp</item>
+        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:background">@drawable/rounded_corner</item>
+        <item name="drawableTint">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">36dp</item>
+    </style>
+</resources>

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="navigation_question_1">Question:</string>
-    <string name="yes">Yes</string>
-    <string name="not">Not</string>
-    <string name="button_title_search">Search</string>
-    <string name="button_title_media">Media</string>
-    <string name="button_title_settings">Settings</string>
-    <string name="question_rating">Is the rating of this movie more than 9?</string>
+    <string name="main_title_search">Search</string>
+    <string name="main_title_media">Media</string>
+    <string name="main_title_settings">Settings</string>
+
     <string name="settings_title">Settings</string>
     <string name="settings_theme_switch">Dark theme</string>
     <string name="settings_share_app">Share app</string>
     <string name="settings_support">Write to support</string>
     <string name="settings_agreement">User agreement</string>
+    <string name="settings_share_title">Share a link</string>
+    <string name="settings_support_message">Thanks to the developers and developers for the cool app!</string>
+    <string name="settings_support_subject">Message to the developers and developers of the Playlist Maker app</string>
+    <string name="search_title">Search</string>
 </resources>
