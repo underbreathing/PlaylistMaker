@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/settings_back"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:drawablePadding="24dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="24dp"
+        android:text="@string/settings_title"
+        android:textColor="@color/black"
+        android:textSize="@dimen/primary_text_size"
+        app:drawableStartCompat="@drawable/ic_back_arrow" />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height"
+        android:paddingHorizontal="@dimen/setting_items_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+            android:text="@string/settings_theme_switch"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_items_text_size" />
+
+        <!--Сделал ширину у switch 48dp,т.к среда требует такую минимальную ширину -->
+        <Switch
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height"
+        android:paddingHorizontal="@dimen/setting_items_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+
+            android:text="@string/settings_share_app"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_items_text_size" />
+
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/ic_share" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height"
+        android:paddingHorizontal="@dimen/setting_items_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+
+            android:text="@string/settings_support"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_items_text_size" />
+
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/ic_support" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height"
+        android:paddingHorizontal="@dimen/setting_items_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+            android:text="@string/settings_agreement"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_items_text_size" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/ic_arrow_forward" />
+    </FrameLayout>
+
+</LinearLayout>
