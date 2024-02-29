@@ -4,7 +4,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/black</item>
         <item name="colorOnPrimary">@color/black</item>
-        <item name="colorSecondary">@color/main_background_color</item>
+        <item name="colorSecondary">@color/blue</item>
 
         <!-- Customize your light theme here. -->
         <item name="android:fontFamily">@font/ys_display_medium</item>
