@@ -4,10 +4,6 @@
     <style name="main_button_style" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_marginBottom">@dimen/main_button_margin_bottom</item>
-        <item name="android:layout_weight">1</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/primary_text_size</item>
@@ -19,26 +15,15 @@
 
     <style name="settings_item_in_the_settings_list">
         <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">64dp</item>
         <item name="android:paddingHorizontal">16dp</item>
     </style>
 
     <style name="settings_text_in_the_settings_list">
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">start</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textSize">@dimen/secondary_text_size</item>
-    </style>
-
-    <style name="settings_image_in_the_settings_list">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">end|center_vertical</item>
     </style>
 
     <style name="settings_text_navigation_panel">
@@ -68,24 +53,34 @@
         <item name="drawableStartCompat">@drawable/ic_back_arrow</item>
         <item name="drawableTint">?attr/colorOnPrimary</item>
     </style>
-
-    <style name="input_line" parent="Widget.AppCompat.EditText">
-        <item name="fontFamily">@font/ys_display_regular</item>
-        <item name="android:textFontWeight">400</item>
-        <item name="android:textSize">@dimen/secondary_text_size</item>
-        <item name="maxLines">1</item>
+    
+    <style name="search_clear_button">
+        <item name="tint">@color/text_gray</item>
+    </style>
+    <style name="search_input_line" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/black</item>
-        <item name="android:inputType">text</item>
-        <item name="android:layout_marginVertical">8dp</item>
-        <item name="android:paddingHorizontal">12dp</item>
-        <item name="android:layout_marginHorizontal">16dp</item>
         <item name="android:background">@drawable/rounded_corner</item>
         <item name="drawableTint">@color/text_gray</item>
         <item name="android:textColorHint">@color/text_gray</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">36dp</item>
     </style>
 
+    <style name="textYsRegular16">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontWeight">400</item>
+    </style>
+    <style name="textYsMedium22">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">22sp</item>
+        <item name="fontWeight">500</item>
+    </style>
+    <style name="textRegular11Gray">
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">11sp</item>
+        <item name="fontWeight">400</item>
+    </style>
 
 </resources>

@@ -18,7 +18,7 @@ class SettingsActivity : AppCompatActivity() {
 
 
         val switchTheme = findViewById<SwitchCompat>(R.id.settings_switch_theme)
-        switchTheme.setOnCheckedChangeListener{ _,isChecked ->
+        switchTheme.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             } else {
@@ -39,21 +39,35 @@ class SettingsActivity : AppCompatActivity() {
                 getString(R.string.settings_share_link)
             ) // здесь указываете вашу ссылку
 
-            startActivity(Intent.createChooser(shareIntent, getString(R.string.settings_share_title)))
+            startActivity(
+                Intent.createChooser(
+                    shareIntent,
+                    getString(R.string.settings_share_title)
+                )
+            )
         }
         val buttonWriteToSupport = findViewById<FrameLayout>(R.id.setting_button_write_to_support)
         buttonWriteToSupport.setOnClickListener {
             val writeToSupportIntent = Intent(Intent.ACTION_SENDTO)
             writeToSupportIntent.data = Uri.parse("mailto:")
-            writeToSupportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.settings_email_address)))
-            writeToSupportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_support_message))
-            writeToSupportIntent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.settings_support_subject))
+            writeToSupportIntent.putExtra(
+                Intent.EXTRA_EMAIL,
+                arrayOf(getString(R.string.settings_email_address))
+            )
+            writeToSupportIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                getString(R.string.settings_support_message)
+            )
+            writeToSupportIntent.putExtra(
+                Intent.EXTRA_SUBJECT,
+                getString(R.string.settings_support_subject)
+            )
             startActivity(writeToSupportIntent)
         }
         val buttonAgreement = findViewById<FrameLayout>(R.id.settings_button_agreement)
-        buttonAgreement.setOnClickListener{
+        buttonAgreement.setOnClickListener {
             val url = Uri.parse(getString(R.string.settings_agreement_link))
-            val agreementIntent = Intent(Intent.ACTION_VIEW,url)
+            val agreementIntent = Intent(Intent.ACTION_VIEW, url)
             startActivity(agreementIntent)
 
         }

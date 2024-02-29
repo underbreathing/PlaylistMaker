@@ -13,59 +13,83 @@
         android:text="@string/settings_title" />
 
 
-    <FrameLayout style="@style/settings_item_in_the_settings_list">
+    <FrameLayout
+        style="@style/settings_item_in_the_settings_list"
+
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height">
 
         <TextView
             style="@style/settings_text_in_the_settings_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/settings_theme_switch" />
 
-        <!--Сделал ширину у switch 48dp,так как среда требует такую минимальную ширину -->
+
         <androidx.appcompat.widget.SwitchCompat
-            app:thumbTint="@color/main_background_color"
             android:id="@+id/settings_switch_theme"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:layout_gravity="end|center_vertical" />
+            android:layout_gravity="end|center_vertical"
+            app:thumbTint="@color/blue" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/settings_button_share"
         style="@style/settings_item_in_the_settings_list"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height"
         android:clickable="true">
 
         <TextView
             style="@style/settings_text_in_the_settings_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/settings_share_app" />
 
         <ImageView
-            style="@style/settings_image_in_the_settings_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
             android:src="@drawable/ic_share" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/setting_button_write_to_support"
-        style="@style/settings_item_in_the_settings_list">
+        style="@style/settings_item_in_the_settings_list"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height">
 
         <TextView
             style="@style/settings_text_in_the_settings_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/settings_support" />
 
         <ImageView
 
-            style="@style/settings_image_in_the_settings_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
             android:src="@drawable/ic_support" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/settings_button_agreement"
-        style="@style/settings_item_in_the_settings_list">
+        style="@style/settings_item_in_the_settings_list"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_items_height">
 
         <TextView
             style="@style/settings_text_in_the_settings_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/settings_agreement" />
 
         <ImageView
-            style="@style/settings_image_in_the_settings_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
             android:src="@drawable/ic_arrow_forward" />
     </FrameLayout>
 
@@ -99,8 +123,8 @@
         <TextView
             style="@style/settings_text_navigation_panel"
             android:text="@string/main_title_settings"
-            android:textColor="@color/main_background_color"
-            app:drawableTint="@color/main_background_color"
+            android:textColor="@color/blue"
+            app:drawableTint="@color/blue"
             app:drawableTopCompat="@drawable/ic_settings" />
 
 
