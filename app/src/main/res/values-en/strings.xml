@@ -13,4 +13,7 @@
     <string name="settings_support_message">Thanks to the developers and developers for the cool app!</string>
     <string name="settings_support_subject">Message to the developers and developers of the Playlist Maker app</string>
     <string name="search_title">Search</string>
+    <string name="search_not_found">Not found</string>
+    <string name="search_internet_problem">Internet problem</string>
+    <string name="search_internet_problem_additional">The download failed. Check your internet connection</string>
 </resources>
