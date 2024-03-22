@@ -5,53 +5,45 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import com.bumptech.glide.Glide
+import com.example.playlistmaker.search_tracks.ITunesApi
+import com.example.playlistmaker.search_tracks.SearchTrackResponse
 import com.example.playlistmaker.search_tracks.Track
 import com.example.playlistmaker.search_tracks.TrackAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    private val tracks = listOf(
-        Track(
-            "Smells Like Teen Spirit",
-            "Nirvana",
-            "5:01",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Billie Jean",
-            "Michael Jackson",
-            "4:35",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Stayin' Alive",
-            "Bee Gees",
-            "4:10",
-            "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Whole Lotta Love",
-            "Led Zeppelin",
-            "5:33",
-            "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Sweet Child O'Mine",
-            "Guns N' Roses",
-            "5:03",
-            "https://static.mixupload.com/n0/media/track/3644/102/cover_orig.jpg"
-        )
-    )
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("https://itunes.apple.com")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+
+    private val iTunesService = retrofit.create(ITunesApi::class.java)
+    private val tracks = ArrayList<Track>()
+    private val trackAdapter = TrackAdapter(tracks)
     private var inputLineText: String = ""
+    private lateinit var titleProblem: TextView
+    private lateinit var additionalMessage: TextView
+    private lateinit var buttonUpdate: Button
+    private lateinit var placeholder: ImageView
+    private lateinit var inputLine: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -59,13 +51,13 @@ class SearchActivity : AppCompatActivity() {
         val tracksRecyclerView = findViewById<RecyclerView>(R.id.search_tracks)
         tracksRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        tracksRecyclerView.adapter = TrackAdapter(tracks)
+        tracksRecyclerView.adapter = trackAdapter
 
         val buttonBack = findViewById<TextView>(R.id.search_button_back)
         buttonBack.setOnClickListener {
             finish()
         }
-        val inputLine = findViewById<EditText>(R.id.search_input_line)
+        inputLine = findViewById<EditText>(R.id.search_input_line)
         inputLine.setText(inputLineText)
 
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
@@ -74,6 +66,17 @@ class SearchActivity : AppCompatActivity() {
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputLine.windowToken, 0)
+            tracks.clear()
+            trackAdapter.notifyDataSetChanged()
+        }
+
+        buttonUpdate = findViewById(R.id.button_update)
+        titleProblem = findViewById(R.id.problem_title)
+        additionalMessage = findViewById(R.id.problem_additional_message)
+        placeholder = findViewById(R.id.problem_image)
+
+        buttonUpdate.setOnClickListener {
+            searchTrack()
         }
 
         val searchTextWatcher = object : TextWatcher {
@@ -91,6 +94,89 @@ class SearchActivity : AppCompatActivity() {
         }
 
         inputLine.addTextChangedListener(searchTextWatcher)
+
+
+        inputLine.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                searchTrack()
+                true
+            }
+            false
+        }
+    }
+
+    private fun searchTrack(){
+        iTunesService.searchTrack(inputLine.text.toString()).enqueue(object : Callback<SearchTrackResponse>{
+            override fun onResponse(
+                call: Call<SearchTrackResponse>,
+                response: Response<SearchTrackResponse>
+            ) {
+                if(response.code() == 200){
+                    clearPlaceholdersVisibility()
+                    tracks.clear()
+                    if(response.body()?.resultCount!! > 0){
+                        tracks.addAll(response.body()?.results!!)
+                        trackAdapter.notifyDataSetChanged()
+                    }else{
+                        showMessage(getString(R.string.search_not_found),"",R.drawable.tracks_not_found)
+                    }
+                }else{
+                    showMessage(getString(R.string.search_internet_problem),getString(R.string.search_internet_problem_additional),
+                        R.drawable.no_internet,true)
+                }
+            }
+
+            override fun onFailure(call: Call<SearchTrackResponse>, t: Throwable) {
+                showMessage(getString(R.string.search_internet_problem),getString(R.string.search_internet_problem_additional),
+                    R.drawable.no_internet,true)
+
+            }
+
+        })
+    }
+    private fun clearPlaceholdersVisibility(){
+        titleProblem.isVisible = false
+        placeholder.isVisible = false
+        additionalMessage.isVisible = false
+        buttonUpdate.isVisible = false
+    }
+    private fun addPlaceholdersVisibility(
+        titlesVisibility: Boolean = false,
+        additionalVisibility: Boolean = false,
+        buttonUpdateVisibility: Boolean = false
+    ) {
+        if(titlesVisibility) {
+            titleProblem.isVisible = true
+            placeholder.isVisible = true
+        }
+        if(additionalVisibility) {
+            additionalMessage.isVisible = true
+        }
+        if(buttonUpdateVisibility){
+            buttonUpdate.isVisible = true
+        }
+    }
+
+    private fun showMessage(
+        title: String ,
+        additional: String ,
+        imageId: Int ,
+        internetProblem: Boolean = false
+    ) {
+        if (title.isNotEmpty()) {
+            tracks.clear()
+            trackAdapter.notifyDataSetChanged()
+            titleProblem.text = title
+            placeholder.setImageResource(imageId)
+            addPlaceholdersVisibility(titlesVisibility = true)
+            if (additional.isNotEmpty()) {
+                additionalMessage.text = additional
+                addPlaceholdersVisibility(additionalVisibility = true)
+            }
+            if (internetProblem) {
+                addPlaceholdersVisibility(buttonUpdateVisibility = true)
+            }
+        }
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Boolean {
