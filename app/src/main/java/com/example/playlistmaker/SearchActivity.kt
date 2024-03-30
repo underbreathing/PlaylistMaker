@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -10,21 +11,25 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.playlistmaker.search_tracks.ITunesApi
+import com.example.playlistmaker.search_tracks.OnTrackClickListener
 import com.example.playlistmaker.search_tracks.SearchTrackResponse
 import com.example.playlistmaker.search_tracks.Track
 import com.example.playlistmaker.search_tracks.TrackAdapter
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val KEY_TRACKS_HISTORY_FILE = "the_key_to_the_track_history_file"
+const val MAX_HISTORY_SIZE = 10
 class SearchActivity : AppCompatActivity() {
 
 
@@ -36,28 +41,64 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesService = retrofit.create(ITunesApi::class.java)
     private val tracks = ArrayList<Track>()
-    private val trackAdapter = TrackAdapter(tracks)
+    private lateinit var trackAdapter: TrackAdapter
     private var inputLineText: String = ""
     private lateinit var titleProblem: TextView
     private lateinit var additionalMessage: TextView
     private lateinit var buttonUpdate: Button
     private lateinit var placeholder: ImageView
+    private lateinit var layoutPlaceholders: LinearLayout
     private lateinit var inputLine: EditText
+    private lateinit var tracksHistory: ArrayList<Track>
+    private lateinit var trackAdapterHistory: TrackAdapter
+    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var sharedHistoryListener: SharedPreferences.OnSharedPreferenceChangeListener
+    private lateinit var searchHistory: SearchHistory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+
+        sharedPrefs = getSharedPreferences(KEY_TRACKS_HISTORY_FILE, MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPrefs)
+        trackAdapter = TrackAdapter(tracks,object:OnTrackClickListener{
+            override fun onTrackClick(track: Track) {
+                searchHistory.addTrackToHistory(track)
+            }
+
+        })
+        sharedHistoryListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if(key == KEY_LAST_TRACK_IN_HISTORY){
+                val addedTrackJSON = sharedPreferences.getString(KEY_LAST_TRACK_IN_HISTORY,null)
+                if(addedTrackJSON != null){
+                    val addedTrack = deserializeTrackFromJSON(addedTrackJSON)
+                    val indexOfCopy = tracksHistory.indexOfFirst { e -> e.trackId == addedTrack.trackId }
+                   if(indexOfCopy != -1){
+                       tracksHistory.removeAt(indexOfCopy)
+                       trackAdapterHistory.notifyItemRemoved(indexOfCopy)
+                       trackAdapterHistory.notifyItemRangeChanged(indexOfCopy,tracksHistory.size)
+                   }else if(tracksHistory.size == MAX_HISTORY_SIZE){
+                       tracksHistory.removeLast()
+                       trackAdapterHistory.notifyItemRemoved(tracksHistory.lastIndex)
+                   }
+                    tracksHistory.add(0,addedTrack)
+                    trackAdapterHistory.notifyItemInserted(0)
+                    trackAdapterHistory.notifyItemRangeChanged(0,tracksHistory.size)
+                }
+            }
+        }
+        sharedPrefs.registerOnSharedPreferenceChangeListener(sharedHistoryListener)
+        val layoutHistory = findViewById<LinearLayout>(R.id.layout_history) //чтобы управлять видимостью всех элементов которые находятся в нем
         val tracksRecyclerView = findViewById<RecyclerView>(R.id.search_tracks)
-        tracksRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        tracksRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         tracksRecyclerView.adapter = trackAdapter
 
         val buttonBack = findViewById<TextView>(R.id.search_button_back)
         buttonBack.setOnClickListener {
             finish()
         }
-        inputLine = findViewById<EditText>(R.id.search_input_line)
+        inputLine = findViewById(R.id.search_input_line)
         inputLine.setText(inputLineText)
 
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
@@ -68,12 +109,14 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(inputLine.windowToken, 0)
             tracks.clear()
             trackAdapter.notifyDataSetChanged()
+            clearPlaceholdersVisibility()
         }
 
         buttonUpdate = findViewById(R.id.button_update)
         titleProblem = findViewById(R.id.problem_title)
         additionalMessage = findViewById(R.id.problem_additional_message)
         placeholder = findViewById(R.id.problem_image)
+        layoutPlaceholders = findViewById(R.id.layout_placeholders)
 
         buttonUpdate.setOnClickListener {
             searchTrack()
@@ -86,6 +129,8 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.isVisible = clearButtonVisibility(s)
                 inputLineText = s.toString()
+                layoutHistory.isVisible = s?.isEmpty() == true && inputLine.hasFocus() && tracksHistory.isNotEmpty()
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -103,8 +148,36 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+        val recyclerHistory = findViewById<RecyclerView>(R.id.history_of_tracks)
+
+        tracksHistory = searchHistory.getTracksHistory()
+        trackAdapterHistory = TrackAdapter(tracksHistory)
+        recyclerHistory.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        recyclerHistory.adapter = trackAdapterHistory
+
+        inputLine.setOnFocusChangeListener { _, hasFocus ->
+            layoutHistory.isVisible = hasFocus && inputLine.text.isEmpty() && tracksHistory.isNotEmpty()
+        }
+        val buttonClearHistory = findViewById<Button>(R.id.button_clear_history)
+        buttonClearHistory.setOnClickListener {
+            tracksHistory.clear()
+            trackAdapterHistory.notifyDataSetChanged()
+            //inputLine.clearFocus() // можно и так. чтобы вызвался обработчик изменения состояния фокуса и убрал пустую историю из видимости
+            layoutHistory.isVisible = false
+        }
     }
 
+    override fun onStop() {
+        super.onStop()
+        searchHistory.saveTracksHistory(tracksHistory)
+    }
+
+    private fun serializeTrackToJSON(track: Track): String{
+        return Gson().toJson(track)
+    }
+    private fun deserializeTrackFromJSON(trackJSON: String): Track{
+        return Gson().fromJson(trackJSON,Track::class.java)
+    }
     private fun searchTrack(){
         iTunesService.searchTrack(inputLine.text.toString()).enqueue(object : Callback<SearchTrackResponse>{
             override fun onResponse(
@@ -139,6 +212,7 @@ class SearchActivity : AppCompatActivity() {
         placeholder.isVisible = false
         additionalMessage.isVisible = false
         buttonUpdate.isVisible = false
+        layoutPlaceholders.isVisible = false
     }
     private fun addPlaceholdersVisibility(
         titlesVisibility: Boolean = false,
@@ -164,6 +238,7 @@ class SearchActivity : AppCompatActivity() {
         internetProblem: Boolean = false
     ) {
         if (title.isNotEmpty()) {
+            layoutPlaceholders.isVisible = true
             tracks.clear()
             trackAdapter.notifyDataSetChanged()
             titleProblem.text = title

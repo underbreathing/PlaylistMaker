@@ -49,68 +49,98 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-<!--        нет нужды управлять видимостью, При проблеме список элементов очищается
-            поэтому здесь tools:visibility-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_tracks"
+    <!--        нет нужды управлять видимостью, При проблеме список элементов очищается
+                поэтому здесь tools:visibility-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_tracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/track"
+        tools:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/layout_placeholders"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/problem_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="86dp"
+            android:visibility="gone"
+            tools:src="@drawable/no_internet" />
+
+        <TextView
+            android:id="@+id/problem_title"
+            style="@style/text400YsMedium19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:text="Проблемы со связью " />
+
+        <TextView
+            android:id="@+id/problem_additional_message"
+            style="@style/text400YsMedium19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:text="Загрузка не удалась. Проверьте подключение к интернету" />
+
+        <Button
+            android:id="@+id/button_update"
+            style="@style/search_button_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="@string/search_button_update"
+            android:visibility="gone" />
+    </LinearLayout>
+    <!--        история запросов-->
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/layout_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/text500YsMedium19"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:visibility="gone"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/search_track_history_title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_of_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="6"
             tools:listitem="@layout/track" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp">
+        <Button
+            android:id="@+id/button_clear_history"
+            style="@style/search_button_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="16dp"
+            android:text="@string/search_button_clear_history" />
 
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/problem_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="86dp"
-                tools:src = "@drawable/no_internet"/>
-            <TextView
-                android:id="@+id/problem_title"
-                style="@style/textYsMedium19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:visibility="gone"
-                tools:text="Проблемы со связью " />
-
-            <TextView
-                android:id="@+id/problem_additional_message"
-                style="@style/textYsMedium19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:visibility="gone"
-                tools:text="Загрузка не удалась. Проверьте подключение к интернету" />
-
-            <Button
-                android:id="@+id/button_update"
-                style="@style/search_button_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:text="Обновить"
-                android:visibility="gone" />
-        </LinearLayout>
-
-
-    </FrameLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
