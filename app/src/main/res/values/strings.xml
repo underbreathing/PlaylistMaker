@@ -23,5 +23,8 @@
     <string name="search_not_found">Ничего не нашлось</string>
     <string name="search_internet_problem">Проблемы со связью</string>
     <string name="search_internet_problem_additional">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_button_clear_history">Очистить историю</string>
+    <string name="search_button_update">Обновить</string>
+    <string name="search_track_history_title">Вы искали</string>
 
 </resources>

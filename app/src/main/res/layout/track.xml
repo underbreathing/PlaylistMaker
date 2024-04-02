@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:paddingVertical="8dp"
+    android:foreground="?attr/selectableItemBackground"
     android:paddingHorizontal="12dp"
     android:layout_height="61dp">
     <ImageView
@@ -34,6 +35,8 @@
             <TextView
                 android:id="@+id/track_artist"
                 android:drawablePadding="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 app:drawableEndCompat = "@drawable/ellipse"
                 tools:text = "The Beatles"
                 style="@style/textRegular11Gray"
