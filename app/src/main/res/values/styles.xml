@@ -53,10 +53,11 @@
         <item name="drawableStartCompat">@drawable/ic_back_arrow</item>
         <item name="drawableTint">?attr/colorOnPrimary</item>
     </style>
-    
+
     <style name="search_clear_button">
         <item name="tint">@color/text_gray</item>
     </style>
+
     <style name="search_input_line" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/black</item>
         <item name="android:background">@drawable/rounded_corner</item>
@@ -70,30 +71,70 @@
         <item name="android:textSize">16sp</item>
         <item name="fontWeight">400</item>
     </style>
-    <style name="textYsMedium22">
+
+    <style name="textYs500Medium22">
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">22sp</item>
         <item name="fontWeight">500</item>
     </style>
+
+    <style name="textYs400Medium22">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">22sp</item>
+        <item name="fontWeight">400</item>
+    </style>
+
     <style name="textRegular11Gray">
         <item name="android:textColor">@color/text_gray</item>
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">11sp</item>
         <item name="fontWeight">400</item>
     </style>
+
+    <style name="textRegular13Gray">
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="textRegular13">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="fontWeight">400</item>
+    </style>
+
     <style name="text400YsMedium19">
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">19sp</item>
         <item name="fontWeight">400</item>
     </style>
+
     <style name="text500YsMedium19">
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">19sp</item>
         <item name="fontWeight">500</item>
     </style>
+
+    <style name="text400YsMedium14">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="text500YsMedium14">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontWeight">500</item>
+    </style>
+
 
     <style name="search_button_update" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="textAllCaps">false</item>
@@ -104,6 +145,10 @@
         <item name="fontWeight">500</item>
         <item name="cornerRadius">54dp</item>
         <item name="backgroundTint">@color/black</item>
+    </style>
+
+    <style name="button_top_back_arrow" parent="Widget.AppCompat.Button.Borderless">
+        <item name="tint">@color/black</item>
     </style>
 
 </resources>

@@ -12,6 +12,7 @@
     <string name="settings_share_title">Share a link</string>
     <string name="settings_support_message">Thanks to the developers and developers for the cool app!</string>
     <string name="settings_support_subject">Message to the developers and developers of the Playlist Maker app</string>
+
     <string name="search_title">Search</string>
     <string name="search_not_found">Not found</string>
     <string name="search_internet_problem">Internet problem</string>
@@ -19,4 +20,10 @@
     <string name="search_button_clear_history">Clear history</string>
     <string name="search_button_update">Update</string>
     <string name="search_track_history_title">You search</string>
+
+    <string name="media_player_info_duration">Duration</string>
+    <string name="media_player_info_album">Album</string>
+    <string name="media_player_info_year">Year</string>
+    <string name="media_player_info_genre">Genre</string>
+    <string name="media_player_info_country">Country</string>
 </resources>

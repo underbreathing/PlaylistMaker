@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name" translatable="false">Playlist Maker</string>
-<!--    main activity-->
+    <!--    main activity-->
     <string name="main_title_search">Поиск</string>
     <string name="main_title_media">Медиатека</string>
     <string name="main_title_settings">Настройки</string>
 
-<!--    settings activity-->
+    <!--    settings activity-->
     <string name="settings_title">Настройки</string>
     <string name="settings_theme_switch">Темная тема</string>
     <string name="settings_share_app">Поделиться приложением</string>
@@ -18,7 +18,7 @@
     <string name="settings_support_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="settings_agreement_link" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
 
-<!--    search activity-->
+    <!--    search activity-->
     <string name="search_title">Поиск</string>
     <string name="search_not_found">Ничего не нашлось</string>
     <string name="search_internet_problem">Проблемы со связью</string>
@@ -26,5 +26,12 @@
     <string name="search_button_clear_history">Очистить историю</string>
     <string name="search_button_update">Обновить</string>
     <string name="search_track_history_title">Вы искали</string>
+
+<!--    media_player-->
+    <string name="media_player_info_duration">Длительность</string>
+    <string name="media_player_info_album">Альбом</string>
+    <string name="media_player_info_year">Год</string>
+    <string name="media_player_info_genre">Жанр</string>
+    <string name="media_player_info_country">Страна</string>
 
 </resources>
