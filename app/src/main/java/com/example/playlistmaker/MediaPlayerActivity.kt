@@ -41,6 +41,7 @@ class MediaPlayerActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.genre).text = trackData?.primaryGenreName
         findViewById<TextView>(R.id.country).text = trackData?.country
+        findViewById<TextView>(R.id.year).text = trackData?.releaseDate?.substring(0,4)
 
 
     }
