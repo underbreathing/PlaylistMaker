@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
@@ -32,8 +30,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val KEY_TRACKS_HISTORY_FILE = "the_key_to_the_track_history_file"
 const val MAX_HISTORY_SIZE = 10
-const val TRACK_INTENT_DATA = "track_intent_data"
-
 class SearchActivity : AppCompatActivity() {
 
 

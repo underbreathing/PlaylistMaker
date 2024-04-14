@@ -11,6 +11,8 @@ import com.example.playlistmaker.search_tracks.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+const val TRACK_INTENT_DATA = "track_intent_data"
+
 class MediaPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,11 @@ class MediaPlayerActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.genre).text = trackData?.primaryGenreName
         findViewById<TextView>(R.id.country).text = trackData?.country
-        findViewById<TextView>(R.id.year).text = trackData?.releaseDate?.substring(0,4)
+        val releaseDate = trackData?.releaseDate ?: ""
+        if(releaseDate.length > 3){
+            findViewById<TextView>(R.id.year).text = releaseDate.substring(0,4)
+        }
+        findViewById<TextView>(R.id.trackCurrentTime).text = "0.29" // пока прогресса воспроизведения нет здесь заглушка
 
 
     }

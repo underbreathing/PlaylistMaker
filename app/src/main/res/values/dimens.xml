@@ -8,4 +8,8 @@
     <dimen name="main_button_margin_bottom">24dp</dimen>
     <dimen name="main_button_corner_radius">16dp</dimen>
     <dimen name="main_button_layout_height">0dp</dimen>
+
+    <dimen name="mediaplayer_info_bottom">8dp</dimen>
+    <dimen name="mediaplayer_info_top">9dp</dimen>
+    <dimen name="mediaplayer_info_text_start_margin">12dp</dimen>
 </resources>
