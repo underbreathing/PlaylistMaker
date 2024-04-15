@@ -31,7 +31,8 @@
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_gravity="end|center_vertical"
-            app:thumbTint="@color/blue" />
+            app:thumbTint="@color/switch_thumb_color"
+            app:trackTint="@color/switch_track_color" />
     </FrameLayout>
 
     <FrameLayout
@@ -92,43 +93,4 @@
             android:layout_gravity="end|center_vertical"
             android:src="@drawable/ic_arrow_forward" />
     </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/colorPrimaryVariant" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/settings_text_navigation_panel"
-            android:text="@string/main_title_search"
-            app:drawableTopCompat="@drawable/ic_search" />
-
-        <TextView
-            style="@style/settings_text_navigation_panel"
-            android:text="@string/main_title_media"
-            app:drawableTopCompat="@drawable/ic_media" />
-
-        <TextView
-            style="@style/settings_text_navigation_panel"
-            android:text="@string/main_title_settings"
-            android:textColor="@color/blue"
-            app:drawableTint="@color/blue"
-            app:drawableTopCompat="@drawable/ic_settings" />
-
-
-    </LinearLayout>
-
-
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,7 +18,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.search_tracks.ITunesApi
-import com.example.playlistmaker.search_tracks.OnTrackClickListener
 import com.example.playlistmaker.search_tracks.SearchTrackResponse
 import com.example.playlistmaker.search_tracks.Track
 import com.example.playlistmaker.search_tracks.TrackAdapter
@@ -62,36 +62,40 @@ class SearchActivity : AppCompatActivity() {
 
         sharedPrefs = getSharedPreferences(KEY_TRACKS_HISTORY_FILE, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPrefs)
-        trackAdapter = TrackAdapter(tracks,object:OnTrackClickListener{
-            override fun onTrackClick(track: Track) {
-                searchHistory.addTrackToHistory(track)
-            }
+        trackAdapter = TrackAdapter(tracks) {
+            searchHistory.addTrackToHistory(it)
+            val intent = Intent(this, MediaPlayerActivity::class.java)
 
-        })
-        sharedHistoryListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if(key == KEY_LAST_TRACK_IN_HISTORY){
-                val addedTrackJSON = sharedPreferences.getString(KEY_LAST_TRACK_IN_HISTORY,null)
-                if(addedTrackJSON != null){
-                    val addedTrack = deserializeTrackFromJSON(addedTrackJSON)
-                    val indexOfCopy = tracksHistory.indexOfFirst { e -> e.trackId == addedTrack.trackId }
-                   if(indexOfCopy != -1){
-                       tracksHistory.removeAt(indexOfCopy)
-                       trackAdapterHistory.notifyItemRemoved(indexOfCopy)
-                       trackAdapterHistory.notifyItemRangeChanged(indexOfCopy,tracksHistory.size)
-                   }else if(tracksHistory.size == MAX_HISTORY_SIZE){
-                       tracksHistory.removeLast()
-                       trackAdapterHistory.notifyItemRemoved(tracksHistory.lastIndex)
-                   }
-                    tracksHistory.add(0,addedTrack)
+            intent.putExtra(TRACK_INTENT_DATA, it)
+            startActivity(intent)
+        }
+        sharedHistoryListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_LAST_TRACK_IN_HISTORY) {
+                val addedTrack = searchHistory.getLastTrackFromHistory()
+                if (addedTrack != null) {
+                    val indexOfCopy =
+                        tracksHistory.indexOfFirst { e -> e.trackId == addedTrack.trackId }
+                    if (indexOfCopy != -1) {
+                        tracksHistory.removeAt(indexOfCopy)
+                        trackAdapterHistory.notifyItemRemoved(indexOfCopy)
+                        trackAdapterHistory.notifyItemRangeChanged(indexOfCopy, tracksHistory.size)
+                    } else if (tracksHistory.size == MAX_HISTORY_SIZE) {
+                        tracksHistory.removeLast()
+                        trackAdapterHistory.notifyItemRemoved(tracksHistory.lastIndex)
+                    }
+                    tracksHistory.add(0, addedTrack)
                     trackAdapterHistory.notifyItemInserted(0)
-                    trackAdapterHistory.notifyItemRangeChanged(0,tracksHistory.size)
+                    trackAdapterHistory.notifyItemRangeChanged(0, tracksHistory.size)
                 }
+
             }
         }
         sharedPrefs.registerOnSharedPreferenceChangeListener(sharedHistoryListener)
-        val layoutHistory = findViewById<LinearLayout>(R.id.layout_history) //чтобы управлять видимостью всех элементов которые находятся в нем
+        val layoutHistory =
+            findViewById<LinearLayout>(R.id.layout_history) //чтобы управлять видимостью всех элементов которые находятся в нем
         val tracksRecyclerView = findViewById<RecyclerView>(R.id.search_tracks)
-        tracksRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        tracksRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         tracksRecyclerView.adapter = trackAdapter
 
         val buttonBack = findViewById<TextView>(R.id.search_button_back)
@@ -127,9 +131,10 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.isVisible = clearButtonVisibility(s)
+                clearButton.isVisible = setButtonVisibility(s)
                 inputLineText = s.toString()
-                layoutHistory.isVisible = s?.isEmpty() == true && inputLine.hasFocus() && tracksHistory.isNotEmpty()
+                layoutHistory.isVisible =
+                    s?.isEmpty() == true && inputLine.hasFocus() && tracksHistory.isNotEmpty()
 
             }
 
@@ -150,13 +155,21 @@ class SearchActivity : AppCompatActivity() {
         }
         val recyclerHistory = findViewById<RecyclerView>(R.id.history_of_tracks)
 
-        tracksHistory = searchHistory.getTracksHistory()
-        trackAdapterHistory = TrackAdapter(tracksHistory)
-        recyclerHistory.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        tracksHistory = ArrayList(searchHistory.getTracksHistory())
+        trackAdapterHistory = TrackAdapter(tracksHistory) {
+            searchHistory.addTrackToHistory(it)
+            val intent = Intent(this, MediaPlayerActivity::class.java)
+
+            intent.putExtra(TRACK_INTENT_DATA, it)
+            startActivity(intent)
+        }
+        recyclerHistory.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerHistory.adapter = trackAdapterHistory
 
         inputLine.setOnFocusChangeListener { _, hasFocus ->
-            layoutHistory.isVisible = hasFocus && inputLine.text.isEmpty() && tracksHistory.isNotEmpty()
+            layoutHistory.isVisible =
+                hasFocus && inputLine.text.isEmpty() && tracksHistory.isNotEmpty()
         }
         val buttonClearHistory = findViewById<Button>(R.id.button_clear_history)
         buttonClearHistory.setOnClickListener {
@@ -172,69 +185,82 @@ class SearchActivity : AppCompatActivity() {
         searchHistory.saveTracksHistory(tracksHistory)
     }
 
-    private fun serializeTrackToJSON(track: Track): String{
+    private fun serializeTrackToJSON(track: Track): String {
         return Gson().toJson(track)
     }
-    private fun deserializeTrackFromJSON(trackJSON: String): Track{
-        return Gson().fromJson(trackJSON,Track::class.java)
-    }
-    private fun searchTrack(){
-        iTunesService.searchTrack(inputLine.text.toString()).enqueue(object : Callback<SearchTrackResponse>{
-            override fun onResponse(
-                call: Call<SearchTrackResponse>,
-                response: Response<SearchTrackResponse>
-            ) {
-                if(response.code() == 200){
-                    clearPlaceholdersVisibility()
-                    tracks.clear()
-                    if(response.body()?.resultCount!! > 0){
-                        tracks.addAll(response.body()?.results!!)
-                        trackAdapter.notifyDataSetChanged()
-                    }else{
-                        showMessage(getString(R.string.search_not_found),"",R.drawable.tracks_not_found)
+
+    private fun searchTrack() {
+        iTunesService.searchTrack(inputLine.text.toString())
+            .enqueue(object : Callback<SearchTrackResponse> {
+                override fun onResponse(
+                    call: Call<SearchTrackResponse>,
+                    response: Response<SearchTrackResponse>
+                ) {
+                    if (response.code() == 200) {
+                        clearPlaceholdersVisibility()
+                        tracks.clear()
+                        if (response.body()?.resultCount!! > 0) {
+                            tracks.addAll(response.body()?.results!!)
+                            trackAdapter.notifyDataSetChanged()
+                        } else {
+                            showMessage(
+                                getString(R.string.search_not_found),
+                                "",
+                                R.drawable.tracks_not_found
+                            )
+                        }
+                    } else {
+                        showMessage(
+                            getString(R.string.search_internet_problem),
+                            getString(R.string.search_internet_problem_additional),
+                            R.drawable.no_internet,
+                            true
+                        )
                     }
-                }else{
-                    showMessage(getString(R.string.search_internet_problem),getString(R.string.search_internet_problem_additional),
-                        R.drawable.no_internet,true)
                 }
-            }
 
-            override fun onFailure(call: Call<SearchTrackResponse>, t: Throwable) {
-                showMessage(getString(R.string.search_internet_problem),getString(R.string.search_internet_problem_additional),
-                    R.drawable.no_internet,true)
+                override fun onFailure(call: Call<SearchTrackResponse>, t: Throwable) {
+                    showMessage(
+                        getString(R.string.search_internet_problem),
+                        getString(R.string.search_internet_problem_additional),
+                        R.drawable.no_internet,
+                        true
+                    )
 
-            }
+                }
 
-        })
+            })
     }
-    private fun clearPlaceholdersVisibility(){
+
+    private fun clearPlaceholdersVisibility() {
         titleProblem.isVisible = false
         placeholder.isVisible = false
         additionalMessage.isVisible = false
         buttonUpdate.isVisible = false
         layoutPlaceholders.isVisible = false
     }
+
     private fun addPlaceholdersVisibility(
         titlesVisibility: Boolean = false,
         additionalVisibility: Boolean = false,
         buttonUpdateVisibility: Boolean = false
     ) {
-        if(titlesVisibility) {
+        if (titlesVisibility) {
             titleProblem.isVisible = true
             placeholder.isVisible = true
         }
-        if(additionalVisibility) {
+        if (additionalVisibility) {
             additionalMessage.isVisible = true
         }
-        if(buttonUpdateVisibility){
+        if (buttonUpdateVisibility) {
             buttonUpdate.isVisible = true
         }
     }
 
     private fun showMessage(
-        title: String ,
-        additional: String ,
-        imageId: Int ,
+        title: String,
+        additional: String,
+        imageId: Int,
         internetProblem: Boolean = false
     ) {
         if (title.isNotEmpty()) {
@@ -254,7 +280,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Boolean {
+    private fun setButtonVisibility(s: CharSequence?): Boolean {
         return !s.isNullOrEmpty()
     }
 

@@ -8,4 +8,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#3772E7</color>
     <color name="text_gray">#AEAFB4</color>
+    
+<!--    settings_switch-->
+    <color name="track_activated_color">@color/blue</color>
+    <color name="track_deactivated_color">@color/text_gray</color>
+    <color name="thumb_activated_color">#9FBBF3</color>
+    <color name="thumb_deactivated_color">@color/light_gray</color>
+
 </resources>
