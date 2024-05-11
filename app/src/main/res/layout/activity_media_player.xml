@@ -114,10 +114,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:text="@string/mediaplayer_play_progress_start"
             app:layout_constraintEnd_toStartOf="@id/guideRight"
             app:layout_constraintStart_toEndOf="@id/guideLeft"
-            app:layout_constraintTop_toBottomOf="@id/buttonPlay"
-            tools:text="0:30" />
+            app:layout_constraintTop_toBottomOf="@id/buttonPlay" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideLeftInformation"
@@ -156,13 +156,13 @@
         <TextView
             android:id="@+id/duration"
             style="@style/textRegular13"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/mediaplayer_info_text_start_margin"
+            android:gravity="end|center_vertical"
             app:layout_constrainedWidth="true"
             app:layout_constraintBaseline_toBaselineOf="@id/durationLabel"
             app:layout_constraintEnd_toStartOf="@id/guideRightInformation"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@id/infoLabelBarrier"
             tools:text="5:35" />
 
@@ -188,15 +188,15 @@
         <TextView
             android:id="@+id/album"
             style="@style/textRegular13"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/mediaplayer_info_text_start_margin"
             android:ellipsize="end"
+            android:gravity="end|center_vertical"
             android:lines="1"
             app:layout_constrainedWidth="true"
             app:layout_constraintBaseline_toBaselineOf="@id/albumLabel"
             app:layout_constraintEnd_toStartOf="@id/guideRightInformation"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@id/infoLabelBarrier"
             app:layout_constraintTop_toBottomOf="@id/duration"
             tools:text="yesterdat(remastered 2009)fljsdfkjsdfihsdbfhdbsdfbsdfsfsdvd" />
@@ -217,13 +217,13 @@
 
             android:id="@+id/year"
             style="@style/textRegular13"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/mediaplayer_info_text_start_margin"
+            android:gravity="end|center_vertical"
             app:layout_constrainedWidth="true"
             app:layout_constraintBaseline_toBaselineOf="@id/yearLabel"
             app:layout_constraintEnd_toStartOf="@id/guideRightInformation"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@id/infoLabelBarrier"
             app:layout_constraintTop_toBottomOf="@id/album"
             tools:text="1995" />
@@ -243,15 +243,15 @@
         <TextView
             android:id="@+id/genre"
             style="@style/textRegular13"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/mediaplayer_info_text_start_margin"
             android:ellipsize="end"
+            android:gravity="end|center_vertical"
             android:lines="1"
             app:layout_constrainedWidth="true"
             app:layout_constraintBaseline_toBaselineOf="@id/genreLabel"
             app:layout_constraintEnd_toStartOf="@id/guideRightInformation"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@id/infoLabelBarrier"
             tools:text="Rock" />
 
@@ -271,15 +271,15 @@
         <TextView
             android:id="@+id/country"
             style="@style/textRegular13"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/mediaplayer_info_text_start_margin"
             android:ellipsize="end"
+            android:gravity="end|center_vertical"
             android:lines="1"
             app:layout_constrainedWidth="true"
             app:layout_constraintBaseline_toBaselineOf="@id/countryLabel"
             app:layout_constraintEnd_toStartOf="@id/guideRightInformation"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@id/infoLabelBarrier"
             tools:text="Великобритания" />
 
