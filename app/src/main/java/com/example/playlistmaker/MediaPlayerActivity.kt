@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 const val TRACK_INTENT_DATA = "track_intent_data"
+const val TRACK_TIME_FORMAT = "mm:ss"
 
 class MediaPlayerActivity : AppCompatActivity() {
 
@@ -44,9 +45,9 @@ class MediaPlayerActivity : AppCompatActivity() {
         uiHandler = Handler(Looper.getMainLooper())
 
         val trackData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(TRACK_INTENT_DATA, Track::class.java) as Track
+            intent.getParcelableExtra(TRACK_INTENT_DATA, Track::class.java)
         } else {
-            intent.getParcelableExtra<Track>(TRACK_INTENT_DATA) as Track
+            intent.getParcelableExtra(TRACK_INTENT_DATA)
         }
 
         playButton = findViewById(R.id.buttonPlay)
@@ -55,7 +56,7 @@ class MediaPlayerActivity : AppCompatActivity() {
             playButtonControl()
         }
         mediaPlayer = MediaPlayer()
-        preparePlayer(trackData.previewUrl)
+        trackData?.let { preparePlayer(it.previewUrl) }
 
 
         val trackImage = findViewById<ImageView>(R.id.trackArtwork)
@@ -68,7 +69,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.trackName).text = trackData?.trackName
         findViewById<TextView>(R.id.nameOfTheGroup).text = trackData?.artistName
         findViewById<TextView>(R.id.duration).text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackData?.trackTimeMillis)
+            SimpleDateFormat(TRACK_TIME_FORMAT, Locale.getDefault()).format(trackData?.trackTimeMillis)
         findViewById<TextView>(R.id.buttonTopBack).setOnClickListener { finish() }
 
         val albumGroup = findViewById<Group>(R.id.albumGroup)
@@ -81,7 +82,7 @@ class MediaPlayerActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.genre).text = trackData?.primaryGenreName
         findViewById<TextView>(R.id.country).text = trackData?.country
-        val releaseDate = trackData.releaseDate ?: ""
+        val releaseDate = trackData?.releaseDate.orEmpty()
         if (releaseDate.length > 3) {
             findViewById<TextView>(R.id.year).text = releaseDate.substring(0, 4)
         }
@@ -89,7 +90,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         updatePlayProgressTask = object : Runnable {
             override fun run() {
                 trackCurrentTime.text = SimpleDateFormat(
-                    "mm:ss",
+                    TRACK_TIME_FORMAT,
                     Locale.getDefault()
                 ).format(mediaPlayer.currentPosition)
                 uiHandler.postDelayed(this, TRACK_CURRENT_TIME_UPDATE_DELAY)

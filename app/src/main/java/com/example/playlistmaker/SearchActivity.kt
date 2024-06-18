@@ -56,7 +56,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var sharedHistoryListener: SharedPreferences.OnSharedPreferenceChangeListener
     private lateinit var searchHistory: SearchHistory
-    private lateinit var uiHandler: Handler
+    private val uiHandler: Handler = Handler(Looper.getMainLooper())
     private val searchTask = Runnable { searchTrack() }
     private lateinit var searchProgressBar: ProgressBar
     private var isClickOnTrackAllowed =
@@ -67,17 +67,11 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        uiHandler = Handler(Looper.getMainLooper())
+
         sharedPrefs = getSharedPreferences(KEY_TRACKS_HISTORY_FILE, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPrefs)
         trackAdapter = TrackAdapter(tracks) {
-            if (clickDebounce()) {
-                searchHistory.addTrackToHistory(it)
-                val intent = Intent(this, MediaPlayerActivity::class.java)
-
-                intent.putExtra(TRACK_INTENT_DATA, it)
-                startActivity(intent)
-            }
+            onClickTrack(it)
         }
         sharedHistoryListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == KEY_LAST_TRACK_IN_HISTORY) {
@@ -166,13 +160,7 @@ class SearchActivity : AppCompatActivity() {
 
         tracksHistory = ArrayList(searchHistory.getTracksHistory())
         trackAdapterHistory = TrackAdapter(tracksHistory) {
-            if (clickDebounce()) {
-                searchHistory.addTrackToHistory(it)
-                val intent = Intent(this, MediaPlayerActivity::class.java)
-
-                intent.putExtra(TRACK_INTENT_DATA, it)
-                startActivity(intent)
-            }
+            onClickTrack(it)
         }
         recyclerHistory.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -189,6 +177,22 @@ class SearchActivity : AppCompatActivity() {
             //inputLine.clearFocus() // можно и так. чтобы вызвался обработчик изменения состояния фокуса и убрал пустую историю из видимости
             layoutHistory.isVisible = false
         }
+    }
+
+    private fun onClickTrack(currentTrack: Track){
+        if (clickDebounce()) {
+            searchHistory.addTrackToHistory(currentTrack)
+            val intent = Intent(this, MediaPlayerActivity::class.java)
+
+            intent.putExtra(TRACK_INTENT_DATA, currentTrack)
+            startActivity(intent)
+        }
+    }
+
+    override fun onDestroy() {
+        uiHandler.removeCallbacks(searchTask)
+        sharedPrefs.unregisterOnSharedPreferenceChangeListener(sharedHistoryListener)
+        super.onDestroy()
     }
 
     private fun clickDebounce(): Boolean {
