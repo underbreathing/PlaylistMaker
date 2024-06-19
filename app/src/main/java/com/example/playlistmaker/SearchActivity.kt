@@ -19,10 +19,11 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.search_tracks.ITunesApi
-import com.example.playlistmaker.search_tracks.SearchTrackResponse
-import com.example.playlistmaker.search_tracks.Track
-import com.example.playlistmaker.search_tracks.TrackAdapter
+import com.example.playlistmaker.data.dto.SearchTrackResponse
+import com.example.playlistmaker.domain.entity.Track
+import com.example.playlistmaker.ui.MediaPlayerActivity
+import com.example.playlistmaker.ui.TRACK_INTENT_DATA
+import com.example.playlistmaker.ui.track.TrackAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
