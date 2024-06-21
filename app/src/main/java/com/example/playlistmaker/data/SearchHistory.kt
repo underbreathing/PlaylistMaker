@@ -1,7 +1,7 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.domain.entity.Track
+import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 
 const val KEY_LAST_TRACK_IN_HISTORY = "the_key_of_the_last_track_from_the_history"
@@ -14,7 +14,7 @@ class SearchHistory(private val sharedPrefs: SharedPreferences) {
             .apply()
     }
 
-    fun saveTracksHistory(tracksHistory: List<Track>) {
+    fun addTrackToHistory(tracksHistory: List<Track>) {
         sharedPrefs.edit()
             .putString(KEY_TRACKS_HISTORY, Gson().toJson(tracksHistory))
             .apply()

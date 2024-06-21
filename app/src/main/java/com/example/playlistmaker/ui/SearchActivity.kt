@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.content.Context
 import android.content.Intent
@@ -19,16 +19,15 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.data.dto.SearchTrackResponse
-import com.example.playlistmaker.domain.entity.Track
-import com.example.playlistmaker.ui.MediaPlayerActivity
-import com.example.playlistmaker.ui.TRACK_INTENT_DATA
+import com.example.playlistmaker.data.KEY_LAST_TRACK_IN_HISTORY
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.SearchHistory
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.model.Consumer
+import com.example.playlistmaker.domain.model.ConsumerData
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.track.TrackAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+
 
 const val KEY_TRACKS_HISTORY_FILE = "the_key_to_the_track_history_file"
 const val MAX_HISTORY_SIZE = 10
@@ -36,13 +35,8 @@ const val MAX_HISTORY_SIZE = 10
 class SearchActivity : AppCompatActivity() {
 
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://itunes.apple.com")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    private val searchTrackUseCase = Creator.provideSearchTrackUseCase()
 
-
-    private val iTunesService = retrofit.create(ITunesApi::class.java)
     private val tracks = ArrayList<Track>()
     private lateinit var trackAdapter: TrackAdapter
     private var inputLineText: String = ""
@@ -78,6 +72,8 @@ class SearchActivity : AppCompatActivity() {
             if (key == KEY_LAST_TRACK_IN_HISTORY) {
                 val addedTrack = searchHistory.getLastTrackFromHistory()
                 if (addedTrack != null) {
+
+                    //onChange по последнему добавленному треку
                     val indexOfCopy =
                         tracksHistory.indexOfFirst { e -> e.trackId == addedTrack.trackId }
                     if (indexOfCopy != -1) {
@@ -128,6 +124,7 @@ class SearchActivity : AppCompatActivity() {
 
 
         buttonUpdate.setOnClickListener {
+            //поиск трека с исп_ retrofit
             searchTrack()
         }
 
@@ -180,7 +177,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun onClickTrack(currentTrack: Track){
+    private fun onClickTrack(currentTrack: Track) {
         if (clickDebounce()) {
             searchHistory.addTrackToHistory(currentTrack)
             val intent = Intent(this, MediaPlayerActivity::class.java)
@@ -192,6 +189,10 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         uiHandler.removeCallbacks(searchTask)
+        val temporarySearchConsumeRunnable = searchConsumeRunnable
+        if (temporarySearchConsumeRunnable != null) {
+            uiHandler.removeCallbacks(temporarySearchConsumeRunnable)
+        }
         sharedPrefs.unregisterOnSharedPreferenceChangeListener(sharedHistoryListener)
         super.onDestroy()
     }
@@ -213,7 +214,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        searchHistory.saveTracksHistory(tracksHistory)
+        searchHistory.addTrackToHistory(tracksHistory)
     }
 
     private fun searchDebounce() {
@@ -221,31 +222,32 @@ class SearchActivity : AppCompatActivity() {
         uiHandler.postDelayed(searchTask, SEARCH_DEBOUNCE_DELAY)
     }
 
+    private var searchConsumeRunnable: Runnable? = null
     private fun searchTrack() {
         clearPlaceholdersVisibility()
         searchProgressBar.isVisible = true
-        iTunesService.searchTrack(inputLine.text.toString())
-            .enqueue(object : Callback<SearchTrackResponse> {
-                override fun onResponse(
-                    call: Call<SearchTrackResponse>,
-                    response: Response<SearchTrackResponse>
-                ) {
+        searchTrackUseCase.execute(inputLine.text.toString(), object : Consumer {
+            //эта функция выполняется в отдельном потоке
+            override fun consume(consumerData: ConsumerData<List<Track>>) {
+                val newSearchConsumeRunnable = Runnable {
                     searchProgressBar.isVisible = false
-                    if (response.code() == 200) {
-                        clearPlaceholdersVisibility()
-                        tracks.clear()
-                        if (response.body()?.resultCount!! > 0) {
-                            tracks.addAll(response.body()?.results!!)
-                            trackAdapter.notifyDataSetChanged()
-                        } else {
-                            showMessage(
-                                getString(R.string.search_not_found),
-                                "",
-                                R.drawable.tracks_not_found
-                            )
+                    when (consumerData) {
+                        is ConsumerData.Data -> {
+                            clearPlaceholdersVisibility()
+                            tracks.clear()
+                            if (consumerData.data.isNotEmpty()) {
+                                tracks.addAll(consumerData.data)
+                                trackAdapter.notifyDataSetChanged()
+                            } else {
+                                showMessage(
+                                    getString(R.string.search_not_found),
+                                    "",
+                                    R.drawable.tracks_not_found
+                                )
+                            }
                         }
-                    } else {
-                        showMessage(
+
+                        is ConsumerData.Error -> showMessage(
                             getString(R.string.search_internet_problem),
                             getString(R.string.search_internet_problem_additional),
                             R.drawable.no_internet,
@@ -253,19 +255,11 @@ class SearchActivity : AppCompatActivity() {
                         )
                     }
                 }
+                searchConsumeRunnable = newSearchConsumeRunnable
 
-                override fun onFailure(call: Call<SearchTrackResponse>, t: Throwable) {
-                    searchProgressBar.isVisible = false
-                    showMessage(
-                        getString(R.string.search_internet_problem),
-                        getString(R.string.search_internet_problem_additional),
-                        R.drawable.no_internet,
-                        true
-                    )
-
-                }
-
-            })
+                uiHandler.post(newSearchConsumeRunnable)
+            }
+        })
     }
 
     private fun clearPlaceholdersVisibility() {
@@ -330,7 +324,6 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         inputLineText = savedInstanceState.getString(INPUT_LINE_TEXT) ?: ""
     }
-
 
     private companion object {
         const val INPUT_LINE_TEXT = "INPUT_LINE_TEXT"

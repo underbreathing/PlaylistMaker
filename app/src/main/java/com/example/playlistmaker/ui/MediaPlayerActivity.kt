@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.api.AudioInteractor
-import com.example.playlistmaker.domain.entity.Track
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.mapper.TimeFormatter
 import com.example.playlistmaker.presentation.mapper.TrackMapper
 import com.example.playlistmaker.presentation.model.TrackInfo

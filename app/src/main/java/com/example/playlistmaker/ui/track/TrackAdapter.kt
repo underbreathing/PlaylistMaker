@@ -2,7 +2,7 @@ package com.example.playlistmaker.ui.track
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.domain.entity.Track
+import com.example.playlistmaker.domain.model.Track
 
 class TrackAdapter(
     private val tracks: List<Track>,

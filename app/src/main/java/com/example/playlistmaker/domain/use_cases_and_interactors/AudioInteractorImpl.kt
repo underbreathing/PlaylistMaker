@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.domain.use_cases_and_interactors
 
 import com.example.playlistmaker.domain.api.AudioInteractor
 import com.example.playlistmaker.domain.audioplayer.AudioPlayer
