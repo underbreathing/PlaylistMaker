@@ -18,7 +18,7 @@ class SearchTrackUseCase(private val repository: NetworkRepository) {
                 }
 
                 is Resource.Error -> {
-                    consumer.consume(ConsumerData.Error("Произошла ошибка"))
+                    consumer.consume(ConsumerData.Error(resource.message,resource.additionalMessage))
                 }
             }
         }

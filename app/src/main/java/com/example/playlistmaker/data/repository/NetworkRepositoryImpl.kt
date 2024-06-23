@@ -18,7 +18,11 @@ class NetworkRepositoryImpl(private val remoteDataSource: RemoteDataSource) : Ne
         return if (response is SearchTracksResponse) {
             Resource.Success(response.results.map { TrackDtoMapper.map(it) })
         } else {
-            Resource.Error(getString(remoteDataSource.getContext(),R.string.search_internet_problem))
+            val context = remoteDataSource.getContext()
+            Resource.Error(
+                getString(context, R.string.search_internet_problem),
+                getString(context, R.string.search_internet_problem_additional)
+            )
         }
     }
 }

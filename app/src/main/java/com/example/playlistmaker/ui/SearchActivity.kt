@@ -248,7 +248,7 @@ class SearchActivity : AppCompatActivity() {
 
                         is ConsumerData.Error -> showMessage(
                             consumerData.message,
-                            getString(R.string.search_internet_problem_additional),
+                            consumerData.additionalMessage ?: "",
                             R.drawable.no_internet,
                             true
                         )
