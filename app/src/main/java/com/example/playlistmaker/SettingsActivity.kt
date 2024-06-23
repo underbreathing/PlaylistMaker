@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
@@ -25,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
             (applicationContext as App).switchTheme(isChecked)
         }
 
-        val buttonBack = findViewById<TextView>(R.id.settings_button_back)
+        val buttonBack = findViewById<Toolbar>(R.id.settings_button_back)
         buttonBack.setOnClickListener {
             finish()
         }
