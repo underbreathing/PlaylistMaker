@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.audioplayer
 
-interface AudioPlayer {
+interface AudioPlayerRepository {
 
     fun preparePlayer(
         dataSource: String,

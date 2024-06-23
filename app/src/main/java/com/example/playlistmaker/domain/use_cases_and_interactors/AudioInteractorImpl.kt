@@ -1,31 +1,31 @@
 package com.example.playlistmaker.domain.use_cases_and_interactors
 
-import com.example.playlistmaker.domain.api.AudioInteractor
-import com.example.playlistmaker.domain.audioplayer.AudioPlayer
+import com.example.playlistmaker.domain.audioplayer.AudioPlayerRepository
 
-class AudioInteractorImpl(private val audioPlayer: AudioPlayer) : AudioInteractor {
+class AudioInteractorImpl(private val audioPlayerRepository: AudioPlayerRepository) :
+    AudioInteractor {
 
     override fun preparePlayer(
         dataSource: String,
         onPrepared: () -> Unit,
         onCompletion: () -> Unit
     ) {
-        audioPlayer.preparePlayer(dataSource, onPrepared, onCompletion)
+        audioPlayerRepository.preparePlayer(dataSource, onPrepared, onCompletion)
     }
 
     override fun playControl(onPlayed: () -> Unit, onPaused: () -> Unit) {
-        audioPlayer.playControl(onPlayed, onPaused)
+        audioPlayerRepository.playControl(onPlayed, onPaused)
     }
 
     override fun pausePlayer(onPaused: () -> Unit) {
-        audioPlayer.pausePlayer(onPaused)
+        audioPlayerRepository.pausePlayer(onPaused)
     }
 
     override fun currentPosition(): Int {
-        return audioPlayer.currentPosition()
+        return audioPlayerRepository.currentPosition()
     }
 
     override fun releasePlayer() {
-        audioPlayer.releasePlayer()
+        audioPlayerRepository.releasePlayer()
     }
 }

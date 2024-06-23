@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.api
+package com.example.playlistmaker.domain.use_cases_and_interactors
 
 
 // как будто можно было бы обойтись без интерфейса для интерактора, но в теории на сайте такой был, поэтому я тоже сделал

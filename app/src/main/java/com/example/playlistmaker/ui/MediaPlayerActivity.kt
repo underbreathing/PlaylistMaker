@@ -9,12 +9,13 @@ import android.os.Looper
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.domain.api.AudioInteractor
+import com.example.playlistmaker.domain.use_cases_and_interactors.AudioInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.mapper.TimeFormatter
 import com.example.playlistmaker.presentation.mapper.TrackMapper
@@ -48,7 +49,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         val trackInfo = trackData?.let { TrackMapper.map(it) }
         trackInfo?.let { showTrackInfo(it) }
 
-        findViewById<TextView>(R.id.buttonTopBack).setOnClickListener { finish() }
+        findViewById<Toolbar>(R.id.buttonTopBack).setOnClickListener{ finish() }
         playButton = findViewById(R.id.buttonPlay)
         playButton.isEnabled = false
         playButton.setOnClickListener {
@@ -86,8 +87,7 @@ class MediaPlayerActivity : AppCompatActivity() {
     private fun showTrackInfo(trackInfo: TrackInfo) {
 
         val trackImage = findViewById<ImageView>(R.id.trackArtwork)
-        //Не придумал как вынести использование Glide
-        //чат гпт говорит, что можно использовать здесь (в presentation) напрямую :)
+
         Glide.with(this)
             .load(trackInfo.coverArtwork)
             .placeholder(R.drawable.placeholder_track)

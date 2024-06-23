@@ -1,6 +1,6 @@
-package com.example.playlistmaker.data.network
+package com.example.playlistmaker.data.remote_data_source
 
-import com.example.playlistmaker.data.dto.SearchTracksResponse
+import com.example.playlistmaker.data.server_response.SearchTracksResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

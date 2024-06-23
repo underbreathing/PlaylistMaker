@@ -1,9 +1,9 @@
 package com.example.playlistmaker.data.audio_player
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.domain.audioplayer.AudioPlayer
+import com.example.playlistmaker.domain.audioplayer.AudioPlayerRepository
 
-class AudioPlayerImpl : MediaPlayer(), AudioPlayer {
+class AudioPlayerRepositoryImpl : MediaPlayer(), AudioPlayerRepository {
     private var playerState = State.DEFAULT
     override fun preparePlayer(
         dataSource: String,

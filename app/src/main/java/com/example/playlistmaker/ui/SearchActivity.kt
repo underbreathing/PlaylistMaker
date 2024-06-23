@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +36,7 @@ const val MAX_HISTORY_SIZE = 10
 class SearchActivity : AppCompatActivity() {
 
 
-    private val searchTrackUseCase = Creator.provideSearchTrackUseCase()
+    private val searchTrackUseCase = Creator.provideSearchTrackUseCase(this)
 
     private val tracks = ArrayList<Track>()
     private lateinit var trackAdapter: TrackAdapter
@@ -99,10 +100,8 @@ class SearchActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         tracksRecyclerView.adapter = trackAdapter
 
-        val buttonBack = findViewById<TextView>(R.id.search_button_back)
-        buttonBack.setOnClickListener {
-            finish()
-        }
+        val buttonBack = findViewById<Toolbar>(R.id.search_button_back)
+        buttonBack.setOnClickListener { finish() }
         inputLine = findViewById(R.id.search_input_line)
         inputLine.setText(inputLineText)
 
@@ -248,7 +247,7 @@ class SearchActivity : AppCompatActivity() {
                         }
 
                         is ConsumerData.Error -> showMessage(
-                            getString(R.string.search_internet_problem),
+                            consumerData.message,
                             getString(R.string.search_internet_problem_additional),
                             R.drawable.no_internet,
                             true

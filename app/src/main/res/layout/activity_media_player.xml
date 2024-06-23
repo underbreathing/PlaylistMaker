@@ -21,14 +21,14 @@
         app:layout_constraintGuide_end="24dp" />
 
 
-    <TextView
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/buttonTopBack"
-        style="@style/button_top_back"
-        android:paddingHorizontal="16dp"
-        android:text=""
+        style="@style/toolbar_top_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
 
 
     <ImageView

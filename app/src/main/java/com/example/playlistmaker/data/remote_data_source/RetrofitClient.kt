@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.network
+package com.example.playlistmaker.data.remote_data_source
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -7,10 +7,16 @@
     android:orientation="vertical"
     tools:context=".ui.SearchActivity">
 
-    <TextView
-        android:id="@+id/search_button_back"
-        style="@style/button_top_back"
-        android:text="@string/search_title" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        style="@style/toolbar_top_back"
+        app:title="@string/search_title"
+        android:id="@+id/search_button_back"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/search_button_back"-->
+<!--        style="@style/button_top_back"-->
+<!--        android:text="@string/search_title" />-->
 
     <FrameLayout
         android:layout_width="match_parent"
