@@ -1,16 +1,15 @@
-package com.example.playlistmaker.search_tracks
+package com.example.playlistmaker.domain.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Track (
+data class Track(
     val trackId: Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,
-    @SerializedName("artworkUrl100")
     val artworkUrl: String,
     val collectionName: String?,
     val releaseDate: String,

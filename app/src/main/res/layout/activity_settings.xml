@@ -7,10 +7,14 @@
     android:orientation="vertical">
 
 
-    <TextView
+    <!--    <TextView-->
+    <!--        android:id="@+id/settings_button_back"-->
+    <!--        style="@style/button_top_back"-->
+    <!--        android:text="@string/settings_title" />-->
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_button_back"
-        style="@style/button_top_back"
-        android:text="@string/settings_title" />
+        style="@style/toolbar_top_back"
+        app:title="@string/settings_title" />
 
 
     <FrameLayout
