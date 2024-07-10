@@ -32,10 +32,17 @@ class MediaPlayerActivity : AppCompatActivity() {
             this, MediaPlayerViewModel.getMediaPlayerViewModelFactory(this)
         )[MediaPlayerViewModel::class.java]
 
-        viewModel.getArrivedTrack()?.let {
-            viewModel.preparePlayer(it.previewUrl)
-            showTrackInfo(TrackMapper.map(it))
+        viewModel.getArrivedTrackLiveData().observe(this) {
+            if (it != null) {
+                viewModel.preparePlayer(it.previewUrl)
+                showTrackInfo(TrackMapper.map(it))
+            }
         }
+
+//        viewModel.getArrivedTrack()?.let {
+//            viewModel.preparePlayer(it.previewUrl)
+//            showTrackInfo(TrackMapper.map(it))
+//        }
 
         binding.buttonTopBack.setOnClickListener { finish() }
         val playButton = binding.buttonPlay

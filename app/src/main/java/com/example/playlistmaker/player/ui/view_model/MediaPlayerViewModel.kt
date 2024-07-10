@@ -15,8 +15,12 @@ import com.example.playlistmaker.search.domain.model.Track
 
 class MediaPlayerViewModel(
     private val audioPlayerRepository: AudioPlayerRepository,
-    private val internalNavigator: InternalNavigator
+    private val internalNavigator: InternalNavigator,
+    private val arrivedTrack: MutableLiveData<Track?>
 ) : ViewModel() {
+    init {
+        arrivedTrack.value = getArrivedTrack()
+    }
 
     enum class MediaPlayerState {
         READY, COMPLETED
@@ -27,7 +31,9 @@ class MediaPlayerViewModel(
         super.onCleared()
     }
 
-    fun getArrivedTrack(): Track? {
+    fun getArrivedTrackLiveData(): LiveData<Track?> = arrivedTrack
+
+    private fun getArrivedTrack(): Track? {
         return internalNavigator.getArrivedTrack()
     }
 
@@ -79,7 +85,9 @@ class MediaPlayerViewModel(
             viewModelFactory {
                 initializer {
                     MediaPlayerViewModel(
-                        Creator.provideAudioPlayer(), Creator.provideInternalNavigator(activity)
+                        Creator.provideAudioPlayer(),
+                        Creator.provideInternalNavigator(activity),
+                        MutableLiveData()
                     )
                 }
             }
