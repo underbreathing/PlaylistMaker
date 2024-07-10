@@ -3,6 +3,8 @@ package com.example.playlistmaker.settings.ui.view_model
 import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
@@ -17,16 +19,21 @@ import com.example.playlistmaker.sharing.domain.model.EmailData
 class SettingsViewModel(
     application: Application,
     private val settingsRepository: SettingsRepository,
-    private val sharingInteractor: SharingInteractor
+    private val sharingInteractor: SharingInteractor,
+    private val themeSettingsLiveData: MutableLiveData<ThemeSettings>
 ) : AndroidViewModel(application) {
+    init {
+        themeSettingsLiveData.value = getThemeModSettings()
+    }
 
+    fun getThemeSettingsLiveData(): LiveData<ThemeSettings> = themeSettingsLiveData
 
     fun switchTheme(themeSettings: ThemeSettings) {
         settingsRepository.updateThemeSettings(themeSettings)
-
+        themeSettingsLiveData.value = themeSettings
     }
 
-    fun getThemeModSettings(): ThemeSettings {
+    private fun getThemeModSettings(): ThemeSettings {
         return settingsRepository.getThemeSettings()
     }
 
@@ -51,7 +58,8 @@ class SettingsViewModel(
                     SettingsViewModel(
                         application,
                         application.provideSettingsRepository(),
-                        Creator.provideSharingInteractor(activity)
+                        Creator.provideSharingInteractor(activity),
+                        MutableLiveData()
                     )
 
                 }

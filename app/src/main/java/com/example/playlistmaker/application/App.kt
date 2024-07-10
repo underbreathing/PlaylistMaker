@@ -2,6 +2,7 @@ package com.example.playlistmaker.application
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.settings.data.impl.SettingsLocalStorageImpl
 import com.example.playlistmaker.settings.data.impl.SettingsRepositoryImpl
@@ -23,6 +24,7 @@ class App : Application() {
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
+        Log.d("MYY","dark enabled == $darkThemeEnabled")
         sharedTheme.edit()
             .putBoolean(KEY_IS_DARK_THEME, darkThemeEnabled)
             .apply()

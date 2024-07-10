@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
-import com.example.playlistmaker.application.App
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.model.Consumer
 import com.example.playlistmaker.search.domain.model.ConsumerData
