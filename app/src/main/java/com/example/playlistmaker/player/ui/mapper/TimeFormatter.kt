@@ -6,7 +6,6 @@ import java.util.Locale
 const val TRACK_TIME_FORMAT = "mm:ss"
 
 object TimeFormatter {
-
     fun formatTheTime(time: Long): String {
         return SimpleDateFormat(
             TRACK_TIME_FORMAT,

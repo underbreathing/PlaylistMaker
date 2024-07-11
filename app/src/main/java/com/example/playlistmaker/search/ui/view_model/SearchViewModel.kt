@@ -26,14 +26,38 @@ class SearchViewModel(
     private val searchTrackUseCase: SearchTrackUseCase
 ) : AndroidViewModel(application) {
 
+    companion object {
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private val SEARCH_REQUEST_TOKEN = Any()
+        const val MAX_HISTORY_SIZE = 10
+        fun getSearchViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SearchViewModel(
+                    Creator.getApplication(),
+                    Creator.provideTracksHistoryRepository(),
+                    Creator.provideSearchTrackUseCase()
+                )
+            }
+        }
+    }
+
+    private val searchTextStateLiveData: MutableLiveData<String> = MutableLiveData()
+    private val historyStateLiveData: MutableLiveData<HistoryState> = MutableLiveData()
+    private val searchStateLiveData: MutableLiveData<SearchState> = MutableLiveData()
+    private var lastSearchRequest: String? = null
+    private val handler = Handler(Looper.getMainLooper())
+
+    override fun onCleared() {
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        super.onCleared()
+    }
+
     fun clearHistory() {
         historyRepository.clearTracks()
         historyStateLiveData.postValue(HistoryState.EmptyHistory)
     }
 
     fun getHistoryStateLiveData(): LiveData<HistoryState> = historyStateLiveData
-
-    private val historyStateLiveData: MutableLiveData<HistoryState> = MutableLiveData()
 
     fun purTrackInHistory(track: Track) {
         val history = getTracksHistory()
@@ -54,20 +78,10 @@ class SearchViewModel(
         Log.d("MYY", " track historySize == ${getTracksHistory().size}")
     }
 
-
-    private fun putTrackInRepository(track: Track) {
-        historyRepository.putTrack(track)
-    }
-
-    private fun removeTrackFromRepository(track: Track) {
-        historyRepository.removeTrack(track)
-    }
-
     fun getTracksHistory(): List<Track> {
         return historyRepository.getTracks()
     }
 
-    private val searchTextStateLiveData: MutableLiveData<String> = MutableLiveData()
     fun getSearchTextLiveData(): LiveData<String> = searchTextStateLiveData
     fun onTextChanged(newSearchText: String) {
         if (newSearchText.isEmpty()) {
@@ -76,13 +90,7 @@ class SearchViewModel(
         searchTextStateLiveData.value = newSearchText
     }
 
-
-    private val searchStateLiveData: MutableLiveData<SearchState> = MutableLiveData()
-
     fun getSearchStateLiveData(): LiveData<SearchState> = searchStateLiveData
-
-    private var lastSearchRequest: String? = null
-    private val handler = Handler(Looper.getMainLooper())
 
     //функция, которую будет использовать кнопка "обновить" т.к при ее нажатии ждать 2с необязательно
     fun search(searchQuery: String) {
@@ -101,15 +109,8 @@ class SearchViewModel(
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         val searchRunnable = Runnable { searchTrack(searchQuery) }
         handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+            searchRunnable, SEARCH_REQUEST_TOKEN, SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
         )
-    }
-
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        super.onCleared()
     }
 
     private fun searchTrack(searchQuery: String) {
@@ -155,19 +156,11 @@ class SearchViewModel(
         searchStateLiveData.postValue(newState)
     }
 
-    companion object {
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
-        const val MAX_HISTORY_SIZE = 10
-        fun getSearchViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = checkNotNull(this[APPLICATION_KEY])
-                SearchViewModel(
-                    application,
-                    Creator.provideTracksHistoryRepository(application.applicationContext),
-                    Creator.provideSearchTrackUseCase(application.applicationContext)
-                )
-            }
-        }
+    private fun putTrackInRepository(track: Track) {
+        historyRepository.putTrack(track)
+    }
+
+    private fun removeTrackFromRepository(track: Track) {
+        historyRepository.removeTrack(track)
     }
 }

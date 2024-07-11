@@ -16,6 +16,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
@@ -131,19 +132,9 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        val searchTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.onTextChanged(s.toString())
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        }
-
-        inputLine.addTextChangedListener(searchTextWatcher)
+        inputLine.addTextChangedListener(onTextChanged = { charSequence, _, _, _ ->
+            viewModel.onTextChanged(charSequence.toString())
+        })
 
 
         val recyclerHistory = binding.searchTracksHistoryRecycler

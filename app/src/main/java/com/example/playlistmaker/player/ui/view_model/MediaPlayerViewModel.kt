@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.ui.view_model
 
 import android.app.Activity
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,18 +10,32 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
-import com.example.playlistmaker.player.domain.internal_navigator.InternalNavigator
 import com.example.playlistmaker.player.ui.view_model.model.PlayStatus
-import com.example.playlistmaker.search.domain.model.Track
 
 class MediaPlayerViewModel(
-    private val audioPlayerRepository: AudioPlayerRepository,
-    private val internalNavigator: InternalNavigator,
-    private val arrivedTrack: MutableLiveData<Track?>
+    private val audioPlayerRepository: AudioPlayerRepository, dataSource: String?
 ) : ViewModel() {
+
     init {
-        arrivedTrack.value = getArrivedTrack()
+        Log.d("MYPLAYER","view model init")
+        if (dataSource?.isNotEmpty() == true) {
+            preparePlayer(dataSource)
+        }
     }
+
+    companion object {
+        fun getMediaPlayerViewModelFactory(dataSource: String?): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    MediaPlayerViewModel(
+                        Creator.provideAudioPlayer(), dataSource
+                    )
+                }
+            }
+    }
+
+    private val playStatusLiveData: MutableLiveData<PlayStatus> = MutableLiveData()
+    private val mediaPlayerStateLiveData: MutableLiveData<MediaPlayerState> = MutableLiveData()
 
     enum class MediaPlayerState {
         READY, COMPLETED
@@ -31,28 +46,14 @@ class MediaPlayerViewModel(
         super.onCleared()
     }
 
-    fun getArrivedTrackLiveData(): LiveData<Track?> = arrivedTrack
-
-    private fun getArrivedTrack(): Track? {
-        return internalNavigator.getArrivedTrack()
-    }
-
     fun pausePlayer() {
         audioPlayerRepository.pausePlayer {
             playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = false)
         }
     }
 
-
-    private val playStatusLiveData: MutableLiveData<PlayStatus> = MutableLiveData()
-
-    private fun getCurrentPlayStatus(): PlayStatus {
-        return playStatusLiveData.value ?: PlayStatus(false, 0)
-    }
-
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
 
-    private val mediaPlayerStateLiveData: MutableLiveData<MediaPlayerState> = MutableLiveData()
     fun getMediaPlayerStateLiveData(): LiveData<MediaPlayerState> = mediaPlayerStateLiveData
     fun preparePlayer(dataSource: String) {
         audioPlayerRepository.preparePlayer(dataSource, {
@@ -80,16 +81,7 @@ class MediaPlayerViewModel(
         })
     }
 
-    companion object {
-        fun getMediaPlayerViewModelFactory(activity: Activity): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    MediaPlayerViewModel(
-                        Creator.provideAudioPlayer(),
-                        Creator.provideInternalNavigator(activity),
-                        MutableLiveData()
-                    )
-                }
-            }
+    private fun getCurrentPlayStatus(): PlayStatus {
+        return playStatusLiveData.value ?: PlayStatus(false, 0)
     }
 }

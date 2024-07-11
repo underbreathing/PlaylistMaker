@@ -1,6 +1,7 @@
 package com.example.playlistmaker.search.data.impl
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.search.data.local_storage.SearchLocalStorage
 import com.example.playlistmaker.search.domain.model.Track
@@ -16,7 +17,15 @@ class SearchLocalStorageImpl(private val sharedPrefs: SharedPreferences) : Searc
     }
 
     override fun clearStorage() {
-        sharedPrefs.edit().clear().apply()
+        sharedPrefs.edit { clear() }
+    }
+
+    override fun putTrack(track: Track) {
+        changeLocalStorage(track, false)
+    }
+
+    override fun removeTrack(track: Track) {
+        changeLocalStorage(track, true)
     }
 
     private fun changeLocalStorage(track: Track, remove: Boolean) {
@@ -30,19 +39,12 @@ class SearchLocalStorageImpl(private val sharedPrefs: SharedPreferences) : Searc
             tracksHistoryMutable.add(0, track)
         }
         if (modified) {
-            sharedPrefs.edit()
-                .putString(TRACKS_HISTORY_KEY, GsonConverter.trackListToGson(tracksHistoryMutable))
-                .apply()
+            sharedPrefs.edit {
+                putString(
+                    TRACKS_HISTORY_KEY, GsonConverter.trackListToGson(tracksHistoryMutable)
+                )
+            }
         }
-    }
-
-
-    override fun putTrack(track: Track) {
-        changeLocalStorage(track, false)
-    }
-
-    override fun removeTrack(track: Track) {
-        changeLocalStorage(track, true)
     }
 
 }

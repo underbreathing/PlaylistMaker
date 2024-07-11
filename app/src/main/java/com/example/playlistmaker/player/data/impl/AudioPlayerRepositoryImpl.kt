@@ -3,7 +3,7 @@ package com.example.playlistmaker.player.data.impl
 import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
 
-class AudioPlayerRepositoryImpl : MediaPlayer(), AudioPlayerRepository {
+class AudioPlayerRepositoryImpl(private val player: MediaPlayer) : AudioPlayerRepository {
 
     private companion object {
         const val PROGRESS_UPDATE_DELAY = 300L
@@ -16,26 +16,25 @@ class AudioPlayerRepositoryImpl : MediaPlayer(), AudioPlayerRepository {
         PAUSED
     }
 
+    private var updateProgressTask: Thread? = null
     private var playerState = State.DEFAULT
     override fun preparePlayer(
         dataSource: String,
         onPrepared: () -> Unit,
         onCompletion: () -> Unit
     ) {
-        this.setDataSource(dataSource)
-        this.setOnPreparedListener {
+        player.setDataSource(dataSource)
+        player.setOnPreparedListener {
             onPrepared()
             playerState = State.PREPARED
         }
-        this.setOnCompletionListener {
+        player.setOnCompletionListener {
             updateProgressTask?.interrupt()
             onCompletion()
             playerState = State.PREPARED
         }
-        this.prepareAsync()
+        player.prepareAsync()
     }
-
-    private var updateProgressTask: Thread? = null
 
     override fun playToggle(statusObserver: AudioPlayerRepository.StatusObserver) {
         when (playerState) {
@@ -52,7 +51,7 @@ class AudioPlayerRepositoryImpl : MediaPlayer(), AudioPlayerRepository {
                         updateProgress(statusObserver)
                     }
                 }
-                updateProgressTask!!.start()
+                updateProgressTask?.start()
             }
 
             State.PLAYING -> pausePlayer { statusObserver.onStop() }
@@ -60,19 +59,8 @@ class AudioPlayerRepositoryImpl : MediaPlayer(), AudioPlayerRepository {
         }
     }
 
-    private fun updateProgress(statusObserver: AudioPlayerRepository.StatusObserver) {
-        statusObserver.onProgress(this.currentPosition)
-    }
-
-
-    private fun startPlayer(onStarted: () -> Unit) {
-        this.start()
-        playerState = State.PLAYING
-        onStarted()
-    }
-
     override fun pausePlayer(onPaused: () -> Unit) {
-        this.pause()
+        player.pause()
         //прерываем задачу обновления трека
         updateProgressTask?.interrupt()
         playerState = State.PAUSED
@@ -80,7 +68,16 @@ class AudioPlayerRepositoryImpl : MediaPlayer(), AudioPlayerRepository {
     }
 
     override fun releasePlayer() {
-        this.release()
+        player.release()
     }
 
+    private fun updateProgress(statusObserver: AudioPlayerRepository.StatusObserver) {
+        statusObserver.onProgress(player.currentPosition)
+    }
+
+    private fun startPlayer(onStarted: () -> Unit) {
+        player.start()
+        playerState = State.PLAYING
+        onStarted()
+    }
 }

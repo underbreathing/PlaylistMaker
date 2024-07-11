@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.ui.activity
 
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -28,21 +29,19 @@ class MediaPlayerActivity : AppCompatActivity() {
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this, MediaPlayerViewModel.getMediaPlayerViewModelFactory(this)
-        )[MediaPlayerViewModel::class.java]
-
-        viewModel.getArrivedTrackLiveData().observe(this) {
-            if (it != null) {
-                viewModel.preparePlayer(it.previewUrl)
-                showTrackInfo(TrackMapper.map(it))
-            }
+        val receivedTrack = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(TRACK_INTENT_DATA, Track::class.java)
+        } else {
+            intent.getParcelableExtra(TRACK_INTENT_DATA)
+        })
+        receivedTrack?.let {
+            showTrackInfo(TrackMapper.map(it))
         }
 
-//        viewModel.getArrivedTrack()?.let {
-//            viewModel.preparePlayer(it.previewUrl)
-//            showTrackInfo(TrackMapper.map(it))
-//        }
+        viewModel = ViewModelProvider(
+            this, MediaPlayerViewModel.getMediaPlayerViewModelFactory(receivedTrack?.previewUrl)
+        )[MediaPlayerViewModel::class.java]
+
 
         binding.buttonTopBack.setOnClickListener { finish() }
         val playButton = binding.buttonPlay
@@ -73,8 +72,7 @@ class MediaPlayerActivity : AppCompatActivity() {
                 playButton.setImageResource(R.drawable.ic_button_play)
                 Log.d("MYY", "PLAY")
             }
-            trackCurrentTime.text =
-                TimeFormatter.formatTheTime(it.progress.toLong()) // может оно только когда isPlaying?
+            trackCurrentTime.text = TimeFormatter.formatTheTime(it.progress.toLong())
         }
 
         playButton.setOnClickListener {
@@ -82,12 +80,14 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        viewModel.pausePlayer()
+        super.onPause()
+    }
+
     private fun showTrackInfo(trackInfo: TrackInfo) {
-
-        val trackImage = findViewById<ImageView>(R.id.track_artwork)
-
         Glide.with(this).load(trackInfo.coverArtwork).placeholder(R.drawable.placeholder_track)
-            .centerCrop().into(trackImage)
+            .centerCrop().into(binding.trackArtwork)
 
         val albumIngoText = trackInfo.nameOfTheBand
         if (albumIngoText.isNotEmpty()) {
@@ -100,10 +100,5 @@ class MediaPlayerActivity : AppCompatActivity() {
         binding.playerTrackName.text = trackInfo.trackName
         binding.nameOfTheBand.text = trackInfo.nameOfTheBand
         binding.duration.text = trackInfo.duration
-    }
-
-    override fun onPause() {
-        viewModel.pausePlayer()
-        super.onPause()
     }
 }

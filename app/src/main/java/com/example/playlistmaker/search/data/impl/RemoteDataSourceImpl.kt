@@ -27,6 +27,9 @@ class RemoteDataSourceImpl(private val context: Context) : RemoteDataSource {
         }
     }
 
+    override fun getContext(): Context {
+        return context
+    }
 
     private fun isConnected(): Boolean {
         val connectivityManager =
@@ -41,10 +44,5 @@ class RemoteDataSourceImpl(private val context: Context) : RemoteDataSource {
             }
         }
         return false
-    }
-
-
-    override fun getContext(): Context {
-        return context
     }
 }

@@ -5,23 +5,25 @@ import com.google.gson.Gson
 
 object GsonConverter {
 
+    private val gson = Gson()
+
     fun trackToJson(track: Track): String {
-        return Gson().toJson(track)
+        return gson.toJson(track)
     }
 
     fun jsonToTrack(trackJson: String): Track {
-        return Gson().fromJson(trackJson, Track::class.java)
+        return gson.fromJson(trackJson, Track::class.java)
     }
 
     fun jsonToTrackList(tracks: String?): List<Track> {
         return if (!tracks.isNullOrEmpty()) {
-            Gson().fromJson(tracks, Array<Track>::class.java).toList()
+            gson.fromJson(tracks, Array<Track>::class.java).toList()
         } else {
             emptyList()
         }
     }
 
     fun trackListToGson(tracks: List<Track>): String {
-        return Gson().toJson(tracks)
+        return gson.toJson(tracks)
     }
 }

@@ -19,7 +19,7 @@ class NetworkRepositoryImpl(private val remoteDataSource: RemoteDataSource) : Ne
         //здесь проверка только на тип ответа
         //коды не проверяются, т.к у нас один placeholder и на отсутствие интернета и на любые ошибки сервера
         return if (response is SearchTracksResponse) {
-            Resource.Success(response.results.map { TrackDtoMapper.map(it) })
+            Resource.Success(response.results.map(TrackDtoMapper::map))
         } else {
             Resource.Error()
         }
