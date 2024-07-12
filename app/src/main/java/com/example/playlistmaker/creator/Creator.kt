@@ -1,30 +1,56 @@
 package com.example.playlistmaker.creator
 
+import android.app.Application
 import android.content.Context
-import com.example.playlistmaker.data.repository.NetworkRepositoryImpl
-import com.example.playlistmaker.data.audio_player.AudioPlayerRepositoryImpl
-import com.example.playlistmaker.data.remote_data_source.RemoteDataSourceImpl
-import com.example.playlistmaker.domain.use_cases_and_interactors.AudioInteractor
-import com.example.playlistmaker.domain.audioplayer.AudioPlayerRepository
-import com.example.playlistmaker.domain.repository.NetworkRepository
-import com.example.playlistmaker.domain.use_cases_and_interactors.AudioInteractorImpl
-import com.example.playlistmaker.domain.use_cases_and_interactors.SearchTrackUseCase
+import android.media.MediaPlayer
+import com.example.playlistmaker.search.data.impl.NetworkRepositoryImpl
+import com.example.playlistmaker.player.data.impl.AudioPlayerRepositoryImpl
+import com.example.playlistmaker.search.data.impl.RemoteDataSourceImpl
+import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
+import com.example.playlistmaker.search.domain.repository.NetworkRepository
+import com.example.playlistmaker.search.data.impl.SearchLocalStorageImpl
+import com.example.playlistmaker.search.data.impl.TracksHistoryRepositoryImpl
+import com.example.playlistmaker.search.data.local_storage.SearchLocalStorage
+import com.example.playlistmaker.search.domain.repository.TracksHistoryRepository
+import com.example.playlistmaker.search.domain.use_cases.SearchTrackUseCase
+
 
 object Creator {
 
-    fun provideAudioInteractor(): AudioInteractor {
-        return AudioInteractorImpl(getAudioPlayerClient())
+    private const val HISTORY_SHARED_PREFERENCES_FILE = "history_shared_preferences_file"
+
+    private lateinit var application: Application
+
+    fun getApplication(): Application {
+        return application
     }
 
-    private fun getAudioPlayerClient(): AudioPlayerRepository{
-        return AudioPlayerRepositoryImpl()
+    fun initApplicationContext(application: Application) {
+        this.application = application
     }
 
-    fun provideSearchTrackUseCase(context: Context): SearchTrackUseCase{
-        return SearchTrackUseCase(getNetworkRepository(context))
+    fun provideTracksHistoryRepository(): TracksHistoryRepository {
+        return TracksHistoryRepositoryImpl(getLocalStorage())
     }
 
-    private fun getNetworkRepository(context: Context): NetworkRepository{
-        return NetworkRepositoryImpl(RemoteDataSourceImpl(context))
+    fun provideAudioPlayer(): AudioPlayerRepository {
+        return AudioPlayerRepositoryImpl(MediaPlayer())
+    }
+
+    fun provideSearchTrackUseCase(): SearchTrackUseCase {
+        return SearchTrackUseCase(getNetworkRepository())
+    }
+
+    private fun getNetworkRepository(): NetworkRepository {
+        return NetworkRepositoryImpl(RemoteDataSourceImpl(application))
+    }
+
+    private fun getLocalStorage(): SearchLocalStorage {
+        return SearchLocalStorageImpl(
+            application.getSharedPreferences(
+                HISTORY_SHARED_PREFERENCES_FILE,
+                Context.MODE_PRIVATE
+            )
+        )
     }
 }
