@@ -4,11 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.application.App
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.settings.domain.SettingsRepository
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
 
@@ -20,19 +15,6 @@ class SettingsViewModel(
 
     init {
         themeSettingsLiveData.value = getThemeModSettings()
-    }
-
-    companion object {
-        fun getSettingsViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = Creator.getApplication() as App
-                SettingsViewModel(
-                    app,
-                    app.provideSettingsRepository(),
-                    MutableLiveData()
-                )
-            }
-        }
     }
 
     fun getThemeSettingsLiveData(): LiveData<ThemeSettings> = themeSettingsLiveData

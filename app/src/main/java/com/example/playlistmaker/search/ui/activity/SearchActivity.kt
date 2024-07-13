@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -17,7 +15,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -27,6 +24,7 @@ import com.example.playlistmaker.player.ui.activity.TRACK_INTENT_DATA
 import com.example.playlistmaker.search.ui.view_model.HistoryState
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -50,7 +48,7 @@ class SearchActivity : AppCompatActivity() {
     private val uiHandler: Handler = Handler(Looper.getMainLooper())
 
     private var isClickOnTrackAllowed = true
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
     private lateinit var binding: ActivitySearchBinding
 
 
@@ -59,10 +57,10 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getSearchViewModelFactory()
-        )[SearchViewModel::class.java]
+//        viewModel = ViewModelProvider(
+//            this,
+//            SearchViewModel.getSearchViewModelFactory()
+//        )[SearchViewModel::class.java]
         viewModel.getSearchStateLiveData().observe(this) {
             when (it) {
                 is SearchState.Content -> showContent(it.tracks)

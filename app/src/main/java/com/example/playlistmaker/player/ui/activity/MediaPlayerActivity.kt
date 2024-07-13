@@ -5,9 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
@@ -16,6 +14,9 @@ import com.example.playlistmaker.player.ui.mapper.TimeFormatter
 import com.example.playlistmaker.player.ui.mapper.TrackMapper
 import com.example.playlistmaker.player.ui.model.TrackInfo
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
+import org.koin.android.ext.android.getKoin
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.core.parameter.parametersOf
 
 const val TRACK_INTENT_DATA = "track_intent_data"
 
@@ -38,9 +39,7 @@ class MediaPlayerActivity : AppCompatActivity() {
             showTrackInfo(TrackMapper.map(it))
         }
 
-        viewModel = ViewModelProvider(
-            this, MediaPlayerViewModel.getMediaPlayerViewModelFactory(receivedTrack?.previewUrl)
-        )[MediaPlayerViewModel::class.java]
+        viewModel = getViewModel { parametersOf(receivedTrack?.previewUrl) }
 
 
         binding.buttonTopBack.setOnClickListener { finish() }

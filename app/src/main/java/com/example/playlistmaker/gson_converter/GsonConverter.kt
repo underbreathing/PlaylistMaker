@@ -2,10 +2,12 @@ package com.example.playlistmaker.gson_converter
 
 import com.example.playlistmaker.search.domain.model.Track
 import com.google.gson.Gson
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object GsonConverter {
+object GsonConverter: KoinComponent {
 
-    private val gson = Gson()
+    private val gson: Gson by inject()
 
     fun trackToJson(track: Track): String {
         return gson.toJson(track)
