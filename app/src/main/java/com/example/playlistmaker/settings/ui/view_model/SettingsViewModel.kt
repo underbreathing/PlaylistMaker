@@ -10,12 +10,10 @@ import com.example.playlistmaker.settings.domain.model.ThemeSettings
 class SettingsViewModel(
     application: Application,
     private val settingsRepository: SettingsRepository,
-    private val themeSettingsLiveData: MutableLiveData<ThemeSettings>
 ) : AndroidViewModel(application) {
 
-    init {
-        themeSettingsLiveData.value = getThemeModSettings()
-    }
+    private val themeSettingsLiveData: MutableLiveData<ThemeSettings> =
+        MutableLiveData(getThemeModSettings())
 
     fun getThemeSettingsLiveData(): LiveData<ThemeSettings> = themeSettingsLiveData
 

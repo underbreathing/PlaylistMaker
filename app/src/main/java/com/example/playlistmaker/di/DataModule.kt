@@ -3,6 +3,7 @@ package com.example.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import com.example.playlistmaker.application.KEY_THEME_FILE
+import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.search.data.impl.RemoteDataSourceImpl
 import com.example.playlistmaker.search.data.impl.SearchLocalStorageImpl
 import com.example.playlistmaker.search.data.local_storage.SearchLocalStorage
@@ -32,8 +33,8 @@ val dataModule = module {
         androidContext().getSharedPreferences(file, Context.MODE_PRIVATE)
     }
 
-    factory {
-        Gson()
+    single {
+        GsonConverter(Gson())
     }
 
     factory {

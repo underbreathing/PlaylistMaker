@@ -28,8 +28,14 @@ class App : Application() {
             androidContext(this@App)
             modules(dataModule, repositoryModule, useCaseModule, viewModelModule)
         }
-        sharedTheme = getKoin().get { parametersOf(KEY_THEME_FILE) }//getSharedPreferences(KEY_THEME_FILE, MODE_PRIVATE)
-        switchTheme(sharedTheme.getBoolean(KEY_IS_DARK_THEME, false))//при вызове этого метода устанавливается тема для всего приложения
+        sharedTheme =
+            getKoin().get { parametersOf(KEY_THEME_FILE) }//getSharedPreferences(KEY_THEME_FILE, MODE_PRIVATE)
+        switchTheme(
+            sharedTheme.getBoolean(
+                KEY_IS_DARK_THEME,
+                false
+            )
+        )//при вызове этого метода устанавливается тема для всего приложения
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
@@ -43,12 +49,4 @@ class App : Application() {
             }
         )
     }
-
-//    fun provideSettingsRepository(): SettingsRepository {
-//        return SettingsRepositoryImpl(this, getSettingsLocalStorage())
-//    }
-//
-//    private fun getSettingsLocalStorage(): SettingsLocalStorage {
-//        return SettingsLocalStorageImpl(sharedTheme)
-//    }
 }

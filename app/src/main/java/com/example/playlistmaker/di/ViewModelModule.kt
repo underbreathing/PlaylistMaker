@@ -19,7 +19,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        SettingsViewModel(androidApplication(), get(), MutableLiveData())
+        SettingsViewModel(androidApplication(), get())
     }
 
 
