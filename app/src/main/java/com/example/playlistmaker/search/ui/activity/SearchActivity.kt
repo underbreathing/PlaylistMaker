@@ -57,10 +57,6 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        viewModel = ViewModelProvider(
-//            this,
-//            SearchViewModel.getSearchViewModelFactory()
-//        )[SearchViewModel::class.java]
         viewModel.getSearchStateLiveData().observe(this) {
             when (it) {
                 is SearchState.Content -> showContent(it.tracks)

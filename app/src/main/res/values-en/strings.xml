@@ -26,4 +26,13 @@
     <string name="media_player_info_year">Year</string>
     <string name="media_player_info_genre">Genre</string>
     <string name="media_player_info_country">Country</string>
+
+<!--    media_library-->
+    <string name="media_selected_empty">Your media library is empty</string>
+    <string name="playlists_empty">You haven\'t created\nany playlists</string>
+    <string name="playlists">New playlist</string>
+    <string name="tab_item1">Selected tracks</string>
+    <string name="tab_item2">Playlists</string>
+
+
 </resources>
