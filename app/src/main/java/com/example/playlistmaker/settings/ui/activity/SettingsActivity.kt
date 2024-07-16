@@ -5,7 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
@@ -15,7 +15,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,9 +24,9 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this, SettingsViewModel.getSettingsViewModelFactory()
-        )[SettingsViewModel::class.java]
+//        viewModel = ViewModelProvider(
+//            this, SettingsViewModel.getSettingsViewModelFactory()
+//        )[SettingsViewModel::class.java]
 
         val switchTheme: SwitchMaterial = binding.settingsSwitchTheme
         viewModel.getThemeSettingsLiveData().observe(this) {

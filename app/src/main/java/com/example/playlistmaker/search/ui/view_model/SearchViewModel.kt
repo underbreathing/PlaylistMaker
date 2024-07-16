@@ -8,12 +8,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.model.Consumer
 import com.example.playlistmaker.search.domain.model.ConsumerData
 import com.example.playlistmaker.search.domain.model.Track
@@ -30,15 +25,6 @@ class SearchViewModel(
         const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
         const val MAX_HISTORY_SIZE = 10
-        fun getSearchViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(
-                    Creator.getApplication(),
-                    Creator.provideTracksHistoryRepository(),
-                    Creator.provideSearchTrackUseCase()
-                )
-            }
-        }
     }
 
     private val searchTextStateLiveData: MutableLiveData<String> = MutableLiveData()

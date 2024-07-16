@@ -5,11 +5,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.remote_data_source.RemoteDataSource
-import com.example.playlistmaker.search.data.remote_data_source.RetrofitClient
 import com.example.playlistmaker.search.data.dto.NetworkResponse
+import com.example.playlistmaker.search.data.remote_data_source.ITunesApi
 
 //
-class RemoteDataSourceImpl(private val context: Context) : RemoteDataSource {
+class RemoteDataSourceImpl(private val context: Context, private val iTunesService: ITunesApi) : RemoteDataSource {
 
     //Здесь задача только получить ответ, а не обработать его. Знает о типе ответа и обрабатывает его уже репозиторий
     override fun doRequest(dto: Any): NetworkResponse {
@@ -17,7 +17,7 @@ class RemoteDataSourceImpl(private val context: Context) : RemoteDataSource {
             NetworkResponse().apply { resultCode = -1 }
         } else {
             if (dto is TrackSearchRequest) {
-                val response = RetrofitClient.api.searchTrack(dto.request).execute()
+                val response = iTunesService.searchTrack(dto.request).execute()
                 val networkResponse: NetworkResponse = response.body() ?: NetworkResponse()
                 networkResponse.apply { resultCode = response.code() }
 
@@ -25,10 +25,6 @@ class RemoteDataSourceImpl(private val context: Context) : RemoteDataSource {
                 NetworkResponse().apply { resultCode = 400 }
             }
         }
-    }
-
-    override fun getContext(): Context {
-        return context
     }
 
     private fun isConnected(): Boolean {

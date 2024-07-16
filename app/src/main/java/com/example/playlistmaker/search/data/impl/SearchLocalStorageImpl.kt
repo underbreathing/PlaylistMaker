@@ -5,6 +5,7 @@ import androidx.core.content.edit
 import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.search.data.local_storage.SearchLocalStorage
 import com.example.playlistmaker.search.domain.model.Track
+import org.koin.java.KoinJavaComponent.getKoin
 
 class SearchLocalStorageImpl(private val sharedPrefs: SharedPreferences) : SearchLocalStorage {
 
@@ -13,7 +14,8 @@ class SearchLocalStorageImpl(private val sharedPrefs: SharedPreferences) : Searc
     }
 
     override fun getTracks(): List<Track> {
-        return GsonConverter.jsonToTrackList(sharedPrefs.getString(TRACKS_HISTORY_KEY, null))
+        return getKoin().get<GsonConverter>()
+            .jsonToTrackList(sharedPrefs.getString(TRACKS_HISTORY_KEY, null))
     }
 
     override fun clearStorage() {
@@ -41,7 +43,8 @@ class SearchLocalStorageImpl(private val sharedPrefs: SharedPreferences) : Searc
         if (modified) {
             sharedPrefs.edit {
                 putString(
-                    TRACKS_HISTORY_KEY, GsonConverter.trackListToGson(tracksHistoryMutable)
+                    TRACKS_HISTORY_KEY,
+                    getKoin().get<GsonConverter>().trackListToGson(tracksHistoryMutable)
                 )
             }
         }
