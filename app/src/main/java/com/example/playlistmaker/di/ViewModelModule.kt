@@ -1,6 +1,8 @@
 package com.example.playlistmaker.di
 
-import androidx.lifecycle.MutableLiveData
+
+import com.example.playlistmaker.media_library.ui.view_model.PlaylistsFragmentViewModel
+import com.example.playlistmaker.media_library.ui.view_model.SelectedTracksFragmentViewModel
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
@@ -20,6 +22,14 @@ val viewModelModule = module {
 
     viewModel {
         SettingsViewModel(androidApplication(), get())
+    }
+
+    viewModel {
+        PlaylistsFragmentViewModel()
+    }
+
+    viewModel {
+        SelectedTracksFragmentViewModel()
     }
 
 

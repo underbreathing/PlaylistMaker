@@ -38,7 +38,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         receivedTrack?.let {
             showTrackInfo(TrackMapper.map(it))
         }
-
+        
         viewModel = getViewModel { parametersOf(receivedTrack?.previewUrl) }
 
 

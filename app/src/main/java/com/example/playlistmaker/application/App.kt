@@ -29,7 +29,7 @@ class App : Application() {
             modules(dataModule, repositoryModule, useCaseModule, viewModelModule)
         }
         sharedTheme =
-            getKoin().get { parametersOf(KEY_THEME_FILE) }//getSharedPreferences(KEY_THEME_FILE, MODE_PRIVATE)
+            getKoin().get { parametersOf(KEY_THEME_FILE) }
         switchTheme(
             sharedTheme.getBoolean(
                 KEY_IS_DARK_THEME,

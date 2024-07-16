@@ -24,7 +24,7 @@
             android:configChanges="uiMode"
             android:exported="false" />
         <activity
-            android:name=".media_library.ui.MediaLibraryActivity"
+            android:name=".media_library.ui.activity.MediaLibraryActivity"
             android:exported="false" />
         <activity
             android:name=".settings.ui.activity.SettingsActivity"
