@@ -17,7 +17,9 @@ class SelectedTracksFragment: Fragment() {
     }
 
 
-    private lateinit var binding: FragmentSelectedTracksBinding
+    private var _binding: FragmentSelectedTracksBinding? = null
+    private val binding: FragmentSelectedTracksBinding get() = _binding!!
+
     private val viewModel: SelectedTracksFragmentViewModel by viewModel()
 
     override fun onCreateView(
@@ -25,8 +27,13 @@ class SelectedTracksFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSelectedTracksBinding.inflate(inflater,container,false)
+        _binding = FragmentSelectedTracksBinding.inflate(inflater,container,false)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

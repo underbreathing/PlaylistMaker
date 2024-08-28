@@ -33,6 +33,8 @@
     <string name="playlists">New playlist</string>
     <string name="tab_item1">Selected tracks</string>
     <string name="tab_item2">Playlists</string>
+    <string name="media_library_title">Media Library</string>
+
 
 
 </resources>

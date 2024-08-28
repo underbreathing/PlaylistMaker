@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fragmentSearch"
+        android:title="@string/search_title"
+        android:icon="@drawable/ic_search"
+        />
+
+    <item
+        android:id="@+id/fragmentMediaLibrary"
+        android:title="@string/media_library_title"
+        android:icon="@drawable/ic_media"
+        />
+
+    <item
+        android:id="@+id/fragmentSettings"
+        android:title="@string/settings_title"
+        android:icon="@drawable/ic_settings"
+        />
+
+</menu>
