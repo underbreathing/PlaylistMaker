@@ -9,10 +9,10 @@
 
 
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <TextView
         android:id="@+id/settings_button_back"
-        style="@style/toolbar_top_back"
-        app:title="@string/settings_title" />
+        style="@style/title_top_back"
+        android:text="@string/settings_title" />
 
 
     <FrameLayout

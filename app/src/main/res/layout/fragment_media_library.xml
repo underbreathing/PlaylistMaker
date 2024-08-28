@@ -7,12 +7,11 @@
     tools:context="com.example.playlistmaker.media_library.ui.fragment.FragmentMediaLibrary"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/button_top_back"
-        style="@style/toolbar_top_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/media_library_title" />
+
+    <TextView
+        android:text="@string/media_library_title"
+        style="@style/title_top_back"
+        />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/media_tabs"
