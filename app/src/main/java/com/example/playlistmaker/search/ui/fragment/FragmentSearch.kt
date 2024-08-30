@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.ui.activity
+package com.example.playlistmaker.search.ui.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -6,39 +6,32 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.model.Track
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
 import com.example.playlistmaker.player.ui.activity.TRACK_INTENT_DATA
+import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.view_model.HistoryState
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class FragmentSearch : Fragment() {
 
-    //search
+
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
     private val tracks = ArrayList<Track>()
     private lateinit var trackAdapter: TrackAdapter
-
-    //views
-    private lateinit var titleProblem: TextView
-    private lateinit var additionalMessage: TextView
-    private lateinit var buttonUpdate: Button
-    private lateinit var placeholder: ImageView
-    private lateinit var layoutPlaceholders: LinearLayout
-    private lateinit var searchProgressBar: ProgressBar
 
     //history
     private lateinit var tracksHistory: ArrayList<Track>
@@ -49,15 +42,22 @@ class SearchActivity : AppCompatActivity() {
 
     private var isClickOnTrackAllowed = true
     private val viewModel: SearchViewModel by viewModel()
-    private lateinit var binding: ActivitySearchBinding
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getSearchStateLiveData().observe(this) {
+        val context = requireContext()
+
+        viewModel.getSearchStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchState.Content -> showContent(it.tracks)
                 is SearchState.Empty -> showEmpty(it.message)
@@ -69,7 +69,7 @@ class SearchActivity : AppCompatActivity() {
             onClickTrack(it)
         }
 
-        viewModel.getHistoryStateLiveData().observe(this) {
+        viewModel.getHistoryStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 HistoryState.EmptyHistory -> {
                     showEmptyHistory()
@@ -87,10 +87,8 @@ class SearchActivity : AppCompatActivity() {
 
         val searchTracksRecycler = binding.searchTracksRecycler
         searchTracksRecycler.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         searchTracksRecycler.adapter = trackAdapter
-
-        binding.searchButtonBack.setOnClickListener { finish() }
 
 
         val inputLine = binding.searchInputLine
@@ -98,24 +96,16 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             inputLine.setText("")
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputLine.windowToken, 0)
             clearTrackList()
         }
 
-        buttonUpdate = binding.buttonUpdate
-        titleProblem = binding.problemTitle
-        additionalMessage = binding.problemAdditionalMessage
-        placeholder = binding.problemImage
-        layoutPlaceholders = binding.layoutPlaceholders
-        searchProgressBar = binding.searchProgressBar
-
-
-        buttonUpdate.setOnClickListener {
+        binding.buttonUpdate.setOnClickListener {
             viewModel.search(inputLine.text.toString())
         }
 
-        viewModel.getSearchTextLiveData().observe(this) { newSearchText ->
+        viewModel.getSearchTextLiveData().observe(viewLifecycleOwner) { newSearchText ->
             clearButton.isVisible = newSearchText.isNotEmpty()
             binding.layoutHistory.isVisible =
                 newSearchText.isEmpty() && inputLine.hasFocus() && tracksHistory.isNotEmpty()
@@ -140,7 +130,7 @@ class SearchActivity : AppCompatActivity() {
             onClickTrack(it)
         }
         recyclerHistory.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerHistory.adapter = trackAdapterHistory
 
         inputLine.setOnFocusChangeListener { _, hasFocus ->
@@ -152,6 +142,12 @@ class SearchActivity : AppCompatActivity() {
         buttonClearHistory.setOnClickListener {
             viewModel.clearHistory()
         }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showAddNewUniqueTrack(it: HistoryState.NewUniqueTrack) {
@@ -188,7 +184,7 @@ class SearchActivity : AppCompatActivity() {
     private fun onClickTrack(currentTrack: Track) {
         if (clickDebounce()) {
             viewModel.purTrackInHistory(currentTrack)
-            val intent = Intent(this, MediaPlayerActivity::class.java)
+            val intent = Intent(context, MediaPlayerActivity::class.java)
 
             intent.putExtra(TRACK_INTENT_DATA, currentTrack)
             startActivity(intent)
@@ -213,16 +209,16 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showLoading() {
         clearPlaceholdersVisibility()
-        searchProgressBar.isVisible = true
+        binding.searchProgressBar.isVisible = true
     }
 
     private fun showError(message: String, additionalMessage: String = "") {
-        searchProgressBar.isVisible = false
+        binding.searchProgressBar.isVisible = false
         showMessage(message, additionalMessage, R.drawable.no_internet, true)
     }
 
     private fun showEmpty(message: String) {
-        searchProgressBar.isVisible = false
+        binding.searchProgressBar.isVisible = false
         clearPlaceholdersVisibility()
         tracks.clear()
         showMessage(message, "", R.drawable.tracks_not_found)
@@ -230,7 +226,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showContent(content: List<Track>) {
         Log.d("MYY", "showContent invoked")
-        searchProgressBar.isVisible = false
+        binding.searchProgressBar.isVisible = false
         clearPlaceholdersVisibility()
         tracks.clear()
         tracks.addAll(content)
@@ -238,16 +234,16 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearPlaceholdersVisibility() {
-        titleProblem.isVisible = false
-        placeholder.isVisible = false
-        additionalMessage.isVisible = false
-        buttonUpdate.isVisible = false
-        layoutPlaceholders.isVisible = false
+        binding.problemTitle.isVisible = false
+        binding.problemImage.isVisible = false
+        binding.problemAdditionalMessage.isVisible = false
+        binding.buttonUpdate.isVisible = false
+        binding.layoutPlaceholders.isVisible = false
     }
 
     private fun setTitlesVisibility(titlesVisibility: Boolean) {
-        titleProblem.isVisible = titlesVisibility
-        placeholder.isVisible = titlesVisibility
+        binding.problemTitle.isVisible = titlesVisibility
+        binding.problemImage.isVisible = titlesVisibility
     }
 
     private fun showMessage(
@@ -257,18 +253,18 @@ class SearchActivity : AppCompatActivity() {
         internetProblem: Boolean = false
     ) {
         if (title.isNotEmpty()) {
-            layoutPlaceholders.isVisible = true
+            binding.layoutPlaceholders.isVisible = true
             tracks.clear()
             trackAdapter.notifyDataSetChanged()
-            titleProblem.text = title
-            placeholder.setImageResource(imageId)
+            binding.problemTitle.text = title
+            binding.problemImage.setImageResource(imageId)
             setTitlesVisibility(true)
             if (additional.isNotEmpty()) {
-                additionalMessage.text = additional
-                additionalMessage.isVisible = true
+                binding.problemAdditionalMessage.text = additional
+                binding.problemAdditionalMessage.isVisible = true
             }
             if (internetProblem) {
-                buttonUpdate.isVisible = true
+                binding.buttonUpdate.isVisible = true
             }
         }
     }
@@ -277,5 +273,4 @@ class SearchActivity : AppCompatActivity() {
         const val CLICK_DEBOUNCE_DELAY = 1000L
 
     }
-
 }

@@ -42,4 +42,7 @@
     <string name="tab_item1">Избранные треки</string>
     <string name="tab_item2">Плейлисты</string>
 
+
+    <string name="media_library_title">Медиатека</string>
+
 </resources>

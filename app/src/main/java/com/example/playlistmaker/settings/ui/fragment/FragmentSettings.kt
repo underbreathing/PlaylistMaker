@@ -1,47 +1,48 @@
-package com.example.playlistmaker.settings.ui.activity
+package com.example.playlistmaker.settings.ui.fragment
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
-import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
 import com.example.playlistmaker.settings.ui.model.EmailData
+import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class FragmentSettings : Fragment() {
 
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding: FragmentSettingsBinding get() = _binding!!
     private val viewModel: SettingsViewModel by viewModel()
-    private lateinit var binding: ActivitySettingsBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("MYY", "activity rebuild")
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-//        viewModel = ViewModelProvider(
-//            this, SettingsViewModel.getSettingsViewModelFactory()
-//        )[SettingsViewModel::class.java]
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val switchTheme: SwitchMaterial = binding.settingsSwitchTheme
-        viewModel.getThemeSettingsLiveData().observe(this) {
-            Log.d("MYY", "getFromViewModel")
+        viewModel.getThemeSettingsLiveData().observe(viewLifecycleOwner) {
             switchTheme.isChecked = it.isDarkThemeEnabled
         }
 
         switchTheme.setOnCheckedChangeListener { _, isChecked ->
-            Log.d("MYY", "switch")
             viewModel.switchTheme(ThemeSettings(isChecked))
         }
 
-        binding.settingsButtonBack.setOnClickListener {
-            finish()
-        }
 
         binding.settingsButtonShare.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
@@ -93,5 +94,10 @@ class SettingsActivity : AppCompatActivity() {
             )
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

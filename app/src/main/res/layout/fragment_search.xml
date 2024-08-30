@@ -4,19 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    tools:context="com.example.playlistmaker.search.ui.fragment.FragmentSearch"
     android:orientation="vertical">
 
 
-    <com.google.android.material.appbar.MaterialToolbar
-        style="@style/toolbar_top_back"
-        app:title="@string/search_title"
+    <TextView
+        style="@style/title_top_back"
+        android:text="@string/search_title"
         android:id="@+id/search_button_back"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/search_button_back"-->
-<!--        style="@style/button_top_back"-->
-<!--        android:text="@string/search_title" />-->
-
+    
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

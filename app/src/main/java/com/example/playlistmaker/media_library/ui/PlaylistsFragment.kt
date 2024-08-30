@@ -15,7 +15,12 @@ class PlaylistsFragment : Fragment() {
         fun getInstance(): PlaylistsFragment = PlaylistsFragment()
     }
 
-    private lateinit var binding: FragmentPlaylistsBinding
+    private var _binding: FragmentPlaylistsBinding? = null
+    private val binding: FragmentPlaylistsBinding
+        get() {
+            return _binding!!
+        }
+
     private val viewModel: PlaylistsFragmentViewModel by viewModel()
 
     override fun onCreateView(
@@ -23,7 +28,12 @@ class PlaylistsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -20,17 +20,8 @@
             android:name=".player.ui.activity.MediaPlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".search.ui.activity.SearchActivity"
-            android:configChanges="uiMode"
-            android:exported="false" />
-        <activity
-            android:name=".media_library.ui.activity.MediaLibraryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.ui.activity.SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".main.ui.activity.MainActivity"
+            android:name=".root_activity.RootActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
