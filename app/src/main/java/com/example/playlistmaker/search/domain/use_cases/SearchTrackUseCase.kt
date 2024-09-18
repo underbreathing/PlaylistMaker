@@ -7,5 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 class SearchTrackUseCase(private val repository: NetworkRepository) {
 
-    fun execute(request: String): Flow<Resource<List<Track>>> = repository.searchTracks(request)
+    operator fun invoke(request: String): Flow<Resource<List<Track>>> =
+        repository.searchTracks(request)
 }

@@ -93,7 +93,7 @@ class SearchViewModel(
             renderSearchState(SearchState.IsLoading)
 
             viewModelScope.launch {
-                searchTrackUseCase.execute(searchQuery).collect { receivedData ->
+                searchTrackUseCase(searchQuery).collect { receivedData ->
                     when (receivedData) {
                         is Resource.Success -> {
                             processSuccess(receivedData)
