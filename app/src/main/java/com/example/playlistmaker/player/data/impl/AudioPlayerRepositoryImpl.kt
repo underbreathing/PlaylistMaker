@@ -2,6 +2,10 @@ package com.example.playlistmaker.player.data.impl
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AudioPlayerRepositoryImpl(private val player: MediaPlayer) : AudioPlayerRepository {
 
@@ -16,7 +20,7 @@ class AudioPlayerRepositoryImpl(private val player: MediaPlayer) : AudioPlayerRe
         PAUSED
     }
 
-    private var updateProgressTask: Thread? = null
+    private var updateProgressJob: Job? = null
     private var playerState = State.DEFAULT
     override fun preparePlayer(
         dataSource: String,
@@ -29,29 +33,24 @@ class AudioPlayerRepositoryImpl(private val player: MediaPlayer) : AudioPlayerRe
             playerState = State.PREPARED
         }
         player.setOnCompletionListener {
-            updateProgressTask?.interrupt()
+            updateProgressJob?.cancel()
             onCompletion()
             playerState = State.PREPARED
         }
         player.prepareAsync()
     }
 
-    override fun playToggle(statusObserver: AudioPlayerRepository.StatusObserver) {
+    override fun playToggle(
+        statusObserver: AudioPlayerRepository.StatusObserver,
+        viewModelScope: CoroutineScope
+    ) {
         when (playerState) {
             State.PREPARED, State.PAUSED -> {
                 startPlayer { statusObserver.onPlay() }
                 //запускаем обновление прогресса
-                updateProgressTask = Thread {
-                    while (!Thread.interrupted()) {
-                        try {
-                            Thread.sleep(PROGRESS_UPDATE_DELAY) // обработать возможное исключение?
-                        } catch (exception: InterruptedException) {
-                            break
-                        }
-                        updateProgress(statusObserver)
-                    }
+                startTimer(viewModelScope) { progress: Int ->
+                    statusObserver.onProgress(progress)
                 }
-                updateProgressTask?.start()
             }
 
             State.PLAYING -> pausePlayer { statusObserver.onStop() }
@@ -59,20 +58,28 @@ class AudioPlayerRepositoryImpl(private val player: MediaPlayer) : AudioPlayerRe
         }
     }
 
+    private fun startTimer(
+        scope: CoroutineScope,
+        onProgress: (Int) -> Unit
+    ) {
+        updateProgressJob = scope.launch {
+            while (true) {
+                delay(PROGRESS_UPDATE_DELAY)
+                onProgress(player.currentPosition)
+            }
+        }
+    }
+
     override fun pausePlayer(onPaused: () -> Unit) {
         player.pause()
         //прерываем задачу обновления трека
-        updateProgressTask?.interrupt()
+        updateProgressJob?.cancel()
         playerState = State.PAUSED
         onPaused()
     }
 
     override fun releasePlayer() {
         player.release()
-    }
-
-    private fun updateProgress(statusObserver: AudioPlayerRepository.StatusObserver) {
-        statusObserver.onProgress(player.currentPosition)
     }
 
     private fun startPlayer(onStarted: () -> Unit) {

@@ -7,22 +7,28 @@ import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.remote_data_source.RemoteDataSource
 import com.example.playlistmaker.search.data.dto.NetworkResponse
 import com.example.playlistmaker.search.data.remote_data_source.ITunesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 //
-class RemoteDataSourceImpl(private val context: Context, private val iTunesService: ITunesApi) : RemoteDataSource {
+class RemoteDataSourceImpl(private val context: Context, private val iTunesService: ITunesApi) :
+    RemoteDataSource {
 
     //Здесь задача только получить ответ, а не обработать его. Знает о типе ответа и обрабатывает его уже репозиторий
-    override fun doRequest(dto: Any): NetworkResponse {
+    override suspend fun doRequest(dto: Any): NetworkResponse {
         return if (!isConnected()) {
             NetworkResponse().apply { resultCode = -1 }
         } else {
-            if (dto is TrackSearchRequest) {
-                val response = iTunesService.searchTrack(dto.request).execute()
-                val networkResponse: NetworkResponse = response.body() ?: NetworkResponse()
-                networkResponse.apply { resultCode = response.code() }
-
-            } else {
-                NetworkResponse().apply { resultCode = 400 }
+            withContext(Dispatchers.IO) {
+                try {
+                    if (dto is TrackSearchRequest) {
+                        iTunesService.searchTrack(dto.request).apply { resultCode = 200 }
+                    } else {
+                        NetworkResponse().apply { resultCode = 400 }
+                    }
+                } catch (e: Throwable) {
+                    NetworkResponse().apply { resultCode = 500 }
+                }
             }
         }
     }
