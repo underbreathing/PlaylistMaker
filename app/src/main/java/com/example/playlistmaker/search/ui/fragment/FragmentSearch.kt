@@ -3,8 +3,6 @@ package com.example.playlistmaker.search.ui.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +11,11 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
 import com.example.playlistmaker.player.ui.activity.TRACK_INTENT_DATA
 import com.example.playlistmaker.search.domain.model.Track
@@ -38,9 +38,7 @@ class FragmentSearch : Fragment() {
     private lateinit var trackAdapterHistory: TrackAdapter
 
     //...
-    private val uiHandler: Handler = Handler(Looper.getMainLooper())
 
-    private var isClickOnTrackAllowed = true
     private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreateView(
@@ -57,7 +55,18 @@ class FragmentSearch : Fragment() {
 
         val context = requireContext()
 
-        viewModel.getSearchStateLiveData().observe(viewLifecycleOwner) {
+        val trackDebounce: (Track) -> Unit = debounce(
+            false, viewLifecycleOwner.lifecycleScope,
+            CLICK_DEBOUNCE_DELAY
+        ) { track: Track ->
+            viewModel.purTrackInHistory(track)
+            val intent = Intent(context, MediaPlayerActivity::class.java)
+
+            intent.putExtra(TRACK_INTENT_DATA, track)
+            startActivity(intent)
+        }
+
+        viewModel.observeSearchStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchState.Content -> showContent(it.tracks)
                 is SearchState.Empty -> showEmpty(it.message)
@@ -66,7 +75,7 @@ class FragmentSearch : Fragment() {
             }
         }
         trackAdapter = TrackAdapter(tracks) {
-            onClickTrack(it)
+            trackDebounce(it)
         }
 
         viewModel.getHistoryStateLiveData().observe(viewLifecycleOwner) {
@@ -105,7 +114,7 @@ class FragmentSearch : Fragment() {
             viewModel.search(inputLine.text.toString())
         }
 
-        viewModel.getSearchTextLiveData().observe(viewLifecycleOwner) { newSearchText ->
+        viewModel.observeSearchTextLiveData().observe(viewLifecycleOwner) { newSearchText ->
             clearButton.isVisible = newSearchText.isNotEmpty()
             binding.layoutHistory.isVisible =
                 newSearchText.isEmpty() && inputLine.hasFocus() && tracksHistory.isNotEmpty()
@@ -127,7 +136,7 @@ class FragmentSearch : Fragment() {
         tracksHistory = ArrayList(viewModel.getTracksHistory())
         trackAdapterHistory = TrackAdapter(tracksHistory)
         {
-            onClickTrack(it)
+            trackDebounce(it)
         }
         recyclerHistory.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -179,25 +188,6 @@ class FragmentSearch : Fragment() {
         tracksHistory.add(0, track)
         trackAdapterHistory.notifyItemInserted(0)
         trackAdapterHistory.notifyItemRangeChanged(0, tracksHistory.size)
-    }
-
-    private fun onClickTrack(currentTrack: Track) {
-        if (clickDebounce()) {
-            viewModel.purTrackInHistory(currentTrack)
-            val intent = Intent(context, MediaPlayerActivity::class.java)
-
-            intent.putExtra(TRACK_INTENT_DATA, currentTrack)
-            startActivity(intent)
-        }
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickOnTrackAllowed
-        if (isClickOnTrackAllowed) {
-            isClickOnTrackAllowed = false
-            uiHandler.postDelayed({ isClickOnTrackAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
     }
 
     private fun clearTrackList() {

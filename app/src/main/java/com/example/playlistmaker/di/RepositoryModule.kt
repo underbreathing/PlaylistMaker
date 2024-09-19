@@ -8,6 +8,7 @@ import com.example.playlistmaker.search.domain.repository.NetworkRepository
 import com.example.playlistmaker.search.domain.repository.TracksHistoryRepository
 import com.example.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.SettingsRepository
+import kotlinx.coroutines.coroutineScope
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 

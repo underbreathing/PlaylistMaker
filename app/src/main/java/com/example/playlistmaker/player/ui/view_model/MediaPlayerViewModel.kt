@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
 import com.example.playlistmaker.player.ui.view_model.model.PlayStatus
 
@@ -41,21 +42,23 @@ class MediaPlayerViewModel(
     fun getMediaPlayerStateLiveData(): LiveData<MediaPlayerState> = mediaPlayerStateLiveData
 
     fun playToggle() {
-        audioPlayerRepository.playToggle(object : AudioPlayerRepository.StatusObserver {
-            override fun onProgress(progress: Int) {
-                //используем post, т.к это вызывается в отдельном потоке в AudioPlayerRepositoryImpl
-                playStatusLiveData.postValue(getCurrentPlayStatus().copy(progress = progress))
-            }
+        audioPlayerRepository.playToggle(
+            object : AudioPlayerRepository.StatusObserver {
+                override fun onProgress(progress: Int) {
+                    playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress)
+                }
 
-            override fun onStop() {
-                playStatusLiveData.postValue(getCurrentPlayStatus().copy(isPlaying = false))
+                override fun onStop() {
+                    playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = false)
 
-            }
+                }
 
-            override fun onPlay() {
-                playStatusLiveData.postValue(getCurrentPlayStatus().copy(isPlaying = true))
-            }
-        })
+                override fun onPlay() {
+                    playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = true)
+                }
+            },
+            viewModelScope
+        )
     }
 
     private fun getCurrentPlayStatus(): PlayStatus {

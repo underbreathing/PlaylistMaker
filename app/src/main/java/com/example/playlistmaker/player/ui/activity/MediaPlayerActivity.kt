@@ -14,7 +14,6 @@ import com.example.playlistmaker.player.ui.mapper.TimeFormatter
 import com.example.playlistmaker.player.ui.mapper.TrackMapper
 import com.example.playlistmaker.player.ui.model.TrackInfo
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
-import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -38,7 +37,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         receivedTrack?.let {
             showTrackInfo(TrackMapper.map(it))
         }
-        
+
         viewModel = getViewModel { parametersOf(receivedTrack?.previewUrl) }
 
 

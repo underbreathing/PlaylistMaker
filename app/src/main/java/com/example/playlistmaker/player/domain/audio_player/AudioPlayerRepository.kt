@@ -1,5 +1,7 @@
 package com.example.playlistmaker.player.domain.audio_player
 
+import kotlinx.coroutines.CoroutineScope
+
 interface AudioPlayerRepository {
 
     fun preparePlayer(
@@ -8,7 +10,7 @@ interface AudioPlayerRepository {
         onCompletion: () -> Unit
     )
 
-    fun playToggle(statusObserver: StatusObserver)
+    fun playToggle(statusObserver: StatusObserver, viewModelScope: CoroutineScope)
 
     fun pausePlayer(onPaused: () -> Unit)
 
