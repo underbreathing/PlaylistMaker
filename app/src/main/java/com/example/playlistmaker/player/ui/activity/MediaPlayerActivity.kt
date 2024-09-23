@@ -5,11 +5,13 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
+import com.example.playlistmaker.player.ui.animations.PlayerAnimations
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.player.ui.mapper.TimeFormatter
 import com.example.playlistmaker.player.ui.mapper.TrackMapper
@@ -33,6 +35,7 @@ class MediaPlayerActivity : AppCompatActivity() {
     private lateinit var viewModel: MediaPlayerViewModel
     private val trackMapper by inject<TrackMapper>()
     private var isTrackInMediaLibrary: Boolean = false
+    private val playerAnimations by inject<PlayerAnimations>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +58,11 @@ class MediaPlayerActivity : AppCompatActivity() {
         viewModel.observeTrackInMediaLibrary().observe(this) { isInMediaLibrary ->
             isTrackInMediaLibrary = isInMediaLibrary
             if (isInMediaLibrary) {
-                binding.buttonLike.setImageResource(R.drawable.ic_like_layer_checked)
+                binding.likeInner.setImageResource(R.drawable.ic_inner_like_checked)
             } else {
-                binding.buttonLike.setImageResource(R.drawable.ic_like_layer)
+                binding.likeInner.setImageResource(R.drawable.ic_inner_like)
             }
+            playerAnimations.animateInnerLikeIn(binding.likeInner)
         }
 
         binding.buttonTopBack.setOnClickListener {
@@ -100,6 +104,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
 
         binding.buttonLike.setOnClickListener {
+            playerAnimations.animateInnerLikeOut(binding.likeInner)
             if (isTrackInMediaLibrary) {
                 viewModel.deleteFromMediaLibrary(currentTrack.trackId)
             } else {
@@ -112,6 +117,8 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
 
     }
+
+
 
     override fun onPause() {
         viewModel.pausePlayer()
