@@ -129,7 +129,11 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
         binding.genre.text = trackInfo.genre
         binding.country.text = trackInfo.country
-        binding.year.text = trackInfo.releaseYear
+        val releaseYear = trackInfo.releaseYear
+        if(releaseYear.isNotEmpty()) {
+            binding.releaseDateGroup.isVisible = true
+            binding.year.text = releaseYear
+        }
         binding.playerTrackName.text = trackInfo.trackName
         binding.nameOfTheBand.text = trackInfo.nameOfTheBand
         binding.duration.text = trackInfo.duration

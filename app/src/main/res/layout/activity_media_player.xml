@@ -166,6 +166,13 @@
         android:visibility="gone"
         app:constraint_referenced_ids="album,album_label" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/releaseDateGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="year,year_label" />
+
     <TextView
         android:id="@+id/album_label"
         style="@style/textRegular13Gray"
