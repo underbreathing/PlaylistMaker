@@ -4,27 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.example.playlistmaker.media_library.ui.FavoriteTracksFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMediaLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        tools:listitem="@layout/track" />
 
     <ImageView
-        android:id="@+id/media_selected_tracks_placeholder"
+        android:id="@+id/placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="106dp"
-        android:src="@drawable/tracks_not_found" />
+        android:src="@drawable/tracks_not_found"
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/problem_additional_message"
+        android:id="@+id/placeholder_additional_message"
         style="@style/text400YsMedium19"
-        android:layout_marginHorizontal="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="@string/media_selected_empty"
-        />
+        android:visibility="gone"
+        tools:text="@string/media_favorite_empty" />
 
 
 </LinearLayout>

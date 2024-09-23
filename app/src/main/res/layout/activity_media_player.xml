@@ -95,7 +95,7 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="51dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_like"
+        android:src="@drawable/ic_like_layer"
         app:layout_constraintBottom_toBottomOf="@+id/button_play"
         app:layout_constraintEnd_toStartOf="@+id/guide_right"
         app:layout_constraintStart_toEndOf="@+id/button_play"

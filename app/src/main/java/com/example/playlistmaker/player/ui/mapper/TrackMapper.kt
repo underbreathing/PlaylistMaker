@@ -4,7 +4,7 @@ package com.example.playlistmaker.player.ui.mapper
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.player.ui.model.TrackInfo
 
-object TrackMapper {
+class TrackMapper {
 
     fun map(track: Track): TrackInfo {
         var releaseDate = track.releaseDate

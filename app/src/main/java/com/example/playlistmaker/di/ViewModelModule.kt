@@ -2,18 +2,22 @@ package com.example.playlistmaker.di
 
 
 import com.example.playlistmaker.media_library.ui.view_model.PlaylistsFragmentViewModel
-import com.example.playlistmaker.media_library.ui.view_model.SelectedTracksFragmentViewModel
+import com.example.playlistmaker.media_library.ui.view_model.FavoriteTracksViewModel
+import com.example.playlistmaker.player.ui.mapper.TrackMapper
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { (dataSource: String?) ->
-        MediaPlayerViewModel(get(), dataSource)
+    single { TrackMapper() }
+
+    viewModel { (dataSource: String?, trackId: Long) ->
+        MediaPlayerViewModel(get(), dataSource, get(), trackId)
     }
 
     viewModel {
@@ -29,7 +33,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        SelectedTracksFragmentViewModel()
+        FavoriteTracksViewModel(get(), androidContext())
     }
 
 

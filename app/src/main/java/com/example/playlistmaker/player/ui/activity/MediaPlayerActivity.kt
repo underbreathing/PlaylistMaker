@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
@@ -14,34 +15,55 @@ import com.example.playlistmaker.player.ui.mapper.TimeFormatter
 import com.example.playlistmaker.player.ui.mapper.TrackMapper
 import com.example.playlistmaker.player.ui.model.TrackInfo
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
-const val TRACK_INTENT_DATA = "track_intent_data"
 
 class MediaPlayerActivity : AppCompatActivity() {
 
+    companion object {
+        const val TRACK_INTENT_DATA = "track_intent_data"
+        fun createArgs(track: Track): Bundle = bundleOf(
+            TRACK_INTENT_DATA to track
+        )
+    }
+
     private lateinit var binding: ActivityMediaPlayerBinding
     private lateinit var viewModel: MediaPlayerViewModel
+    private val trackMapper by inject<TrackMapper>()
+    private var isTrackInMediaLibrary: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val receivedTrack = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(TRACK_INTENT_DATA, Track::class.java)
-        } else {
-            intent.getParcelableExtra(TRACK_INTENT_DATA)
-        })
-        receivedTrack?.let {
-            showTrackInfo(TrackMapper.map(it))
+        //я переживаю что постоянные ?.let это плохо и поэтому решил использовать requireNotNull
+        val currentTrack = requireNotNull(
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(TRACK_INTENT_DATA, Track::class.java)
+            } else {
+                intent.getParcelableExtra(TRACK_INTENT_DATA)
+            })
+        )
+
+        showTrackInfo(trackMapper.map(currentTrack))
+
+        viewModel = getViewModel { parametersOf(currentTrack.previewUrl, currentTrack.trackId) }
+
+        viewModel.observeTrackInMediaLibrary().observe(this) { isInMediaLibrary ->
+            isTrackInMediaLibrary = isInMediaLibrary
+            if (isInMediaLibrary) {
+                binding.buttonLike.setImageResource(R.drawable.ic_like_layer_checked)
+            } else {
+                binding.buttonLike.setImageResource(R.drawable.ic_like_layer)
+            }
         }
 
-        viewModel = getViewModel { parametersOf(receivedTrack?.previewUrl) }
-
-
-        binding.buttonTopBack.setOnClickListener { finish() }
+        binding.buttonTopBack.setOnClickListener {
+            finish()
+        }
         val playButton = binding.buttonPlay
         playButton.isEnabled = false
         val trackCurrentTime = binding.trackCurrentTime
@@ -76,6 +98,19 @@ class MediaPlayerActivity : AppCompatActivity() {
         playButton.setOnClickListener {
             viewModel.playToggle()
         }
+
+        binding.buttonLike.setOnClickListener {
+            if (isTrackInMediaLibrary) {
+                viewModel.deleteFromMediaLibrary(currentTrack.trackId)
+            } else {
+                viewModel.saveTrackToMediaLibrary(
+                    currentTrack,
+                    System.currentTimeMillis()
+                )
+            }
+
+        }
+
     }
 
     override fun onPause() {

@@ -1,0 +1,114 @@
+package com.example.playlistmaker.media_library.ui
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
+import com.example.playlistmaker.media_library.ui.view_model.FavoriteTracksViewModel
+import com.example.playlistmaker.media_library.ui.view_model.state.MediaLibraryDataState
+import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
+import com.example.playlistmaker.search.domain.model.Track
+import com.example.playlistmaker.search.ui.fragment.TrackAdapter
+import com.example.playlistmaker.utils.debounce
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+
+class FavoriteTracksFragment : Fragment() {
+
+    companion object {
+        fun getInstance(): FavoriteTracksFragment = FavoriteTracksFragment()
+    }
+
+
+    private var _binding: FragmentFavoriteTracksBinding? = null
+    private val binding: FragmentFavoriteTracksBinding get() = _binding!!
+
+    private val viewModel: FavoriteTracksViewModel by viewModel()
+
+    private val tracks = ArrayList<Track>()
+    private lateinit var trackAdapter: TrackAdapter
+    private var isClickAllowed: Boolean = true
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        trackAdapter = TrackAdapter(tracks) {
+            trackDebounce(it)
+        }
+
+        viewModel.observeMediaLibraryData().observe(viewLifecycleOwner) {
+            when (it) {
+                is MediaLibraryDataState.Content -> showContent(it.tracks)
+                is MediaLibraryDataState.Empty -> showEmpty(it.message)
+            }
+        }
+
+        binding.rvMediaLibrary.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvMediaLibrary.adapter = trackAdapter
+    }
+
+    override fun onStart() {
+        super.onStart()
+        //обновляю здесь, а не в onCreate, т.к иначе в кейсе
+        // (медиатека -> трек -> убрать из избранного -> медиатека) трек не обновляется
+        viewModel.fillData()
+    }
+
+    private fun trackDebounce(track: Track) {
+        if (isClickAllowed) {
+            isClickAllowed = false
+            debounce<Boolean>(
+                false, viewLifecycleOwner.lifecycleScope,
+                TrackAdapter.CLICK_DEBOUNCE_DELAY
+            ) { value ->
+                isClickAllowed = value
+            }.invoke(true)
+            findNavController().navigate(
+                R.id.action_fragmentMediaLibrary_to_mediaPlayerActivity,
+                MediaPlayerActivity.createArgs(track)
+            )
+        }
+    }
+
+    private fun showEmpty(message: String) {
+        binding.rvMediaLibrary.isVisible = false
+        setPlaceholdersVisibility(true)
+        binding.placeholderAdditionalMessage.text = message
+    }
+
+    private fun setPlaceholdersVisibility(visibility: Boolean) {
+        binding.placeholder.isVisible = visibility
+        binding.placeholderAdditionalMessage.isVisible = visibility
+    }
+
+    private fun showContent(tracks: List<Track>) {
+        setPlaceholdersVisibility(false)
+        binding.rvMediaLibrary.isVisible = true
+        this.tracks.clear()
+        this.tracks.addAll(tracks)
+        trackAdapter.notifyDataSetChanged()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+}
