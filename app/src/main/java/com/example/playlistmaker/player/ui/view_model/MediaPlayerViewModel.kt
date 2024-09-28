@@ -20,7 +20,7 @@ class MediaPlayerViewModel(
 
     init {
         Log.d("MYPLAYER", "view model init")
-        if (dataSource?.isNotEmpty() == true) {
+        if (!dataSource.isNullOrEmpty()) {
             preparePlayer(dataSource)
         }
         checkIsTrackInMediaLibrary(trackId)

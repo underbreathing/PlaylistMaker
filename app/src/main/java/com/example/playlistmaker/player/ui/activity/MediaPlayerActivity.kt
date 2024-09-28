@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -42,7 +43,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //я переживаю что постоянные ?.let это плохо и поэтому решил использовать requireNotNull
+
         val currentTrack = requireNotNull(
             (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(TRACK_INTENT_DATA, Track::class.java)

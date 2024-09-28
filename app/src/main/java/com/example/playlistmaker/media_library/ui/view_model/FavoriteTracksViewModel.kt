@@ -17,8 +17,11 @@ class FavoriteTracksViewModel(
 ) : ViewModel() {
 
     private val mediaLibraryDataState: MutableLiveData<MediaLibraryDataState> = MutableLiveData()
+    init {
+        fillData()
+    }
 
-    fun fillData() {
+    private fun fillData() {
         viewModelScope.launch(Dispatchers.IO) {
             mediaLibraryRepository.getMediaLibrary().collect { data ->
                 if (data.isEmpty()) {

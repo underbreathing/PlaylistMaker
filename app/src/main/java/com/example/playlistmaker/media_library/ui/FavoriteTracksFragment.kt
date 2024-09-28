@@ -55,12 +55,6 @@ class FavoriteTracksFragment : Fragment() {
         binding.rvMediaLibrary.adapter = trackAdapter
     }
 
-    override fun onStart() {
-        super.onStart()
-        //обновляю здесь, а не в onCreate, т.к иначе в кейсе
-        // (медиатека -> трек -> убрать из избранного -> медиатека) трек не обновляется
-        viewModel.fillData()
-    }
 
     private fun trackDebounce(track: Track) {
         if (isClickAllowed) {

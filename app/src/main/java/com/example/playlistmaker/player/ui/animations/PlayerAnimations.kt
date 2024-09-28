@@ -1,6 +1,8 @@
 package com.example.playlistmaker.player.ui.animations
 
+import android.graphics.Interpolator
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 
 
 class PlayerAnimations {
@@ -19,6 +21,7 @@ class PlayerAnimations {
             this.duration = duration
             scaleX(from)
             scaleY(from)
+            interpolator = AccelerateDecelerateInterpolator()
             withEndAction {
                 animatedView.animate().scaleX(to).scaleY(to).start()
             }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.playlistmaker.player.data.db.entity.TrackEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TrackDao {
@@ -16,9 +17,9 @@ interface TrackDao {
         "SELECT * FROM track_table " +
                 "ORDER BY timeOfAddition DESC"
     )
-    suspend fun getTracks(): List<TrackEntity>
+    fun getTracks(): Flow<List<TrackEntity>>
 
-    //возможно выбросит NullPointerException посмотрим на это. Fix: TrackEntity?
+
     @Query("SELECT * FROM track_table WHERE trackId = :trackId")
     suspend fun getTrackById(trackId: Long): TrackEntity?
 

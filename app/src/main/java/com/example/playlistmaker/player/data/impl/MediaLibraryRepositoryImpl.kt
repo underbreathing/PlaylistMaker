@@ -5,7 +5,9 @@ import com.example.playlistmaker.player.data.mappers.TrackEntityMapper
 import com.example.playlistmaker.player.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class MediaLibraryRepositoryImpl(
     private val trackDatabase: TrackDatabase,
@@ -15,8 +17,10 @@ class MediaLibraryRepositoryImpl(
         trackDatabase.getTrackDao().insertTrack(trackEntityMapper.map(track, additionTime))
     }
 
-    override suspend fun getMediaLibrary(): Flow<List<Track>> = flow {
-        emit(trackDatabase.getTrackDao().getTracks().map(trackEntityMapper::map))
+    override suspend fun getMediaLibrary(): Flow<List<Track>> {
+        return trackDatabase.getTrackDao().getTracks().map {
+            it.map(trackEntityMapper::map)
+        }
     }
 
     override suspend fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean> = flow {

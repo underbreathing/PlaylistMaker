@@ -51,6 +51,8 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
+
+
     implementation("androidx.fragment:fragment-ktx:1.5.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
