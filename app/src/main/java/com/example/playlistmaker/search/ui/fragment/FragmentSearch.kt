@@ -186,7 +186,6 @@ class FragmentSearch : Fragment() {
     private fun showEmptyHistory() {
         tracksHistory.clear()
         trackAdapterHistory.notifyDataSetChanged()
-        //inputLine.clearFocus() // можно и так. чтобы вызвался обработчик изменения состояния фокуса и убрал пустую историю из видимости
         binding.layoutHistory.isVisible = false
     }
 

@@ -33,7 +33,7 @@ class FavoriteTracksFragment : Fragment() {
     private val viewModel: FavoriteTracksViewModel by viewModel()
 
     private val tracks = ArrayList<Track>()
-    private lateinit var trackAdapter: TrackAdapter
+    private var trackAdapter: TrackAdapter? = null
     private var isClickAllowed: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,12 +75,12 @@ class FavoriteTracksFragment : Fragment() {
     private fun showEmpty(message: String) {
         binding.rvMediaLibrary.isVisible = false
         setPlaceholdersVisibility(true)
-        binding.placeholderAdditionalMessage.text = message
+        binding.tvPlaceholderAdditionalMessage.text = message
     }
 
     private fun setPlaceholdersVisibility(visibility: Boolean) {
-        binding.placeholder.isVisible = visibility
-        binding.placeholderAdditionalMessage.isVisible = visibility
+        binding.ivPlaceholder.isVisible = visibility
+        binding.tvPlaceholderAdditionalMessage.isVisible = visibility
     }
 
     private fun showContent(tracks: List<Track>) {
@@ -88,7 +88,7 @@ class FavoriteTracksFragment : Fragment() {
         binding.rvMediaLibrary.isVisible = true
         this.tracks.clear()
         this.tracks.addAll(tracks)
-        trackAdapter.notifyDataSetChanged()
+        trackAdapter?.notifyDataSetChanged()
     }
 
     override fun onCreateView(
@@ -103,6 +103,7 @@ class FavoriteTracksFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        trackAdapter = null
     }
 
 }

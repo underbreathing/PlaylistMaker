@@ -1,6 +1,6 @@
-package com.example.playlistmaker.player.data.mappers
+package com.example.playlistmaker.media_library.data.mappers
 
-import com.example.playlistmaker.player.data.db.entity.TrackEntity
+import com.example.playlistmaker.media_library.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.model.Track
 
 class TrackEntityMapper {

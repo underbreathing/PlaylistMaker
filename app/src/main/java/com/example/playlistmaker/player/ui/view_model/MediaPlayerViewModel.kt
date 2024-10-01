@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
-import com.example.playlistmaker.player.domain.db.MediaLibraryRepository
+import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.player.ui.view_model.model.PlayStatus
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Dispatchers

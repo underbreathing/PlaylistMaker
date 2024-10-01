@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.media_library.ui.view_model.state.MediaLibraryDataState
-import com.example.playlistmaker.player.domain.db.MediaLibraryRepository
+import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

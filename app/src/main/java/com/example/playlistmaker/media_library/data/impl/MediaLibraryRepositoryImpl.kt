@@ -1,11 +1,10 @@
-package com.example.playlistmaker.player.data.impl
+package com.example.playlistmaker.media_library.data.impl
 
-import com.example.playlistmaker.player.data.db.TrackDatabase
-import com.example.playlistmaker.player.data.mappers.TrackEntityMapper
-import com.example.playlistmaker.player.domain.db.MediaLibraryRepository
+import com.example.playlistmaker.media_library.data.db.TrackDatabase
+import com.example.playlistmaker.media_library.data.mappers.TrackEntityMapper
+import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -23,8 +22,10 @@ class MediaLibraryRepositoryImpl(
         }
     }
 
-    override suspend fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean> = flow {
-        emit(trackDatabase.getTrackDao().getTrackById(trackId) != null)
+    override suspend fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean> {
+        return flow {
+            emit(trackDatabase.getTrackDao().getTrackById(trackId) != null)
+        }
     }
 
     override suspend fun deleteFromMediaLibrary(trackId: Long) {

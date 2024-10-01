@@ -15,7 +15,7 @@
         tools:listitem="@layout/track" />
 
     <ImageView
-        android:id="@+id/placeholder"
+        android:id="@+id/iv_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -24,7 +24,7 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/placeholder_additional_message"
+        android:id="@+id/tv_placeholder_additional_message"
         style="@style/text400YsMedium19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:visibility="gone"
-        tools:text="@string/media_favorite_empty" />
+        tools:text="[Ваша медиатека пуста ]" />
 
 
 </LinearLayout>

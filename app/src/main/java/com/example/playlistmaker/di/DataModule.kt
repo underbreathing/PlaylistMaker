@@ -5,8 +5,8 @@ import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.application.KEY_THEME_FILE
 import com.example.playlistmaker.gson_converter.GsonConverter
-import com.example.playlistmaker.player.data.db.TrackDatabase
-import com.example.playlistmaker.player.data.mappers.TrackEntityMapper
+import com.example.playlistmaker.media_library.data.db.TrackDatabase
+import com.example.playlistmaker.media_library.data.mappers.TrackEntityMapper
 import com.example.playlistmaker.search.data.impl.RemoteDataSourceImpl
 import com.example.playlistmaker.search.data.impl.SearchLocalStorageImpl
 import com.example.playlistmaker.search.data.local_storage.SearchLocalStorage
@@ -26,9 +26,8 @@ private const val HISTORY_SHARED_PREFERENCES_FILE = "history_shared_preferences_
 
 val dataModule = module {
 
-    single { Room.databaseBuilder(androidContext(),TrackDatabase::class.java,"track_media_library.db").build() }
-
-    //single or fabric?? не знаю что лучше здесь
+    single { Room.databaseBuilder(androidContext(), TrackDatabase::class.java,"track_media_library.db").build() }
+    //? single or fabric ?
     single { TrackEntityMapper() }
     single { TrackDtoMapper() }
 
