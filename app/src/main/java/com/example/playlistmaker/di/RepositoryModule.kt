@@ -1,7 +1,9 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.player.data.impl.AudioPlayerRepositoryImpl
+import com.example.playlistmaker.player.data.impl.MediaLibraryRepositoryImpl
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
+import com.example.playlistmaker.player.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.search.data.impl.NetworkRepositoryImpl
 import com.example.playlistmaker.search.data.impl.TracksHistoryRepositoryImpl
 import com.example.playlistmaker.search.domain.repository.NetworkRepository
@@ -18,8 +20,12 @@ val repositoryModule = module {
         AudioPlayerRepositoryImpl(get())
     }
 
+    single<MediaLibraryRepository>{
+        MediaLibraryRepositoryImpl(get(), get())
+    }
+
     single<NetworkRepository> {
-        NetworkRepositoryImpl(get())
+        NetworkRepositoryImpl(get(),get())
     }
 
     single<TracksHistoryRepository> {

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,12 +11,12 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
-import com.example.playlistmaker.player.ui.activity.TRACK_INTENT_DATA
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.view_model.HistoryState
 import com.example.playlistmaker.search.ui.view_model.SearchState
@@ -32,6 +31,7 @@ class FragmentSearch : Fragment() {
 
     private val tracks = ArrayList<Track>()
     private lateinit var trackAdapter: TrackAdapter
+    private var isClickAllowed = true
 
     //history
     private lateinit var tracksHistory: ArrayList<Track>
@@ -54,17 +54,6 @@ class FragmentSearch : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val context = requireContext()
-
-        val trackDebounce: (Track) -> Unit = debounce(
-            false, viewLifecycleOwner.lifecycleScope,
-            CLICK_DEBOUNCE_DELAY
-        ) { track: Track ->
-            viewModel.purTrackInHistory(track)
-            val intent = Intent(context, MediaPlayerActivity::class.java)
-
-            intent.putExtra(TRACK_INTENT_DATA, track)
-            startActivity(intent)
-        }
 
         viewModel.observeSearchStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
@@ -152,6 +141,23 @@ class FragmentSearch : Fragment() {
             viewModel.clearHistory()
         }
 
+    }
+
+    private fun trackDebounce(track: Track) {
+        if (isClickAllowed) {
+            viewModel.purTrackInHistory(track)
+            isClickAllowed = false
+            debounce<Boolean>(
+                false, viewLifecycleOwner.lifecycleScope,
+                TrackAdapter.CLICK_DEBOUNCE_DELAY
+            ) { value ->
+                isClickAllowed = value
+            }.invoke(true)
+            findNavController().navigate(
+                R.id.action_fragmentSearch_to_mediaPlayerActivity,
+                MediaPlayerActivity.createArgs(track)
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -257,10 +263,5 @@ class FragmentSearch : Fragment() {
                 binding.buttonUpdate.isVisible = true
             }
         }
-    }
-
-    private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-
     }
 }

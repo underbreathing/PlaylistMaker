@@ -2,11 +2,15 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.example.playlistmaker.application.KEY_THEME_FILE
 import com.example.playlistmaker.gson_converter.GsonConverter
+import com.example.playlistmaker.player.data.db.TrackDatabase
+import com.example.playlistmaker.player.data.mappers.TrackEntityMapper
 import com.example.playlistmaker.search.data.impl.RemoteDataSourceImpl
 import com.example.playlistmaker.search.data.impl.SearchLocalStorageImpl
 import com.example.playlistmaker.search.data.local_storage.SearchLocalStorage
+import com.example.playlistmaker.search.data.mapper.TrackDtoMapper
 import com.example.playlistmaker.search.data.remote_data_source.ITunesApi
 import com.example.playlistmaker.search.data.remote_data_source.RemoteDataSource
 import com.example.playlistmaker.settings.data.impl.SettingsLocalStorageImpl
@@ -21,6 +25,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val HISTORY_SHARED_PREFERENCES_FILE = "history_shared_preferences_file"
 
 val dataModule = module {
+
+    single { Room.databaseBuilder(androidContext(),TrackDatabase::class.java,"track_media_library.db").build() }
+
+    //single or fabric?? не знаю что лучше здесь
+    single { TrackEntityMapper() }
+    single { TrackDtoMapper() }
+
     single {
         Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")

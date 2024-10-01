@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.uiModule
 import com.example.playlistmaker.di.useCaseModule
 import com.example.playlistmaker.di.viewModelModule
 import kotlinx.coroutines.Job
@@ -26,7 +27,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(dataModule, repositoryModule, useCaseModule, viewModelModule)
+            modules(dataModule, repositoryModule, useCaseModule, viewModelModule, uiModule)
         }
         sharedTheme =
             getKoin().get { parametersOf(KEY_THEME_FILE) }

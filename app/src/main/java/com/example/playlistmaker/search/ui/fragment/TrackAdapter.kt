@@ -9,6 +9,11 @@ import com.example.playlistmaker.search.domain.model.Track
 class TrackAdapter(
     private val tracks: List<Track>, private val onTrackClickListener: ((Track) -> Unit)? = null
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+
+    companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
         TrackViewHolder(TrackBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 

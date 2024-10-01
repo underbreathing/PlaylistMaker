@@ -14,13 +14,13 @@ import com.example.playlistmaker.search.domain.repository.NetworkRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class NetworkRepositoryImpl(private val remoteDataSource: RemoteDataSource) : NetworkRepository {
+class NetworkRepositoryImpl(private val remoteDataSource: RemoteDataSource, private val trackDtoMapper: TrackDtoMapper) : NetworkRepository {
     override fun searchTracks(request: String): Flow<Resource<List<Track>>> = flow {
         val response: NetworkResponse = remoteDataSource.doRequest(TrackSearchRequest(request))
         //здесь проверка только на тип ответа
         //коды не проверяются, т.к у нас один placeholder и на отсутствие интернета и на любые ошибки сервера
         if (response is SearchTracksResponse) {
-            emit(Resource.Success(response.results.map(TrackDtoMapper::map)))
+            emit(Resource.Success(response.results.map(trackDtoMapper::map)))
         } else {
             emit(Resource.Error())
         }

@@ -1,19 +1,20 @@
-package com.example.playlistmaker.search.data.dto
+package com.example.playlistmaker.player.data.db.entity
 
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-
-data class TrackDto(
+@Entity(tableName = "track_table")
+data class TrackEntity(
+    @PrimaryKey
     val trackId: Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,
-    @SerializedName("artworkUrl100")
     val artworkUrl: String,
     val collectionName: String?,
     val releaseDate: String?,
     val primaryGenreName: String,
     val country: String,
-    val previewUrl: String
+    val previewUrl: String?,
+    val timeOfAddition: Long
 )

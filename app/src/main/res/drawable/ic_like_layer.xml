@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_background" />
+    <item android:drawable="@drawable/ic_inner_like">
+        <scale
+            android:duration="500"
+            android:fromXScale="1.0"
+            android:fromYScale="1.0"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toXScale="0.6"
+            android:toYScale="0.6" />
+    </item>
+
+
+</layer-list>
