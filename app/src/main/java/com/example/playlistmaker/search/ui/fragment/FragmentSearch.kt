@@ -99,7 +99,7 @@ class FragmentSearch : Fragment() {
             clearTrackList()
         }
 
-        binding.buttonUpdate.setOnClickListener {
+        binding.bUpdate.setOnClickListener {
             viewModel.search(inputLine.text.toString())
         }
 
@@ -232,7 +232,7 @@ class FragmentSearch : Fragment() {
         binding.problemTitle.isVisible = false
         binding.problemImage.isVisible = false
         binding.problemAdditionalMessage.isVisible = false
-        binding.buttonUpdate.isVisible = false
+        binding.bUpdate.isVisible = false
         binding.layoutPlaceholders.isVisible = false
     }
 
@@ -259,7 +259,7 @@ class FragmentSearch : Fragment() {
                 binding.problemAdditionalMessage.isVisible = true
             }
             if (internetProblem) {
-                binding.buttonUpdate.isVisible = true
+                binding.bUpdate.isVisible = true
             }
         }
     }

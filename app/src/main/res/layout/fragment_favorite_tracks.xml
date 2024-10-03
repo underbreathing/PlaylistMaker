@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.playlistmaker.media_library.ui.FavoriteTracksFragment">
+    tools:context="com.example.playlistmaker.media_library.ui.child.favorite_tracks.FavoriteTracksFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMediaLibrary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
-        tools:listitem="@layout/track" />
+        tools:listitem="@layout/track_rv_item" />
 
     <ImageView
         android:id="@+id/iv_placeholder"

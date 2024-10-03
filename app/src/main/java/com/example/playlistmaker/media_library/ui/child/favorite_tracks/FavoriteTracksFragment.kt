@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media_library.ui
+package com.example.playlistmaker.media_library.ui.child.favorite_tracks
 
 import android.os.Bundle
 import android.view.LayoutInflater

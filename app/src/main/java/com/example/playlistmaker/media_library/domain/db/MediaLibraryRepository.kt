@@ -7,9 +7,9 @@ interface MediaLibraryRepository {
 
     suspend fun putToMediaLibrary(track: Track, additionTime: Long)
 
-    suspend fun getMediaLibrary(): Flow<List<Track>>
+    fun getMediaLibrary(): Flow<List<Track>>
 
-    suspend fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean>
+    fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean>
 
     suspend fun deleteFromMediaLibrary(trackId: Long)
 

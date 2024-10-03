@@ -16,13 +16,13 @@ class MediaLibraryRepositoryImpl(
         trackDatabase.getTrackDao().insertTrack(trackEntityMapper.map(track, additionTime))
     }
 
-    override suspend fun getMediaLibrary(): Flow<List<Track>> {
+    override fun getMediaLibrary(): Flow<List<Track>> {
         return trackDatabase.getTrackDao().getTracks().map {
             it.map(trackEntityMapper::map)
         }
     }
 
-    override suspend fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean> {
+    override fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean> {
         return flow {
             emit(trackDatabase.getTrackDao().getTrackById(trackId) != null)
         }

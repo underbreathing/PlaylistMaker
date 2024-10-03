@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
 
+import com.example.playlistmaker.create_playlist.ui.CreatePlaylistViewModel
 import com.example.playlistmaker.media_library.ui.view_model.PlaylistsFragmentViewModel
 import com.example.playlistmaker.media_library.ui.view_model.FavoriteTracksViewModel
 import com.example.playlistmaker.player.ui.mapper.TrackMapper
@@ -16,6 +17,10 @@ val viewModelModule = module {
 
     single { TrackMapper() }
 
+    viewModel {
+        CreatePlaylistViewModel(get(),get())
+    }
+
     viewModel { (dataSource: String?, trackId: Long) ->
         MediaPlayerViewModel(get(), dataSource, get(), trackId)
     }
@@ -29,7 +34,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        PlaylistsFragmentViewModel()
+        PlaylistsFragmentViewModel(get())
     }
 
     viewModel {

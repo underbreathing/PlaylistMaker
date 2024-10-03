@@ -42,7 +42,19 @@
     <string name="tab_item1">Избранные треки</string>
     <string name="tab_item2">Плейлисты</string>
 
-
+<!--        media_library-->
     <string name="media_library_title">Медиатека</string>
+
+<!--    new playlist-->
+    <string name="new_playlist_button_top_back_title">Новый плейлист</string>
+    <string name="add_playlist_edit_text_title">Название*</string>
+    <string name="add_playlist_edit_text_description">Описание</string>
+    <string name="add_playlist_b_create">Создать</string>
+    <string name="add_playlist_dialog_title">Завершить создание плейлиста?</string>
+    <string name="add_playlist_dialog_description">Все несохраненные данные будут потеряны</string>
+    <string name="add_playlist_button_cancel">Отмена</string>
+    <string name="add_playlist_button_exit">Завершить</string>
+    <string name="add_playlist_toast_message">Плейлист %1$s создан</string>
+
 
 </resources>
