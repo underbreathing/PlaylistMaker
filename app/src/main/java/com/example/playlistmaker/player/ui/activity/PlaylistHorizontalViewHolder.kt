@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media_library.ui.child.playlists
+package com.example.playlistmaker.player.ui.activity
 
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -7,11 +7,11 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.PlaylistRvItemBinding
+import com.example.playlistmaker.databinding.PlaylistRvItemHorizontalBinding
 import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 import com.example.playlistmaker.utils.Utils
 
-class PlaylistViewHolder(private val binding: PlaylistRvItemBinding) : ViewHolder(binding.root) {
+class PlaylistHorizontalViewHolder(private val binding: PlaylistRvItemHorizontalBinding): ViewHolder(binding.root) {
 
     fun bind(playlist: PlaylistInfo) {
         val path: Any =

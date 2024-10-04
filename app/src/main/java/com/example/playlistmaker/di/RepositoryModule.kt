@@ -2,8 +2,8 @@ package com.example.playlistmaker.di
 
 import com.example.playlistmaker.create_playlist.data.impl.LocalFileStorageImpl
 import com.example.playlistmaker.create_playlist.data.impl.PlaylistRepositoryImpl
-import com.example.playlistmaker.create_playlist.domain.LocalFileStorage
-import com.example.playlistmaker.create_playlist.domain.PlaylistRepository
+import com.example.playlistmaker.create_playlist.domain.api.LocalFileStorage
+import com.example.playlistmaker.create_playlist.domain.api.PlaylistRepository
 import com.example.playlistmaker.player.data.impl.AudioPlayerRepositoryImpl
 import com.example.playlistmaker.media_library.data.impl.MediaLibraryRepositoryImpl
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository

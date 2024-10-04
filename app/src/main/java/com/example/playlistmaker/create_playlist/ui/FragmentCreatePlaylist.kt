@@ -1,7 +1,5 @@
 package com.example.playlistmaker.create_playlist.ui
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -24,8 +22,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 const val PLAYLIST_CORNER_RADIUS = 8
 
@@ -52,6 +48,12 @@ class FragmentCreatePlaylist : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var savedUri: Uri? = null
+
+        viewModel.isSavingCompleted.observe(viewLifecycleOwner) { isSavingOver ->
+            if (isSavingOver) {
+                findNavController().navigateUp()
+            }
+        }
 
         binding.tbButtonTopBack.setOnClickListener {
             if (shouldShowDialog) {
@@ -115,11 +117,7 @@ class FragmentCreatePlaylist : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
-            findNavController().navigateUp()
         }
-
-
     }
 
     private fun showExitDialog() {

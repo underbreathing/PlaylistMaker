@@ -117,7 +117,7 @@
 
         <Button
             android:id="@+id/b_update"
-            style="@style/search_button_update"
+            style="@style/pm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -152,7 +152,7 @@
 
         <Button
             android:id="@+id/button_clear_history"
-            style="@style/search_button_update"
+            style="@style/pm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"

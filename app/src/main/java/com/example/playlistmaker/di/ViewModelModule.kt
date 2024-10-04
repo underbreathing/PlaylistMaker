@@ -18,11 +18,11 @@ val viewModelModule = module {
     single { TrackMapper() }
 
     viewModel {
-        CreatePlaylistViewModel(get(),get())
+        CreatePlaylistViewModel(get(), get())
     }
 
     viewModel { (dataSource: String?, trackId: Long) ->
-        MediaPlayerViewModel(get(), dataSource, get(), trackId)
+        MediaPlayerViewModel(get(), dataSource, get(), trackId, get())
     }
 
     viewModel {

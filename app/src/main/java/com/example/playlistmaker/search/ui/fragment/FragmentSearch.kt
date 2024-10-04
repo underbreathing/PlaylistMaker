@@ -10,17 +10,17 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.activity.FragmentMediaPlayer
 import com.example.playlistmaker.utils.debounce
-import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.view_model.HistoryState
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import kotlinx.coroutines.GlobalScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentSearch : Fragment() {
@@ -148,14 +148,14 @@ class FragmentSearch : Fragment() {
             viewModel.purTrackInHistory(track)
             isClickAllowed = false
             debounce<Boolean>(
-                false, viewLifecycleOwner.lifecycleScope,
+                false, GlobalScope,
                 TrackAdapter.CLICK_DEBOUNCE_DELAY
             ) { value ->
                 isClickAllowed = value
             }.invoke(true)
             findNavController().navigate(
-                R.id.action_fragmentSearch_to_mediaPlayerActivity,
-                MediaPlayerActivity.createArgs(track)
+                R.id.action_fragmentSearch_to_fragmentMediaPlayer,
+                FragmentMediaPlayer.createArgs(track)
             )
         }
     }

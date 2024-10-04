@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.media_library.ui.view_model.FavoriteTracksViewModel
 import com.example.playlistmaker.media_library.ui.view_model.state.MediaLibraryDataState
-import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
+import com.example.playlistmaker.player.ui.activity.FragmentMediaPlayer
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.fragment.TrackAdapter
 import com.example.playlistmaker.utils.debounce
+import kotlinx.coroutines.GlobalScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -60,14 +60,14 @@ class FavoriteTracksFragment : Fragment() {
         if (isClickAllowed) {
             isClickAllowed = false
             debounce<Boolean>(
-                false, viewLifecycleOwner.lifecycleScope,
+                false, GlobalScope,
                 TrackAdapter.CLICK_DEBOUNCE_DELAY
             ) { value ->
                 isClickAllowed = value
             }.invoke(true)
             findNavController().navigate(
-                R.id.action_fragmentMediaLibrary_to_mediaPlayerActivity,
-                MediaPlayerActivity.createArgs(track)
+                R.id.action_fragmentMediaLibrary_to_fragmentMediaPlayer,
+                FragmentMediaPlayer.createArgs(track)
             )
         }
     }

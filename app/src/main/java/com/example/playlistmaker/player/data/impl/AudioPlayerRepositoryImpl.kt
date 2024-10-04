@@ -27,6 +27,7 @@ class AudioPlayerRepositoryImpl(private val player: MediaPlayer) : AudioPlayerRe
         onPrepared: () -> Unit,
         onCompletion: () -> Unit
     ) {
+        player.reset()
         player.setDataSource(dataSource)
         player.setOnPreparedListener {
             onPrepared()

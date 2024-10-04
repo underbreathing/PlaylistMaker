@@ -8,7 +8,7 @@ import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 
 class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
 
-    private val playlists: MutableList<PlaylistInfo> = mutableListOf()
+    val playlists: MutableList<PlaylistInfo> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         return PlaylistViewHolder(

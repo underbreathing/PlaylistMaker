@@ -110,7 +110,7 @@
         <item name="fontWeight">400</item>
     </style>
 
-    <style name="search_button_update" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="pm_button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="textAllCaps">false</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:textColor">@color/black</item>

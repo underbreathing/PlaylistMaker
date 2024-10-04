@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 import com.example.playlistmaker.media_library.ui.view_model.PlaylistsFragmentViewModel
+import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -39,6 +42,13 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.observeDataState().observe(viewLifecycleOwner) {
+            when (it) {
+                is PlaylistsDataState.Content -> showContent(it.data)
+                PlaylistsDataState.Empty -> showEmpty()
+            }
+        }
+
         binding.rvPlaylists.adapter = adapter
 
         binding.bNewPlaylist.setOnClickListener {
@@ -46,6 +56,24 @@ class PlaylistsFragment : Fragment() {
 
         }
 
+    }
+
+    private fun showEmpty() {
+        binding.rvPlaylists.isVisible = false
+        setPlaceholderVisibility(true)
+    }
+
+    private fun setPlaceholderVisibility(isVisible: Boolean) {
+        binding.problemAdditionalMessage.isVisible = isVisible
+        binding.mediaSelectedTracksPlaceholder.isVisible = isVisible
+    }
+
+    private fun showContent(content: List<PlaylistInfo>) {
+        setPlaceholderVisibility(false)
+        binding.rvPlaylists.isVisible = true
+        adapter.playlists.clear()
+        adapter.playlists.addAll(content)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onDestroyView() {
