@@ -6,6 +6,7 @@ import com.example.playlistmaker.media_library.ui.view_model.PlaylistsFragmentVi
 import com.example.playlistmaker.media_library.ui.view_model.FavoriteTracksViewModel
 import com.example.playlistmaker.player.ui.mapper.TrackMapper
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
+import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -21,8 +22,8 @@ val viewModelModule = module {
         CreatePlaylistViewModel(get(), get())
     }
 
-    viewModel { (dataSource: String?, trackId: Long) ->
-        MediaPlayerViewModel(get(), dataSource, get(), trackId, get())
+    viewModel { (dataSource: String?, track: Track) ->
+        MediaPlayerViewModel(get(), dataSource, get(), track, get())
     }
 
     viewModel {

@@ -5,6 +5,6 @@ data class Playlist(
     val title: String,
     val description: String?,
     val coverPath: String?,
-    val trackIds: String?,
+    val trackIds: List<Long>,
     val trackCount: Int
 )

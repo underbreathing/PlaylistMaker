@@ -35,7 +35,7 @@ class CreatePlaylistViewModel(
                     title,
                     description,
                     savedFileUri,
-                    null,
+                    emptyList(),
                     0
                 )
             )

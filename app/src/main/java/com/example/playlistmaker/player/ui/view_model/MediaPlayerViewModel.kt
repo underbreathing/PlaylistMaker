@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
+import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
 import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
@@ -17,19 +18,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MediaPlayerViewModel(
-    private val audioPlayerRepository: AudioPlayerRepository, private val dataSource: String?,
+    private val audioPlayerRepository: AudioPlayerRepository,
+    private val dataSource: String?,
     private val mediaLibraryRepository: MediaLibraryRepository,
-    private val trackId: Long,
+    private val track: Track,
     private val playlistsInteractor: PlaylistsInteractor
-) : ViewModel() {
 
-//    init {
-//        Log.d("MYPLAYER", "view model init")
-//        if (!dataSource.isNullOrEmpty()) {
-//            preparePlayer(dataSource)
-//        }
-//        checkIsTrackInMediaLibrary(trackId)
-//    }
+) : ViewModel() {
 
     private val playStatusLiveData: MutableLiveData<PlayStatus> = MutableLiveData()
     private val mediaPlayerStateLiveData: MutableLiveData<MediaPlayerState> = MutableLiveData()
@@ -50,26 +45,47 @@ class MediaPlayerViewModel(
         super.onCleared()
     }
 
-//    fun onDestroy(){
-//        audioPlayerRepository.releasePlayer()
-//    }
-
-    fun onCreateView(){
+    fun onCreateView() {
         if (!dataSource.isNullOrEmpty()) {
             preparePlayer(dataSource)
         }
-        checkIsTrackInMediaLibrary(trackId)
+        checkIsTrackInMediaLibrary(track.trackId)
     }
 
     fun addTrackToPlaylist(playlist: PlaylistInfo) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (playlistsInteractor.addTrackToPlaylist(trackId, playlist.id)) {
-                addTrackToPlaylistState.postValue(TrackAddState(playlist.title, true))
-            } else {
+        val trackId = track.trackId
+        val trackIds = playlist.trackIds
+        if (trackIds.isEmpty()) {
+            updatePlaylist(
+                playlist.copy(
+                    trackIds = listOf(trackId),
+                    trackCount = 1
+                ),
+                track
+            )
+        } else {
+            if (trackIds.contains(trackId)) {
                 addTrackToPlaylistState.postValue(TrackAddState(playlist.title, false))
+            } else {
+                updatePlaylist(
+                    playlist.copy(
+                        trackIds = trackIds + trackId,
+                        trackCount = playlist.trackCount + 1
+                    ),
+                    track
+                )
             }
         }
     }
+
+
+    private fun updatePlaylist(playlist: PlaylistInfo, track: Track) {
+        viewModelScope.launch {
+            playlistsInteractor.addTrackToPlaylist(playlist, track)
+            addTrackToPlaylistState.postValue(TrackAddState(playlist.title, true))
+        }
+    }
+
 
     fun observeAddTrackToPlaylistState(): LiveData<TrackAddState> {
         return addTrackToPlaylistState
@@ -120,8 +136,7 @@ class MediaPlayerViewModel(
                 override fun onPlay() {
                     playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = true)
                 }
-            },
-            viewModelScope
+            }, viewModelScope
         )
     }
 

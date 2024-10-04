@@ -10,5 +10,5 @@ val useCaseModule = module {
         SearchTrackUseCase(get())
     }
 
-    factory<PlaylistsInteractor> { PlaylistsInteractorImpl(get(), get(), get()) }
+    factory<PlaylistsInteractor> { PlaylistsInteractorImpl(get(), get(),get()) }
 }

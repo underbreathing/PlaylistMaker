@@ -38,7 +38,6 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/add_playlist_et_empty"
         android:hint="@string/add_playlist_edit_text_title"
-        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_add_playlist_cover" />

@@ -63,7 +63,7 @@ class FragmentCreatePlaylist : Fragment() {
             }
         }
 
-        activity?.onBackPressedDispatcher?.addCallback {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner){
             if (shouldShowDialog) {
                 showExitDialog()
             } else {

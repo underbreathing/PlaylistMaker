@@ -33,7 +33,7 @@ val repositoryModule = module {
     }
 
     single<MediaLibraryRepository> {
-        MediaLibraryRepositoryImpl(get(), get())
+        MediaLibraryRepositoryImpl(get(), get(),get())
     }
 
     single<NetworkRepository> {

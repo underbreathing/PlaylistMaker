@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.activity
+package com.example.playlistmaker.player.ui.fragment
 
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView.ViewHolder

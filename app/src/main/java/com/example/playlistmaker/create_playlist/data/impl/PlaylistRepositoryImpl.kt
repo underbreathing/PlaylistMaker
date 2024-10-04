@@ -4,7 +4,6 @@ import com.example.playlistmaker.create_playlist.data.mappers.PlaylistEntityMapp
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistRepository
 import com.example.playlistmaker.create_playlist.domain.model.Playlist
 import com.example.playlistmaker.media_library.data.db.TrackDatabase
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

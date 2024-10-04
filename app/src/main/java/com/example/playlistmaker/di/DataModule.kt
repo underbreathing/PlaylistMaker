@@ -8,6 +8,7 @@ import com.example.playlistmaker.create_playlist.data.mappers.PlaylistEntityMapp
 import com.example.playlistmaker.create_playlist.domain.mappers.PlaylistMapper
 import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.media_library.data.db.TrackDatabase
+import com.example.playlistmaker.media_library.data.mappers.PlaylistTrackEntityMapper
 import com.example.playlistmaker.media_library.data.mappers.TrackEntityMapper
 import com.example.playlistmaker.search.data.impl.RemoteDataSourceImpl
 import com.example.playlistmaker.search.data.impl.SearchLocalStorageImpl
@@ -34,8 +35,9 @@ val dataModule = module {
         ).build()
     }
 
+    single { PlaylistTrackEntityMapper() }
     single { PlaylistMapper() }
-    single { PlaylistEntityMapper() }
+    single { PlaylistEntityMapper(get()) }
     //? single or fabric ?
     single { TrackEntityMapper() }
     single { TrackDtoMapper() }

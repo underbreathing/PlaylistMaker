@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.activity
+package com.example.playlistmaker.player.ui.fragment
 
 import android.os.Build
 import android.os.Bundle
@@ -73,7 +73,7 @@ class FragmentMediaPlayer : Fragment() {
 
         showTrackInfo(trackMapper.map(currentTrack))
 
-        viewModel = getViewModel { parametersOf(currentTrack.previewUrl, currentTrack.trackId) }
+        viewModel = getViewModel { parametersOf(currentTrack.previewUrl, currentTrack) }
 
         viewModel?.onCreateView()
 
@@ -196,6 +196,7 @@ class FragmentMediaPlayer : Fragment() {
         }
 
         binding.bNewPlaylist.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             findNavController().navigate(R.id.action_fragmentMediaPlayer_to_fragmentCreatePlaylist)
         }
     }
