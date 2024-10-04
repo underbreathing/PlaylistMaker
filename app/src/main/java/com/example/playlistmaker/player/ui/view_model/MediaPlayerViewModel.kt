@@ -5,30 +5,36 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
+import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
-import com.example.playlistmaker.player.domain.db.MediaLibraryRepository
+import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
+import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
+import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
 import com.example.playlistmaker.player.ui.view_model.model.PlayStatus
+import com.example.playlistmaker.player.ui.view_model.model.TrackAddState
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MediaPlayerViewModel(
-    private val audioPlayerRepository: AudioPlayerRepository, dataSource: String?,
+    private val audioPlayerRepository: AudioPlayerRepository,
+    private val dataSource: String?,
     private val mediaLibraryRepository: MediaLibraryRepository,
-    trackId: Long
-) : ViewModel() {
+    private val track: Track,
+    private val playlistsInteractor: PlaylistsInteractor
 
-    init {
-        Log.d("MYPLAYER", "view model init")
-        if (!dataSource.isNullOrEmpty()) {
-            preparePlayer(dataSource)
-        }
-        checkIsTrackInMediaLibrary(trackId)
-    }
+) : ViewModel() {
 
     private val playStatusLiveData: MutableLiveData<PlayStatus> = MutableLiveData()
     private val mediaPlayerStateLiveData: MutableLiveData<MediaPlayerState> = MutableLiveData()
     private val trackInMediaLibraryLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val playlistsLiveData: MutableLiveData<PlaylistsDataState> = MutableLiveData()
+    private var addTrackToPlaylistState: MutableLiveData<TrackAddState> = MutableLiveData()
+
+    init {
+        fillPlaylists()
+    }
 
     enum class MediaPlayerState {
         READY, COMPLETED
@@ -38,6 +44,54 @@ class MediaPlayerViewModel(
         audioPlayerRepository.releasePlayer()
         super.onCleared()
     }
+
+    fun onCreateView() {
+        if (!dataSource.isNullOrEmpty()) {
+            preparePlayer(dataSource)
+        }
+        checkIsTrackInMediaLibrary(track.trackId)
+    }
+
+    fun addTrackToPlaylist(playlist: PlaylistInfo) {
+        val trackId = track.trackId
+        val trackIds = playlist.trackIds
+        if (trackIds.isEmpty()) {
+            updatePlaylist(
+                playlist.copy(
+                    trackIds = listOf(trackId),
+                    trackCount = 1
+                ),
+                track
+            )
+        } else {
+            if (trackIds.contains(trackId)) {
+                addTrackToPlaylistState.postValue(TrackAddState(playlist.title, false))
+            } else {
+                updatePlaylist(
+                    playlist.copy(
+                        trackIds = trackIds + trackId,
+                        trackCount = playlist.trackCount + 1
+                    ),
+                    track
+                )
+            }
+        }
+    }
+
+
+    private fun updatePlaylist(playlist: PlaylistInfo, track: Track) {
+        viewModelScope.launch {
+            playlistsInteractor.addTrackToPlaylist(playlist, track)
+            addTrackToPlaylistState.postValue(TrackAddState(playlist.title, true))
+        }
+    }
+
+
+    fun observeAddTrackToPlaylistState(): LiveData<TrackAddState> {
+        return addTrackToPlaylistState
+    }
+
+    fun observePlaylistLiveData(): LiveData<PlaylistsDataState> = playlistsLiveData
 
     fun saveTrackToMediaLibrary(track: Track, additionTime: Long) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -60,6 +114,13 @@ class MediaPlayerViewModel(
 
     fun getMediaPlayerStateLiveData(): LiveData<MediaPlayerState> = mediaPlayerStateLiveData
 
+    fun deleteFromMediaLibrary(trackId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mediaLibraryRepository.deleteFromMediaLibrary(trackId)
+            trackInMediaLibraryLiveData.postValue(false)
+        }
+    }
+
     fun playToggle() {
         audioPlayerRepository.playToggle(
             object : AudioPlayerRepository.StatusObserver {
@@ -75,8 +136,7 @@ class MediaPlayerViewModel(
                 override fun onPlay() {
                     playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = true)
                 }
-            },
-            viewModelScope
+            }, viewModelScope
         )
     }
 
@@ -100,10 +160,19 @@ class MediaPlayerViewModel(
         }
     }
 
-    fun deleteFromMediaLibrary(trackId: Long) {
+    private fun fillPlaylists() {
         viewModelScope.launch(Dispatchers.IO) {
-            mediaLibraryRepository.deleteFromMediaLibrary(trackId)
-            trackInMediaLibraryLiveData.postValue(false)
+            playlistsInteractor.getPlayLists().collect { data ->
+                if (data.isEmpty()) {
+                    playlistsLiveData.postValue(PlaylistsDataState.Empty)
+                } else {
+                    playlistsLiveData.postValue(PlaylistsDataState.Content(data))
+                }
+            }
         }
+    }
+
+    fun onDestroy() {
+        addTrackToPlaylistState = MutableLiveData()
     }
 }

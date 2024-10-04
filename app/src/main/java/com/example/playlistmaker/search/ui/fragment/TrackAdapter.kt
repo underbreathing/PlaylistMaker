@@ -3,7 +3,7 @@ package com.example.playlistmaker.search.ui.fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.databinding.TrackBinding
+import com.example.playlistmaker.databinding.TrackRvItemBinding
 import com.example.playlistmaker.search.domain.model.Track
 
 class TrackAdapter(
@@ -15,7 +15,7 @@ class TrackAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
-        TrackViewHolder(TrackBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        TrackViewHolder(TrackRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount(): Int = tracks.size
 

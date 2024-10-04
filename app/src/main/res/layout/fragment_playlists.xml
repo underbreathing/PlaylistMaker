@@ -8,8 +8,8 @@
 
 
     <Button
-        android:id="@+id/button_update"
-        style="@style/search_button_update"
+        android:id="@+id/b_new_playlist"
+        style="@style/pm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -18,16 +18,26 @@
         android:tag="placeholder_button"
         android:text="@string/playlists" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_playlists"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="16dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/playlist_rv_item" />
+
     <ImageView
         android:id="@+id/media_selected_tracks_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="46dp"
-        android:src="@drawable/tracks_not_found" />
+        android:src="@drawable/tracks_not_found"
+        android:visibility="gone" />
 
     <TextView
-
         android:id="@+id/problem_additional_message"
         style="@style/text400YsMedium19"
         android:layout_width="wrap_content"
@@ -36,7 +46,8 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="@string/playlists_empty" />
+        android:text="@string/playlists_empty"
+        android:visibility="gone" />
 
 
 </LinearLayout>

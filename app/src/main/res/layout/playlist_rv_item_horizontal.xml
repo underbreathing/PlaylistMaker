@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="?attr/selectableItemBackground"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_margin="8dp"
+        tools:scaleType="centerCrop"
+        tools:src="@drawable/sponge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingVertical="14dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/textYsRegular16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            tools:text="Best Songs 2021 sdfsdfjdjvnfdvndfivfdnkdjfvnkdfjvnkdjfnvjdv" />
+
+        <TextView
+            android:id="@+id/tv_track_count"
+            style="@style/textRegular11Gray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            tools:text="sdfkdvmfdvdfjvndlkfvmdfv" />
+
+    </LinearLayout>
+
+</LinearLayout>
