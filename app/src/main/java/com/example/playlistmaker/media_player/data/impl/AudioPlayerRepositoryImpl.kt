@@ -1,7 +1,7 @@
-package com.example.playlistmaker.player.data.impl
+package com.example.playlistmaker.media_player.data.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
+import com.example.playlistmaker.media_player.domain.audio_player.AudioPlayerRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

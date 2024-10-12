@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.domain.audio_player
+package com.example.playlistmaker.media_player.domain.audio_player
 
 import kotlinx.coroutines.CoroutineScope
 

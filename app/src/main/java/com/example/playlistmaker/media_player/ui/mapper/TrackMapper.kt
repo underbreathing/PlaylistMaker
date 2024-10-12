@@ -1,8 +1,8 @@
-package com.example.playlistmaker.player.ui.mapper
+package com.example.playlistmaker.media_player.ui.mapper
 
 
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.player.ui.model.TrackInfo
+import com.example.playlistmaker.media_player.ui.model.TrackInfo
 
 class TrackMapper {
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.model
+package com.example.playlistmaker.media_player.ui.model
 
 data class TrackInfo(
     val trackName: String,

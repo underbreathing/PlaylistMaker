@@ -2,7 +2,7 @@ package com.example.playlistmaker.create_playlist.domain.impl
 
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistRepository
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
-import com.example.playlistmaker.create_playlist.domain.mappers.PlaylistMapper
+import com.example.playlistmaker.create_playlist.ui.mappers.PlaylistMapper
 import com.example.playlistmaker.create_playlist.domain.model.Playlist
 import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.media_library.ui.model.PlaylistInfo

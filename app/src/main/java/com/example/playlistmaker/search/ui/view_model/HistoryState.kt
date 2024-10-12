@@ -18,9 +18,11 @@ import com.example.playlistmaker.search.domain.model.Track
 
 sealed interface HistoryState {
 
+    data class InitState(val history: List<Track>) : HistoryState
+
     data object EmptyHistory : HistoryState
 
     data class NewUniqueTrack(val track: Track, val historyOverloaded: Boolean) : HistoryState
 
-    data class NewNotUniqueTrack(val track: Track): HistoryState
+    data class NewNotUniqueTrack(val track: Track) : HistoryState
 }

@@ -12,27 +12,28 @@ import kotlinx.coroutines.launch
 class PlaylistsFragmentViewModel(private val playlistsInteractor: PlaylistsInteractor) :
     ViewModel() {
 
-    private fun fillData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            playlistsInteractor.getPlayLists().collect{data ->
-                if(data.isEmpty()){
-                    stateLiveData.postValue(PlaylistsDataState.Empty)
-                }else{
-                    stateLiveData.postValue(PlaylistsDataState.Content(data))
-                }
-
-            }
-        }
-
-    }
-
     private val stateLiveData: MutableLiveData<PlaylistsDataState> = MutableLiveData()
+
     init {
         fillData()
     }
 
     fun observeDataState(): LiveData<PlaylistsDataState> {
         return stateLiveData
+    }
+
+    private fun fillData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistsInteractor.getPlayLists().collect { data ->
+                if (data.isEmpty()) {
+                    stateLiveData.postValue(PlaylistsDataState.Empty)
+                } else {
+                    stateLiveData.postValue(PlaylistsDataState.Content(data))
+                }
+
+            }
+        }
+
     }
 
 }

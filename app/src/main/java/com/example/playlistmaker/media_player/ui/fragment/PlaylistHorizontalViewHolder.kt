@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.fragment
+package com.example.playlistmaker.media_player.ui.fragment
 
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -9,19 +9,24 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistRvItemHorizontalBinding
 import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
-import com.example.playlistmaker.utils.Utils
 
-class PlaylistHorizontalViewHolder(private val binding: PlaylistRvItemHorizontalBinding): ViewHolder(binding.root) {
+class PlaylistHorizontalViewHolder(private val binding: PlaylistRvItemHorizontalBinding) :
+    ViewHolder(binding.root) {
 
     fun bind(playlist: PlaylistInfo) {
-        val path: Any =
-            if (playlist.coverUriString != null) Uri.parse(playlist.coverUriString) else R.drawable.placeholder_track
         Glide.with(itemView)
-            .load(path)
+            .load(playlist.coverUriString?.let(Uri::parse))
+            .error(R.drawable.placeholder_track)
+            .placeholder(R.drawable.placeholder_track)
             .transform(MultiTransformation(CenterCrop(), RoundedCorners(8)))
             .into(binding.ivCover)
 
         binding.tvTitle.text = playlist.title
-        binding.tvTrackCount.text = Utils.getTrackDeclension(playlist.trackCount)
+        binding.tvTrackCount.text =
+            itemView.context.getString(
+                R.string.playlist_track_count,
+                playlist.trackCount.toString(),
+                itemView.context.resources.getQuantityString(R.plurals.track, playlist.trackCount)
+            )
     }
 }

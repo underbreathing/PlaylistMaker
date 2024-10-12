@@ -1,13 +1,18 @@
 package com.example.playlistmaker.root_activity
 
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.addCallback
+import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityRootBinding
+
 
 class RootActivity : AppCompatActivity() {
 
@@ -18,16 +23,32 @@ class RootActivity : AppCompatActivity() {
         binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            v.setPadding(0, statusBarInsets.top, 0, 0)
+            insets
+        }
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
 
         val navController = navHostFragment.navController
 
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.fragmentCreatePlaylist, R.id.fragmentMediaPlayer -> binding.bottomNavigationPanel.isVisible = false
+                R.id.fragmentCreatePlaylist, R.id.fragmentMediaPlayer -> {
+                    binding.bottomNavigationPanel.isVisible = false
+                }
 
-                else -> binding.bottomNavigationPanel.isVisible = true
+                else -> {
+                    binding.bottomNavigationPanel.isVisible = true
+                }
             }
         }
 

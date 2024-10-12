@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.fragment
+package com.example.playlistmaker.media_player.ui.fragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 class PlaylistHorizontalAdapter(private val onClick: ((playlist: PlaylistInfo) -> Unit)? = null) :
     RecyclerView.Adapter<PlaylistHorizontalViewHolder>() {
 
-    val playlists: MutableList<PlaylistInfo> = mutableListOf()
+    private val playlists: MutableList<PlaylistInfo> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,5 +34,10 @@ class PlaylistHorizontalAdapter(private val onClick: ((playlist: PlaylistInfo) -
         if (onClick != null) {
             holder.itemView.setOnClickListener { onClick.invoke(currentPlaylist) }
         }
+    }
+
+    fun setNewItems(newPlaylists: List<PlaylistInfo>) {
+        playlists.clear()
+        playlists.addAll(newPlaylists)
     }
 }

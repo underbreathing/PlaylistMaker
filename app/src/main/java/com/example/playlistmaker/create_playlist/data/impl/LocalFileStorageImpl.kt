@@ -17,7 +17,7 @@ class LocalFileStorageImpl(private val appContext: Context) : LocalFileStorage {
         if (!pathToImages.exists()) {
             pathToImages.mkdirs()
         }
-        val outputFile = File(pathToImages, "${fileName}.jpg")
+        val outputFile = File(pathToImages, "${fileName}${System.currentTimeMillis()}.jpg")
 
         appContext.contentResolver.openInputStream(uri)?.use {
             BitmapFactory.decodeStream(it)

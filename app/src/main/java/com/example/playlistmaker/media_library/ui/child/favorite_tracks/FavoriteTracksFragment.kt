@@ -12,7 +12,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.media_library.ui.view_model.FavoriteTracksViewModel
 import com.example.playlistmaker.media_library.ui.view_model.state.MediaLibraryDataState
-import com.example.playlistmaker.player.ui.fragment.FragmentMediaPlayer
+import com.example.playlistmaker.media_player.ui.fragment.FragmentMediaPlayer
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.fragment.TrackAdapter
 import com.example.playlistmaker.utils.debounce
@@ -32,14 +32,13 @@ class FavoriteTracksFragment : Fragment() {
 
     private val viewModel: FavoriteTracksViewModel by viewModel()
 
-    private val tracks = ArrayList<Track>()
     private var trackAdapter: TrackAdapter? = null
     private var isClickAllowed: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackAdapter(tracks) {
+        trackAdapter = TrackAdapter {
             trackDebounce(it)
         }
 
@@ -86,8 +85,7 @@ class FavoriteTracksFragment : Fragment() {
     private fun showContent(tracks: List<Track>) {
         setPlaceholdersVisibility(false)
         binding.rvMediaLibrary.isVisible = true
-        this.tracks.clear()
-        this.tracks.addAll(tracks)
+        trackAdapter?.setNewItems(tracks)
         trackAdapter?.notifyDataSetChanged()
     }
 

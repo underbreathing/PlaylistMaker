@@ -71,8 +71,7 @@ class PlaylistsFragment : Fragment() {
     private fun showContent(content: List<PlaylistInfo>) {
         setPlaceholderVisibility(false)
         binding.rvPlaylists.isVisible = true
-        adapter.playlists.clear()
-        adapter.playlists.addAll(content)
+        adapter.setNewPlaylists(content)
         adapter.notifyDataSetChanged()
     }
 

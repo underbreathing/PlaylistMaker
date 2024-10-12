@@ -31,9 +31,7 @@ class GsonConverter(private val gson: Gson) : KoinComponent {
     }
 
     fun jsonToListLong(json: String?): List<Long> {
-        if(json == null){
-            return emptyList()
-        }
-        return gson.fromJson(json, Array<Long>::class.java).toList()
+        return if (json == null) emptyList()
+        else gson.fromJson(json, Array<Long>::class.java).toList()
     }
 }

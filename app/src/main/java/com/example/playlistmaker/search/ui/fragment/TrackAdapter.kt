@@ -7,15 +7,23 @@ import com.example.playlistmaker.databinding.TrackRvItemBinding
 import com.example.playlistmaker.search.domain.model.Track
 
 class TrackAdapter(
-    private val tracks: List<Track>, private val onTrackClickListener: ((Track) -> Unit)? = null
+    private val onTrackClickListener: ((Track) -> Unit)? = null
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+
+    private val tracks: MutableList<Track> = mutableListOf()
 
     companion object {
         const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
-        TrackViewHolder(TrackRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        TrackViewHolder(
+            TrackRvItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
     override fun getItemCount(): Int = tracks.size
 
@@ -26,4 +34,11 @@ class TrackAdapter(
             holder.itemView.setOnClickListener { onTrackClickListener.invoke(tracks[position]) }
         }
     }
+
+    fun setNewItems(tracks: List<Track>) {
+        this.tracks.clear()
+        this.tracks.addAll(tracks)
+    }
+
+    val itemsIsNotEmpty get() = tracks.isNotEmpty()
 }

@@ -46,6 +46,11 @@
     <string name="add_playlist_toast_message">Playlist %1$s is created</string>
     <string name="media_player_toast_new_track_added">added to playlist [%1$s]</string>
     <string name="media_player_toast_old_track">The track has already been added to the playlist [%1$s]</string>
+    <string name="playlist_track_count">%1$s %2$s</string>
 
+    <plurals name="track">
+        <item quantity="one">track</item>
+        <item quantity="other">tracks</item>
+    </plurals>
 
 </resources>

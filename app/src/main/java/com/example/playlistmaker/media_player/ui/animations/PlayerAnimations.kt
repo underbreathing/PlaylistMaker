@@ -1,6 +1,5 @@
-package com.example.playlistmaker.player.ui.animations
+package com.example.playlistmaker.media_player.ui.animations
 
-import android.graphics.Interpolator
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 

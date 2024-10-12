@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.view_model
+package com.example.playlistmaker.media_player.ui.view_model
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,13 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
-import com.example.playlistmaker.gson_converter.GsonConverter
-import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
+import com.example.playlistmaker.media_player.domain.audio_player.AudioPlayerRepository
 import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
-import com.example.playlistmaker.player.ui.view_model.model.PlayStatus
-import com.example.playlistmaker.player.ui.view_model.model.TrackAddState
+import com.example.playlistmaker.media_player.ui.view_model.model.PlayStatus
+import com.example.playlistmaker.media_player.ui.view_model.model.TrackAddState
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +30,6 @@ class MediaPlayerViewModel(
     private val trackInMediaLibraryLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val playlistsLiveData: MutableLiveData<PlaylistsDataState> = MutableLiveData()
     private var addTrackToPlaylistState: MutableLiveData<TrackAddState> = MutableLiveData()
-
     init {
         fillPlaylists()
     }

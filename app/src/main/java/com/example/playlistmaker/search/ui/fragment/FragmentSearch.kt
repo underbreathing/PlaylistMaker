@@ -14,14 +14,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.fragment.FragmentMediaPlayer
-import com.example.playlistmaker.utils.debounce
+import com.example.playlistmaker.media_player.ui.fragment.FragmentMediaPlayer
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.view_model.HistoryState
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import com.example.playlistmaker.utils.debounce
 import kotlinx.coroutines.GlobalScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class FragmentSearch : Fragment() {
 
@@ -29,12 +30,11 @@ class FragmentSearch : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val tracks = ArrayList<Track>()
     private lateinit var trackAdapter: TrackAdapter
     private var isClickAllowed = true
 
     //history
-    private lateinit var tracksHistory: ArrayList<Track>
+    private var tracksHistory: ArrayList<Track> = arrayListOf()
     private lateinit var trackAdapterHistory: TrackAdapter
 
     //...
@@ -55,6 +55,8 @@ class FragmentSearch : Fragment() {
 
         val context = requireContext()
 
+        binding.searchInputLine.requestFocus()
+
         viewModel.observeSearchStateLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchState.Content -> showContent(it.tracks)
@@ -63,7 +65,7 @@ class FragmentSearch : Fragment() {
                 SearchState.IsLoading -> showLoading()
             }
         }
-        trackAdapter = TrackAdapter(tracks) {
+        trackAdapter = TrackAdapter {
             trackDebounce(it)
         }
 
@@ -79,6 +81,10 @@ class FragmentSearch : Fragment() {
 
                 is HistoryState.NewUniqueTrack -> {
                     showAddNewUniqueTrack(it)
+                }
+
+                is HistoryState.InitState -> {
+                    showInitState(it.history)
                 }
             }
         }
@@ -121,10 +127,8 @@ class FragmentSearch : Fragment() {
 
         val recyclerHistory = binding.searchTracksHistoryRecycler
 
-
-        tracksHistory = ArrayList(viewModel.getTracksHistory())
-        trackAdapterHistory = TrackAdapter(tracksHistory)
-        {
+        viewModel.initHistory()
+        trackAdapterHistory = TrackAdapter {
             trackDebounce(it)
         }
         recyclerHistory.layoutManager =
@@ -141,6 +145,12 @@ class FragmentSearch : Fragment() {
             viewModel.clearHistory()
         }
 
+    }
+
+    private fun showInitState(history: List<Track>) {
+        tracksHistory = ArrayList(history)
+        trackAdapterHistory.setNewItems(history)
+        trackAdapterHistory.notifyDataSetChanged()
     }
 
     private fun trackDebounce(track: Track) {
@@ -169,6 +179,7 @@ class FragmentSearch : Fragment() {
         if (it.historyOverloaded) {
             val lastIndex = tracksHistory.lastIndex
             tracksHistory.removeLast()
+            trackAdapterHistory.setNewItems(tracksHistory)
             trackAdapterHistory.notifyItemRemoved(lastIndex)
         }
         showPutTrackOnTopHistory(it.track)
@@ -178,6 +189,7 @@ class FragmentSearch : Fragment() {
         val currentTrack = it.track
         val indexOfCopy = tracksHistory.indexOf(currentTrack)
         tracksHistory.remove(currentTrack)
+        trackAdapterHistory.setNewItems(tracksHistory)
         trackAdapterHistory.notifyItemRemoved(indexOfCopy)
         trackAdapterHistory.notifyItemRangeChanged(indexOfCopy, tracksHistory.size)
         showPutTrackOnTopHistory(currentTrack)
@@ -185,18 +197,20 @@ class FragmentSearch : Fragment() {
 
     private fun showEmptyHistory() {
         tracksHistory.clear()
+        trackAdapterHistory.setNewItems(tracksHistory)
         trackAdapterHistory.notifyDataSetChanged()
         binding.layoutHistory.isVisible = false
     }
 
     private fun showPutTrackOnTopHistory(track: Track) {
         tracksHistory.add(0, track)
+        trackAdapterHistory.setNewItems(tracksHistory)
         trackAdapterHistory.notifyItemInserted(0)
         trackAdapterHistory.notifyItemRangeChanged(0, tracksHistory.size)
     }
 
     private fun clearTrackList() {
-        tracks.clear()
+        trackAdapter.setNewItems(emptyList())
         trackAdapter.notifyDataSetChanged()
         clearPlaceholdersVisibility()
     }
@@ -215,7 +229,6 @@ class FragmentSearch : Fragment() {
     private fun showEmpty(message: String) {
         binding.searchProgressBar.isVisible = false
         clearPlaceholdersVisibility()
-        tracks.clear()
         showMessage(message, "", R.drawable.tracks_not_found)
     }
 
@@ -223,8 +236,7 @@ class FragmentSearch : Fragment() {
         Log.d("MYY", "showContent invoked")
         binding.searchProgressBar.isVisible = false
         clearPlaceholdersVisibility()
-        tracks.clear()
-        tracks.addAll(content)
+        trackAdapter.setNewItems(content)
         trackAdapter.notifyDataSetChanged()
     }
 
@@ -249,7 +261,7 @@ class FragmentSearch : Fragment() {
     ) {
         if (title.isNotEmpty()) {
             binding.layoutPlaceholders.isVisible = true
-            tracks.clear()
+            trackAdapter.setNewItems(emptyList())
             trackAdapter.notifyDataSetChanged()
             binding.problemTitle.text = title
             binding.problemImage.setImageResource(imageId)

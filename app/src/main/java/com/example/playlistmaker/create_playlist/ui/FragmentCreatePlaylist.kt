@@ -1,15 +1,20 @@
 package com.example.playlistmaker.create_playlist.ui
 
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -19,15 +24,15 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
+import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val PLAYLIST_CORNER_RADIUS = 8
+private const val PLAYLIST_FRAME_CORNER_RADIUS = 8
 
 class FragmentCreatePlaylist : Fragment() {
 
-    private var _binding: FragmentNewPlaylistBinding? = null
+    private var _binding: FragmentCreatePlaylistBinding? = null
     private val binding get() = _binding!!
 
     private var shouldShowDialog = false
@@ -36,13 +41,40 @@ class FragmentCreatePlaylist : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewPlaylistBinding.inflate(inflater, container, false)
+        _binding = FragmentCreatePlaylistBinding.inflate(inflater, container, false)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+                val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+                val navBarsInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+                if (imeInsets.bottom == 0) {
+                    v.setPadding(0, 0, 0, navBarsInsets.bottom)
+                } else {
+                    v.setPadding(0, 0, 0, imeInsets.bottom)
+                }
+                insets
+            }
+        } else {
+            requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
         return binding.root
     }
+
+
+    override fun onStop() {
+        super.onStop()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            val activity = requireActivity()
+            activity.window.setSoftInputMode(
+                activity.packageManager.getActivityInfo(
+                    activity.componentName, PackageManager.GET_META_DATA
+                ).softInputMode
+            )
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,7 +95,7 @@ class FragmentCreatePlaylist : Fragment() {
             }
         }
 
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner){
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
             if (shouldShowDialog) {
                 showExitDialog()
             } else {
@@ -83,16 +115,13 @@ class FragmentCreatePlaylist : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     savedUri = uri
-                    Glide.with(requireContext())
-                        .load(uri)
-                        .transform(
-                            MultiTransformation(
-                                CenterCrop(), RoundedCorners(
-                                    PLAYLIST_CORNER_RADIUS
-                                )
+                    Glide.with(requireContext()).load(uri).transform(
+                        MultiTransformation(
+                            CenterCrop(), RoundedCorners(
+                                PLAYLIST_FRAME_CORNER_RADIUS
                             )
                         )
-                        .into(binding.ivAddPlaylistCover)
+                    ).into(binding.ivAddPlaylistCover)
                     shouldShowDialog = true
                 } else {
                     Log.d("MYYY", "image not selected")
@@ -106,9 +135,7 @@ class FragmentCreatePlaylist : Fragment() {
         binding.bCreate.setOnClickListener {
             val playlistName: String = binding.etTitle.text.toString()
             viewModel.savePlaylist(
-                playlistName,
-                binding.etDescription.text.toString().ifEmpty { null },
-                savedUri
+                playlistName, binding.etDescription.text.toString().ifEmpty { null }, savedUri
             )
             context?.let {
                 Toast.makeText(
@@ -122,24 +149,21 @@ class FragmentCreatePlaylist : Fragment() {
 
     private fun showExitDialog() {
         context?.let {
-            MaterialAlertDialogBuilder(it)
-                .setTitle(getString(R.string.add_playlist_dialog_title))
+            MaterialAlertDialogBuilder(it).setTitle(getString(R.string.add_playlist_dialog_title))
                 .setMessage(getString(R.string.add_playlist_dialog_description))
                 .setNeutralButton(getString(R.string.add_playlist_button_cancel)) { _, _ -> }
                 .setPositiveButton(getString(R.string.add_playlist_button_exit)) { _, _ ->
                     findNavController().navigateUp()
-                }
-                .show()
+                }.show()
         }
     }
 
     private fun onEditTextDescriptionChange(descriptionIsEmpty: Boolean) {
         shouldShowDialog = !descriptionIsEmpty
-        if (descriptionIsEmpty) {
-            binding.etDescription.setBackgroundResource(R.drawable.add_playlist_et_empty)
-        } else {
-            binding.etDescription.setBackgroundResource(R.drawable.add_playlist_et_not_empty)
-        }
+        binding.etDescription.setBackgroundResource(
+            if (descriptionIsEmpty) R.drawable.add_playlist_et_empty
+            else R.drawable.add_playlist_et_not_empty
+        )
         binding.tvOnEtDescription.isVisible = !descriptionIsEmpty
     }
 

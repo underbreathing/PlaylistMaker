@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.fragment
+package com.example.playlistmaker.media_player.ui.fragment
 
 import android.os.Build
 import android.os.Bundle
@@ -18,11 +18,11 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaPlayerBinding
 import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
-import com.example.playlistmaker.player.ui.animations.PlayerAnimations
-import com.example.playlistmaker.player.ui.mapper.TimeFormatter
-import com.example.playlistmaker.player.ui.mapper.TrackMapper
-import com.example.playlistmaker.player.ui.model.TrackInfo
-import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
+import com.example.playlistmaker.media_player.ui.animations.PlayerAnimations
+import com.example.playlistmaker.media_player.ui.mapper.TimeFormatter
+import com.example.playlistmaker.media_player.ui.mapper.TrackMapper
+import com.example.playlistmaker.media_player.ui.model.TrackInfo
+import com.example.playlistmaker.media_player.ui.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.search.domain.model.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.android.ext.android.inject
@@ -50,9 +50,7 @@ class FragmentMediaPlayer : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
@@ -61,7 +59,7 @@ class FragmentMediaPlayer : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("MYYY","onViewCreated")
+        Log.d("MYYY", "onViewCreated")
 
         val currentTrack: Track = requireNotNull(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -127,8 +125,7 @@ class FragmentMediaPlayer : Fragment() {
                 viewModel?.deleteFromMediaLibrary(currentTrack.trackId)
             } else {
                 viewModel?.saveTrackToMediaLibrary(
-                    currentTrack,
-                    System.currentTimeMillis()
+                    currentTrack, System.currentTimeMillis()
                 )
             }
 
@@ -179,20 +176,13 @@ class FragmentMediaPlayer : Fragment() {
         viewModel?.observeAddTrackToPlaylistState()?.observe(viewLifecycleOwner) { addedState ->
             if (addedState.isAdded) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                showToast(
-                    getString(
-                        R.string.media_player_toast_new_track_added,
-                        addedState.playlistTitle
-                    )
-                )
-            } else {
-                showToast(
-                    getString(
-                        R.string.media_player_toast_old_track,
-                        addedState.playlistTitle
-                    )
-                )
             }
+            showToast(
+                if (addedState.isAdded) getString(
+                    R.string.media_player_toast_new_track_added, addedState.playlistTitle
+                )
+                else getString(R.string.media_player_toast_old_track, addedState.playlistTitle)
+            )
         }
 
         binding.bNewPlaylist.setOnClickListener {
@@ -209,9 +199,7 @@ class FragmentMediaPlayer : Fragment() {
     private fun showToast(toastMessage: String) {
         context?.let {
             Toast.makeText(
-                it,
-                toastMessage,
-                Toast.LENGTH_SHORT
+                it, toastMessage, Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -223,8 +211,7 @@ class FragmentMediaPlayer : Fragment() {
 
     private fun showPlaylists(data: List<PlaylistInfo>) {
         binding.rvAddToPlaylist.isVisible = true
-        playlistAdapter.playlists.clear()
-        playlistAdapter.playlists.addAll(data)
+        playlistAdapter.setNewItems(data)
         playlistAdapter.notifyDataSetChanged()
     }
 
@@ -245,11 +232,8 @@ class FragmentMediaPlayer : Fragment() {
     }
 
     private fun showTrackInfo(trackInfo: TrackInfo) {
-        Glide.with(this)
-            .load(trackInfo.coverArtwork)
-            .placeholder(R.drawable.placeholder_track)
-            .transform(CenterCrop(), RoundedCorners(8))
-            .into(binding.trackArtwork)
+        Glide.with(this).load(trackInfo.coverArtwork).placeholder(R.drawable.placeholder_track)
+            .transform(CenterCrop(), RoundedCorners(8)).into(binding.trackArtwork)
 
         val albumIngoText = trackInfo.nameOfTheBand
         if (albumIngoText.isNotEmpty()) {

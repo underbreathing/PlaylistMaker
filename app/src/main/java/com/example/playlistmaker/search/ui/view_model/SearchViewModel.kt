@@ -12,6 +12,7 @@ import com.example.playlistmaker.search.domain.model.Resource
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.domain.repository.TracksHistoryRepository
 import com.example.playlistmaker.search.domain.use_cases.SearchTrackUseCase
+import com.example.playlistmaker.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -27,6 +28,9 @@ class SearchViewModel(
 
     private val searchTextStateLiveData: MutableLiveData<String> = MutableLiveData()
     private val historyStateLiveData: MutableLiveData<HistoryState> = MutableLiveData()
+//    init {
+//        historyStateLiveData.value = HistoryState.InitState(getTracksHistory())
+//    }
     private val searchStateLiveData: MutableLiveData<SearchState> = MutableLiveData()
     private var lastSearchRequest: String? = null
     private var _searchDebounce: (String) -> Unit = debounce(
@@ -61,10 +65,6 @@ class SearchViewModel(
         Log.d("MYY", " track historySize == ${getTracksHistory().size}")
     }
 
-    fun getTracksHistory(): List<Track> {
-        return historyRepository.getTracks()
-    }
-
     fun observeSearchTextLiveData(): LiveData<String> = searchTextStateLiveData
     fun onTextChanged(newSearchText: String) {
         searchTextStateLiveData.value = newSearchText
@@ -75,6 +75,10 @@ class SearchViewModel(
     //функция, которую будет использовать кнопка "обновить" т.к при ее нажатии ждать 2с необязательно
     fun search(searchQuery: String) {
         searchTrack(searchQuery)
+    }
+
+    fun initHistory(){
+        historyStateLiveData.value = HistoryState.InitState(getTracksHistory())
     }
 
 
@@ -141,6 +145,10 @@ class SearchViewModel(
 
     private fun putTrackInRepository(track: Track) {
         historyRepository.putTrack(track)
+    }
+
+    private fun getTracksHistory(): List<Track> {
+        return historyRepository.getTracks()
     }
 
     private fun removeTrackFromRepository(track: Track) {

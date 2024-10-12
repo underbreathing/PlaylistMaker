@@ -36,7 +36,7 @@ class App : Application() {
                 KEY_IS_DARK_THEME,
                 false
             )
-        )//при вызове этого метода устанавливается тема для всего приложения
+        )
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.mapper
+package com.example.playlistmaker.media_player.ui.mapper
 
 import java.text.SimpleDateFormat
 import java.util.Locale

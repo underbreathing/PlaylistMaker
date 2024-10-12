@@ -4,9 +4,9 @@ import com.example.playlistmaker.create_playlist.data.impl.LocalFileStorageImpl
 import com.example.playlistmaker.create_playlist.data.impl.PlaylistRepositoryImpl
 import com.example.playlistmaker.create_playlist.domain.api.LocalFileStorage
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistRepository
-import com.example.playlistmaker.player.data.impl.AudioPlayerRepositoryImpl
+import com.example.playlistmaker.media_player.data.impl.AudioPlayerRepositoryImpl
 import com.example.playlistmaker.media_library.data.impl.MediaLibraryRepositoryImpl
-import com.example.playlistmaker.player.domain.audio_player.AudioPlayerRepository
+import com.example.playlistmaker.media_player.domain.audio_player.AudioPlayerRepository
 import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
 import com.example.playlistmaker.search.data.impl.NetworkRepositoryImpl
 import com.example.playlistmaker.search.data.impl.TracksHistoryRepositoryImpl

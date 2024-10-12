@@ -43,8 +43,8 @@
         app:layout_constraintTop_toBottomOf="@id/iv_add_playlist_cover" />
 
     <TextView
-        style="@style/tv_add_playlist_on_et"
         android:id="@+id/tv_on_et_title"
+        style="@style/tv_add_playlist_on_et"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/add_playlist_on_et_marginStart"
@@ -70,8 +70,8 @@
         app:layout_constraintTop_toBottomOf="@id/et_title" />
 
     <TextView
-        style="@style/tv_add_playlist_on_et"
         android:id="@+id/tv_on_et_description"
+        style="@style/tv_add_playlist_on_et"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/add_playlist_on_et_marginStart"
@@ -86,6 +86,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/b_create"
         android:layout_width="0dp"
+        android:layout_marginTop="@dimen/add_playlist_et_margin"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="32dp"
@@ -98,6 +99,8 @@
         android:textSize="@dimen/secondary_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_description"
+        app:layout_constraintVertical_bias="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
