@@ -12,7 +12,6 @@ import com.example.playlistmaker.search.domain.model.Resource
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.domain.repository.TracksHistoryRepository
 import com.example.playlistmaker.search.domain.use_cases.SearchTrackUseCase
-import com.example.playlistmaker.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -28,9 +27,6 @@ class SearchViewModel(
 
     private val searchTextStateLiveData: MutableLiveData<String> = MutableLiveData()
     private val historyStateLiveData: MutableLiveData<HistoryState> = MutableLiveData()
-//    init {
-//        historyStateLiveData.value = HistoryState.InitState(getTracksHistory())
-//    }
     private val searchStateLiveData: MutableLiveData<SearchState> = MutableLiveData()
     private var lastSearchRequest: String? = null
     private var _searchDebounce: (String) -> Unit = debounce(
@@ -77,7 +73,7 @@ class SearchViewModel(
         searchTrack(searchQuery)
     }
 
-    fun initHistory(){
+    fun initHistory() {
         historyStateLiveData.value = HistoryState.InitState(getTracksHistory())
     }
 
