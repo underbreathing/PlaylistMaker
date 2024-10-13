@@ -5,11 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
+import com.example.playlistmaker.create_playlist.ui.mappers.PlaylistMapper
 import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlaylistsFragmentViewModel(private val playlistsInteractor: PlaylistsInteractor) :
+class PlaylistsFragmentViewModel(
+    private val playlistsInteractor: PlaylistsInteractor,
+    private val playlistMapper: PlaylistMapper
+) :
     ViewModel() {
 
     private val stateLiveData: MutableLiveData<PlaylistsDataState> = MutableLiveData()
@@ -28,7 +32,11 @@ class PlaylistsFragmentViewModel(private val playlistsInteractor: PlaylistsInter
                 if (data.isEmpty()) {
                     stateLiveData.postValue(PlaylistsDataState.Empty)
                 } else {
-                    stateLiveData.postValue(PlaylistsDataState.Content(data))
+                    stateLiveData.postValue(
+                        PlaylistsDataState.Content(
+                            data.mapNotNull(playlistMapper::map)
+                        )
+                    )
                 }
 
             }

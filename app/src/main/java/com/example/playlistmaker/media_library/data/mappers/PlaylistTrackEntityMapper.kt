@@ -22,4 +22,21 @@ class PlaylistTrackEntityMapper {
             )
         }
     }
+
+    fun map(playlistTrackEntity: PlaylistTrackEntity): Track {
+        return with(playlistTrackEntity) {
+            Track(
+                trackId,
+                trackName,
+                artistName,
+                trackTimeMillis,
+                artworkUrl,
+                collectionName,
+                releaseDate,
+                primaryGenreName,
+                country,
+                previewUrl
+            )
+        }
+    }
 }

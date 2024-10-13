@@ -21,7 +21,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get())
+        PlaylistRepositoryImpl(get(), get(), get())
     }
 
     factory<LocalFileStorage> {
@@ -33,7 +33,7 @@ val repositoryModule = module {
     }
 
     single<MediaLibraryRepository> {
-        MediaLibraryRepositoryImpl(get(), get(),get())
+        MediaLibraryRepositoryImpl(get(), get(), get())
     }
 
     single<NetworkRepository> {

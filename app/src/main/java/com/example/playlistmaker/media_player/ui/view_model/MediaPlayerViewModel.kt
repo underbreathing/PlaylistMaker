@@ -6,9 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
+import com.example.playlistmaker.create_playlist.ui.mappers.PlaylistMapper
 import com.example.playlistmaker.media_player.domain.audio_player.AudioPlayerRepository
 import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
+import com.example.playlistmaker.media_library.ui.model.PlaylistInfoUi
 import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
 import com.example.playlistmaker.media_player.ui.view_model.model.PlayStatus
 import com.example.playlistmaker.media_player.ui.view_model.model.TrackAddState
@@ -21,7 +22,8 @@ class MediaPlayerViewModel(
     private val dataSource: String?,
     private val mediaLibraryRepository: MediaLibraryRepository,
     private val track: Track,
-    private val playlistsInteractor: PlaylistsInteractor
+    private val playlistsInteractor: PlaylistsInteractor,
+    private val playlistMapper: PlaylistMapper
 
 ) : ViewModel() {
 
@@ -30,6 +32,7 @@ class MediaPlayerViewModel(
     private val trackInMediaLibraryLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val playlistsLiveData: MutableLiveData<PlaylistsDataState> = MutableLiveData()
     private var addTrackToPlaylistState: MutableLiveData<TrackAddState> = MutableLiveData()
+
     init {
         fillPlaylists()
     }
@@ -50,7 +53,7 @@ class MediaPlayerViewModel(
         checkIsTrackInMediaLibrary(track.trackId)
     }
 
-    fun addTrackToPlaylist(playlist: PlaylistInfo) {
+    fun addTrackToPlaylist(playlist: PlaylistInfoUi) {
         val trackId = track.trackId
         val trackIds = playlist.trackIds
         if (trackIds.isEmpty()) {
@@ -77,9 +80,9 @@ class MediaPlayerViewModel(
     }
 
 
-    private fun updatePlaylist(playlist: PlaylistInfo, track: Track) {
+    private fun updatePlaylist(playlist: PlaylistInfoUi, track: Track) {
         viewModelScope.launch {
-            playlistsInteractor.addTrackToPlaylist(playlist, track)
+            playlistsInteractor.addTrackToPlaylist(playlistMapper.map(playlist), track)
             addTrackToPlaylistState.postValue(TrackAddState(playlist.title, true))
         }
     }
@@ -164,7 +167,7 @@ class MediaPlayerViewModel(
                 if (data.isEmpty()) {
                     playlistsLiveData.postValue(PlaylistsDataState.Empty)
                 } else {
-                    playlistsLiveData.postValue(PlaylistsDataState.Content(data))
+                    playlistsLiveData.postValue(PlaylistsDataState.Content(data.mapNotNull(playlistMapper::map)))
                 }
             }
         }

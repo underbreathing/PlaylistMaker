@@ -9,9 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
+import com.example.playlistmaker.media_library.ui.model.PlaylistInfoUi
 import com.example.playlistmaker.media_library.ui.view_model.PlaylistsFragmentViewModel
 import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
+import com.example.playlistmaker.playlist.ui.fragment.FragmentPlaylist
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -28,7 +29,12 @@ class PlaylistsFragment : Fragment() {
 
     private val viewModel: PlaylistsFragmentViewModel by viewModel()
 
-    private var adapter: PlaylistAdapter = PlaylistAdapter()
+    private var adapter: PlaylistAdapter = PlaylistAdapter { playlistInfo ->
+        findNavController().navigate(
+            R.id.action_fragmentMediaLibrary_to_fragmentPlaylist,
+            FragmentPlaylist.createArgs(playlistInfo.id)
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +74,7 @@ class PlaylistsFragment : Fragment() {
         binding.mediaSelectedTracksPlaceholder.isVisible = isVisible
     }
 
-    private fun showContent(content: List<PlaylistInfo>) {
+    private fun showContent(content: List<PlaylistInfoUi>) {
         setPlaceholderVisibility(false)
         binding.rvPlaylists.isVisible = true
         adapter.setNewPlaylists(content)

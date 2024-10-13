@@ -1,4 +1,4 @@
-package com.example.playlistmaker.root_activity
+package com.example.playlistmaker
 
 import android.os.Build
 import android.os.Bundle
@@ -42,7 +42,7 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.fragmentCreatePlaylist, R.id.fragmentMediaPlayer -> {
+                R.id.fragmentCreatePlaylist, R.id.fragmentMediaPlayer, R.id.fragmentPlaylist -> {
                     binding.bottomNavigationPanel.isVisible = false
                 }
 

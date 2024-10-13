@@ -27,7 +27,7 @@
     <string name="search_button_update">Обновить</string>
     <string name="search_track_history_title">Вы искали</string>
 
-<!--    media_player-->
+    <!--    media_player-->
     <string name="media_player_info_duration">Длительность</string>
     <string name="media_player_info_album">Альбом</string>
     <string name="media_player_info_year">Год</string>
@@ -36,17 +36,17 @@
     <string name="media_player_play_progress_start" translatable="false">00:00</string>
     <string name="media_player_botomsheet_title">Добавить в плейлист</string>
 
-<!--    media_library-->
+    <!--    media_library-->
     <string name="media_favorite_empty">Ваша медиатека пуста</string>
     <string name="playlists_empty">Вы не создали\nни одного плейлиста</string>
     <string name="playlists">Новый плейлист</string>
     <string name="tab_item1">Избранные треки</string>
     <string name="tab_item2">Плейлисты</string>
 
-<!--        media_library-->
+    <!--        media_library-->
     <string name="media_library_title">Медиатека</string>
 
-<!--    new playlist-->
+    <!--    new playlist-->
     <string name="new_playlist_button_top_back_title">Новый плейлист</string>
     <string name="add_playlist_edit_text_title">Название*</string>
     <string name="add_playlist_edit_text_description">Описание</string>
@@ -59,6 +59,7 @@
     <string name="media_player_toast_new_track_added">Добавлено в плейлист [%1$s]</string>
     <string name="media_player_toast_old_track">Трек уже добавлен в плейлист [%1$s]</string>
     <string name="playlist_track_count">%1$s %2$s</string>
+    <string name="playlist_tracks_total_time">%1$s %2$s</string>
 
 
     <plurals name="track">
@@ -66,6 +67,13 @@
         <item quantity="few">трека</item>
         <item quantity="many">треков</item>
         <item quantity="other">трека</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">минута</item>
+        <item quantity="few">минуты</item>
+        <item quantity="many">минут</item>
+        <item quantity="other">минут</item>
     </plurals>
 
 </resources>

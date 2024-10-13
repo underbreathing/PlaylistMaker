@@ -8,12 +8,12 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistRvItemHorizontalBinding
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
+import com.example.playlistmaker.media_library.ui.model.PlaylistInfoUi
 
 class PlaylistHorizontalViewHolder(private val binding: PlaylistRvItemHorizontalBinding) :
     ViewHolder(binding.root) {
 
-    fun bind(playlist: PlaylistInfo) {
+    fun bind(playlist: PlaylistInfoUi) {
         Glide.with(itemView)
             .load(playlist.coverUriString?.let(Uri::parse))
             .error(R.drawable.placeholder_track)

@@ -28,7 +28,7 @@
     <string name="media_player_info_country">Country</string>
     <string name="media_player_botomsheet_title">Add to playlist</string>
 
-<!--    media_library-->
+    <!--    media_library-->
     <string name="media_favorite_empty">Your media library is empty</string>
     <string name="playlists_empty">You haven\'t created\nany playlists</string>
     <string name="playlists">New playlist</string>
@@ -51,6 +51,11 @@
     <plurals name="track">
         <item quantity="one">track</item>
         <item quantity="other">tracks</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">minute</item>
+        <item quantity="other">minutes</item>
     </plurals>
 
 </resources>

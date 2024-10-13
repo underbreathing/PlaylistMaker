@@ -6,9 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.playlistmaker.create_playlist.data.db.entity.PlaylistEntity
-import com.example.playlistmaker.create_playlist.domain.model.Playlist
-import com.example.playlistmaker.media_library.data.db.entity.TrackEntity
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
 import kotlinx.coroutines.flow.Flow
 
 
@@ -25,7 +22,7 @@ interface PlaylistDao {
     fun getPlaylists(): Flow<List<PlaylistEntity>>
 
     @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
-    suspend fun getPlaylistById(playlistId: Long): PlaylistEntity?
+    fun getPlaylistById(playlistId: Long): Flow<PlaylistEntity?>
 
     @Update(PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updatePlaylist(playlist: PlaylistEntity)

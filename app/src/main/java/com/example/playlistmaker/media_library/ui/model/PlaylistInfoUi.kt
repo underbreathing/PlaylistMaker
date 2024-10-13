@@ -1,6 +1,6 @@
 package com.example.playlistmaker.media_library.ui.model
 
-data class PlaylistInfo(
+data class PlaylistInfoUi(
     val id: Long,
     val title: String,
     val description: String,
