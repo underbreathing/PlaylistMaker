@@ -33,7 +33,8 @@
     <string name="media_player_info_year">Год</string>
     <string name="media_player_info_genre">Жанр</string>
     <string name="media_player_info_country">Страна</string>
-    <string name="mediaplayer_play_progress_start" translatable="false">00:00</string>
+    <string name="media_player_play_progress_start" translatable="false">00:00</string>
+    <string name="media_player_botomsheet_title">Добавить в плейлист</string>
 
 <!--    media_library-->
     <string name="media_favorite_empty">Ваша медиатека пуста</string>
@@ -42,7 +43,29 @@
     <string name="tab_item1">Избранные треки</string>
     <string name="tab_item2">Плейлисты</string>
 
-
+<!--        media_library-->
     <string name="media_library_title">Медиатека</string>
+
+<!--    new playlist-->
+    <string name="new_playlist_button_top_back_title">Новый плейлист</string>
+    <string name="add_playlist_edit_text_title">Название*</string>
+    <string name="add_playlist_edit_text_description">Описание</string>
+    <string name="add_playlist_b_create">Создать</string>
+    <string name="add_playlist_dialog_title">Завершить создание плейлиста?</string>
+    <string name="add_playlist_dialog_description">Все несохраненные данные будут потеряны</string>
+    <string name="add_playlist_button_cancel">Отмена</string>
+    <string name="add_playlist_button_exit">Завершить</string>
+    <string name="add_playlist_toast_message">Плейлист %1$s создан</string>
+    <string name="media_player_toast_new_track_added">Добавлено в плейлист [%1$s]</string>
+    <string name="media_player_toast_old_track">Трек уже добавлен в плейлист [%1$s]</string>
+    <string name="playlist_track_count">%1$s %2$s</string>
+
+
+    <plurals name="track">
+        <item quantity="one">трек</item>
+        <item quantity="few">трека</item>
+        <item quantity="many">треков</item>
+        <item quantity="other">трека</item>
+    </plurals>
 
 </resources>

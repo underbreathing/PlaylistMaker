@@ -12,4 +12,10 @@
     <dimen name="mediaplayer_info_bottom">8dp</dimen>
     <dimen name="mediaplayer_info_top">9dp</dimen>
     <dimen name="mediaplayer_info_text_start_margin">12dp</dimen>
+
+    <dimen name="new_playlist_corners">8dp</dimen>
+    <dimen name="add_playlist_et_margin">16dp</dimen>
+    <dimen name="add_playlist_on_et_marginStart">16dp</dimen>
+    <dimen name="add_playlist_on_et_text_size">12sp</dimen>
+    <dimen name="add_playlist_on_et_padding">4dp</dimen>
 </resources>

@@ -26,6 +26,7 @@
     <string name="media_player_info_year">Year</string>
     <string name="media_player_info_genre">Genre</string>
     <string name="media_player_info_country">Country</string>
+    <string name="media_player_botomsheet_title">Add to playlist</string>
 
 <!--    media_library-->
     <string name="media_favorite_empty">Your media library is empty</string>
@@ -34,7 +35,22 @@
     <string name="tab_item1">Selected tracks</string>
     <string name="tab_item2">Playlists</string>
     <string name="media_library_title">Media Library</string>
+    <string name="new_playlist_button_top_back_title">New playlist</string>
+    <string name="add_playlist_edit_text_title">Title*</string>
+    <string name="add_playlist_edit_text_description">Description</string>
+    <string name="add_playlist_b_create">Create</string>
+    <string name="add_playlist_dialog_title">Finish creating a playlist?</string>
+    <string name="add_playlist_dialog_description">All unsaved data will be lost</string>
+    <string name="add_playlist_button_cancel">Cancel</string>
+    <string name="add_playlist_button_exit">Exit</string>
+    <string name="add_playlist_toast_message">Playlist %1$s is created</string>
+    <string name="media_player_toast_new_track_added">added to playlist [%1$s]</string>
+    <string name="media_player_toast_old_track">The track has already been added to the playlist [%1$s]</string>
+    <string name="playlist_track_count">%1$s %2$s</string>
 
-
+    <plurals name="track">
+        <item quantity="one">track</item>
+        <item quantity="other">tracks</item>
+    </plurals>
 
 </resources>

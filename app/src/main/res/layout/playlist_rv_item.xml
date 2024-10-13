@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:scaleType="centerCrop"
+        tools:src="@drawable/sponge" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/textYs400Regular12"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:lines="1"
+        app:layout_constraintTop_toBottomOf="@id/iv_cover"
+        tools:text="Best songs 2021    sdfsdfsdfsdfsdfsdsdfsdf" />
+
+    <TextView
+        android:id="@+id/tv_track_count"
+        style="@style/textYs400Regular12"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:lines="1"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="98 треков ss dfsdf sdfsdfsdfssdfsdf" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,4 +25,13 @@ class GsonConverter(private val gson: Gson) : KoinComponent {
     fun trackListToGson(tracks: List<Track>): String {
         return gson.toJson(tracks)
     }
+
+    fun trackIdsToJson(trackIds: List<Long>): String {
+        return gson.toJson(trackIds)
+    }
+
+    fun jsonToListLong(json: String?): List<Long> {
+        return if (json == null) emptyList()
+        else gson.fromJson(json, Array<Long>::class.java).toList()
+    }
 }

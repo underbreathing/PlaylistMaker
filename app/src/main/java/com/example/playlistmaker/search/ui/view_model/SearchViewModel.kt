@@ -61,10 +61,6 @@ class SearchViewModel(
         Log.d("MYY", " track historySize == ${getTracksHistory().size}")
     }
 
-    fun getTracksHistory(): List<Track> {
-        return historyRepository.getTracks()
-    }
-
     fun observeSearchTextLiveData(): LiveData<String> = searchTextStateLiveData
     fun onTextChanged(newSearchText: String) {
         searchTextStateLiveData.value = newSearchText
@@ -75,6 +71,10 @@ class SearchViewModel(
     //функция, которую будет использовать кнопка "обновить" т.к при ее нажатии ждать 2с необязательно
     fun search(searchQuery: String) {
         searchTrack(searchQuery)
+    }
+
+    fun initHistory() {
+        historyStateLiveData.value = HistoryState.InitState(getTracksHistory())
     }
 
 
@@ -141,6 +141,10 @@ class SearchViewModel(
 
     private fun putTrackInRepository(track: Track) {
         historyRepository.putTrack(track)
+    }
+
+    private fun getTracksHistory(): List<Track> {
+        return historyRepository.getTracks()
     }
 
     private fun removeTrackFromRepository(track: Track) {

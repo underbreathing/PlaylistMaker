@@ -61,7 +61,7 @@
             android:id="@+id/search_tracks_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/track"
+            tools:listitem="@layout/track_rv_item"
             tools:visibility="gone" />
 
         <ProgressBar
@@ -116,8 +116,8 @@
             tools:text="Загрузка не удалась. Проверьте подключение к интернету" />
 
         <Button
-            android:id="@+id/button_update"
-            style="@style/search_button_update"
+            android:id="@+id/b_update"
+            style="@style/pm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -148,11 +148,11 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             tools:itemCount="10"
-            tools:listitem="@layout/track" />
+            tools:listitem="@layout/track_rv_item" />
 
         <Button
             android:id="@+id/button_clear_history"
-            style="@style/search_button_update"
+            style="@style/pm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
