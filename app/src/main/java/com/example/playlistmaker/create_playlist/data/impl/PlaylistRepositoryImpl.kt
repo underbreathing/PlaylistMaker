@@ -19,15 +19,13 @@ class PlaylistRepositoryImpl(
     }
 
     override fun getPlayLists(): Flow<List<Playlist>> {
-        return playlistDb.getPlaylistDao().getPlaylists().map {
+        return playlistDb.getPlaylistDao().getPlaylistsFlow().map {
             it.map(playlistEntityMapper::map)
         }
     }
 
-    override fun getPlaylist(playlistId: Long): Flow<Playlist?> {
-        return playlistDb.getPlaylistDao().getPlaylistById(playlistId).map {
-            it?.let(playlistEntityMapper::map)
-        }
+    override suspend fun getPlaylist(playlistId: Long): Playlist {
+        return playlistEntityMapper.map(playlistDb.getPlaylistDao().getPlaylistById(playlistId))
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {

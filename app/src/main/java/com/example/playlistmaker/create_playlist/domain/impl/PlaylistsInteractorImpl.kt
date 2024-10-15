@@ -25,12 +25,18 @@ class PlaylistsInteractorImpl(
         mediaLibraryRepository.insertPlaylistTrack(track)
     }
 
-    override fun getPlaylist(playlistId: Long): Flow<Playlist?> {
+    override suspend fun getPlaylist(playlistId: Long): Playlist {
         return playlistRepository.getPlaylist(playlistId)
     }
 
     override fun getPlaylistTracks(playlistTracksIds: List<Long>): Flow<List<Track>> {
         return playlistRepository.getPlaylistTracks(playlistTracksIds)
+    }
+
+    override suspend fun deleteTrackFromPlaylist(updatedPlaylist: Playlist, track: Track) {
+        playlistRepository.updatePlaylist(updatedPlaylist)
+        mediaLibraryRepository.deleteTrack(track)
+        //TODO проверить что вьюмодел получит список обновленных треков благодаря методу     override fun getPlaylistTracks(playlistTracksIds: List<Long>): Flow<List<Track>> {
     }
 
 }

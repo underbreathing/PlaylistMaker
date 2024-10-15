@@ -14,4 +14,6 @@ interface MediaLibraryRepository {
     suspend fun deleteFromMediaLibrary(trackId: Long)
 
     suspend fun insertPlaylistTrack(track: Track)
+
+    suspend fun deleteTrack(track: Track)
 }

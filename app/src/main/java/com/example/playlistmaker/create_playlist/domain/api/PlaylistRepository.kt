@@ -12,7 +12,7 @@ interface PlaylistRepository {
 
     fun getPlayLists(): Flow<List<Playlist>>
 
-    fun getPlaylist(playlistId: Long): Flow<Playlist?>
+    suspend fun getPlaylist(playlistId: Long): Playlist
 
     suspend fun updatePlaylist(playlist: Playlist)
 

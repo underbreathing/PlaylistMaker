@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.PlaylistRvItemHorizontalBinding
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfoUi
+import com.example.playlistmaker.media_library.ui.model.PlaylistUi
 
-class PlaylistHorizontalAdapter(private val onClick: ((playlist: PlaylistInfoUi) -> Unit)? = null) :
+class PlaylistHorizontalAdapter(private val onClick: ((playlist: PlaylistUi) -> Unit)? = null) :
     RecyclerView.Adapter<PlaylistHorizontalViewHolder>() {
 
-    private val playlists: MutableList<PlaylistInfoUi> = mutableListOf()
+    private val playlists: MutableList<PlaylistUi> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -36,7 +36,7 @@ class PlaylistHorizontalAdapter(private val onClick: ((playlist: PlaylistInfoUi)
         }
     }
 
-    fun setNewItems(newPlaylists: List<PlaylistInfoUi>) {
+    fun setNewItems(newPlaylists: List<PlaylistUi>) {
         playlists.clear()
         playlists.addAll(newPlaylists)
     }

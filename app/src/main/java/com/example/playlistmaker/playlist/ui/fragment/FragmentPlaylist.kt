@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.media_player.ui.fragment.FragmentMediaPlayer
-import com.example.playlistmaker.playlist.ui.PlaylistCompleteDataUi
+import com.example.playlistmaker.playlist.ui.model.PlaylistCompleteDataUi
 import com.example.playlistmaker.playlist.ui.rv.PlaylistTracksAdapter
 import com.example.playlistmaker.playlist.ui.view_model.PlaylistViewModel
 import com.example.playlistmaker.search.domain.model.Track
@@ -40,11 +40,11 @@ class FragmentPlaylist : Fragment() {
             R.id.action_fragmentPlaylist_to_fragmentMediaPlayer,
             FragmentMediaPlayer.createArgs(track)
         )
-    }, {
-        MaterialAlertDialogBuilder(requireContext()).setTitle("Хотите удалить трек?")
-            .setPositiveButton("Да") { _, _ ->
-                //TODO удалить трек
-            }.setNegativeButton("Нет") { _, _ -> }.show()
+    }, { track ->
+        MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.material_dialog_playlist_title))
+            .setPositiveButton(getString(R.string.material_dialog_positive)) { _, _ ->
+                viewModel.deleteTrack(track)
+            }.setNegativeButton(getString(R.string.material_dialog_negative)) { _, _ -> }.show()
         true
     })
 

@@ -19,10 +19,13 @@ interface PlaylistDao {
     suspend fun updatePlaylistTrackIds(playlistId: Long, trackIds: String)
 
     @Query("SELECT * FROM playlist_table")
-    fun getPlaylists(): Flow<List<PlaylistEntity>>
+    fun getPlaylistsFlow(): Flow<List<PlaylistEntity>>
+
+    @Query("SELECT * FROM playlist_table")
+    suspend fun getPlaylists(): List<PlaylistEntity>
 
     @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
-    fun getPlaylistById(playlistId: Long): Flow<PlaylistEntity?>
+    suspend fun getPlaylistById(playlistId: Long): PlaylistEntity
 
     @Update(PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updatePlaylist(playlist: PlaylistEntity)

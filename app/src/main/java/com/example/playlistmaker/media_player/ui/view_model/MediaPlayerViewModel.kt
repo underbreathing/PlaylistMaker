@@ -9,7 +9,7 @@ import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.create_playlist.ui.mappers.PlaylistMapper
 import com.example.playlistmaker.media_player.domain.audio_player.AudioPlayerRepository
 import com.example.playlistmaker.media_library.domain.db.MediaLibraryRepository
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfoUi
+import com.example.playlistmaker.media_library.ui.model.PlaylistUi
 import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
 import com.example.playlistmaker.media_player.ui.view_model.model.PlayStatus
 import com.example.playlistmaker.media_player.ui.view_model.model.TrackAddState
@@ -53,7 +53,7 @@ class MediaPlayerViewModel(
         checkIsTrackInMediaLibrary(track.trackId)
     }
 
-    fun addTrackToPlaylist(playlist: PlaylistInfoUi) {
+    fun addTrackToPlaylist(playlist: PlaylistUi) {
         val trackId = track.trackId
         val trackIds = playlist.trackIds
         if (trackIds.isEmpty()) {
@@ -80,7 +80,7 @@ class MediaPlayerViewModel(
     }
 
 
-    private fun updatePlaylist(playlist: PlaylistInfoUi, track: Track) {
+    private fun updatePlaylist(playlist: PlaylistUi, track: Track) {
         viewModelScope.launch {
             playlistsInteractor.addTrackToPlaylist(playlistMapper.map(playlist), track)
             addTrackToPlaylistState.postValue(TrackAddState(playlist.title, true))

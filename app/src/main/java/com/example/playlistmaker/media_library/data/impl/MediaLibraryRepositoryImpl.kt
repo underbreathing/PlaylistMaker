@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media_library.data.impl
 
+import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.media_library.data.db.TrackDatabase
 import com.example.playlistmaker.media_library.data.mappers.PlaylistTrackEntityMapper
 import com.example.playlistmaker.media_library.data.mappers.TrackEntityMapper
@@ -12,11 +13,22 @@ import kotlinx.coroutines.flow.map
 class MediaLibraryRepositoryImpl(
     private val trackDatabase: TrackDatabase,
     private val trackEntityMapper: TrackEntityMapper,
-    private val playlistTrackEntityMapper: PlaylistTrackEntityMapper
+    private val playlistTrackEntityMapper: PlaylistTrackEntityMapper,
+    private val gsonConverter: GsonConverter
 ) : MediaLibraryRepository {
+
     override suspend fun insertPlaylistTrack(track: Track) {
         trackDatabase.getPlaylistTrackDao()
             .insertTrack(playlistTrackEntityMapper.map(track))
+    }
+
+    override suspend fun deleteTrack(track: Track) {
+        if (!isContainedInAnyPlaylist(track.trackId)) {
+            trackDatabase.getPlaylistTrackDao()
+                .deletePlaylistTrack(playlistTrackEntityMapper.map(track))
+        }
+        //если этого идентификатора нет ни в одном из плейлистов - удалить
+        //это сработает, тк мы сначала обновляем плейлист в базе
     }
 
     override suspend fun putToMediaLibrary(track: Track, additionTime: Long) {
@@ -39,4 +51,10 @@ class MediaLibraryRepositoryImpl(
         trackDatabase.getTrackDao().deleteTrackById(trackId)
     }
 
+
+    //проверить
+    private suspend fun isContainedInAnyPlaylist(trackId: Long): Boolean {
+        return trackDatabase.getPlaylistDao().getPlaylists().map { it.trackIds }
+            .flatMap(gsonConverter::jsonToListLong).contains(trackId)
+    }
 }

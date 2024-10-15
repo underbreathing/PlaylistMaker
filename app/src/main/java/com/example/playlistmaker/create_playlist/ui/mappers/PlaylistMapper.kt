@@ -1,20 +1,20 @@
 package com.example.playlistmaker.create_playlist.ui.mappers
 
 import com.example.playlistmaker.create_playlist.domain.model.Playlist
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfoUi
+import com.example.playlistmaker.media_library.ui.model.PlaylistUi
 
 class PlaylistMapper {
 
-    fun map(playlist: Playlist?): PlaylistInfoUi? {
+    fun map(playlist: Playlist?): PlaylistUi? {
         return playlist?.let {
             with(playlist) {
-                PlaylistInfoUi(id, title, description.orEmpty(), trackIds, trackCount, coverPath)
+                PlaylistUi(id, title, description.orEmpty(), trackIds, trackCount, coverPath)
             }
         }
     }
 
-    fun map(playlistInfoUi: PlaylistInfoUi): Playlist {
-        return with(playlistInfoUi) {
+    fun map(playlistUi: PlaylistUi): Playlist {
+        return with(playlistUi) {
             Playlist(
                 id,
                 title,

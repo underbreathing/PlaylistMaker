@@ -7,8 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.create_playlist.domain.api.PlaylistsInteractor
 import kotlinx.coroutines.launch
 import com.example.playlistmaker.create_playlist.ui.mappers.PlaylistMapper
-import com.example.playlistmaker.playlist.ui.PlaylistCompleteDataUi
+import com.example.playlistmaker.media_library.ui.model.PlaylistUi
+import com.example.playlistmaker.playlist.ui.model.PlaylistCompleteDataUi
 import com.example.playlistmaker.search.domain.model.Track
+import kotlinx.coroutines.Dispatchers
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -20,25 +22,22 @@ class PlaylistViewModel(
 
     val receivedPlaylist: LiveData<PlaylistCompleteDataUi?> get() = _receivedPlaylist
 
+    private var ownPlaylist: PlaylistUi? = null
+
 
     fun initData(playlistId: Long) {
-        viewModelScope.launch {
-            playlistsInteractor.getPlaylist(playlistId).collect { playlist ->
-                playlist?.let {
-                    var totalTime = "0"
-                    playlistsInteractor.getPlaylistTracks(it.trackIds).collect { trackList ->
-                        if (trackList.isNotEmpty()) {
-                            totalTime = computeTotalTime(trackList)
-                        }
-                        _receivedPlaylist.value =
-                            PlaylistCompleteDataUi(
-                                playlistMapper.map(playlist),
-                                totalTime,
-                                trackList
-                            )
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            ownPlaylist = playlistMapper.map(playlistsInteractor.getPlaylist(playlistId))
+            var totalTime = "0"
+            playlistsInteractor.getPlaylistTracks(ownPlaylist?.trackIds ?: emptyList())
+                .collect { updatedTrackList ->
+                    totalTime = computeTotalTime(updatedTrackList)
+                    _receivedPlaylist.postValue(
+                        PlaylistCompleteDataUi(
+                            ownPlaylist, totalTime, updatedTrackList
+                        )
+                    )
                 }
-            }
         }
     }
 
@@ -46,6 +45,21 @@ class PlaylistViewModel(
         return SimpleDateFormat("m", Locale.getDefault()).format(trackList.sumOf {
             it.trackTimeMillis
         })
+    }
+
+    fun deleteTrack(track: Track) {
+        ownPlaylist?.let { playlist ->
+            if (playlist.trackIds.isNotEmpty()) {
+                val newOwn = playlist.copy(
+                    trackIds = playlist.trackIds.toMutableList().apply { remove(track.trackId) },
+                    trackCount = playlist.trackCount - 1
+                )
+                ownPlaylist = newOwn
+                viewModelScope.launch(Dispatchers.IO) {
+                    playlistsInteractor.deleteTrackFromPlaylist(playlistMapper.map(newOwn), track)
+                }
+            }
+        }
     }
 
 }

@@ -60,6 +60,9 @@
     <string name="media_player_toast_old_track">Трек уже добавлен в плейлист [%1$s]</string>
     <string name="playlist_track_count">%1$s %2$s</string>
     <string name="playlist_tracks_total_time">%1$s %2$s</string>
+    <string name="material_dialog_positive">Да</string>
+    <string name="material_dialog_negative">Нет</string>
+    <string name="material_dialog_playlist_title">Хотите удалить трек?</string>
 
 
     <plurals name="track">
