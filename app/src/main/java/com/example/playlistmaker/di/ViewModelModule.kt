@@ -40,8 +40,8 @@ val viewModelModule = module {
         FavoriteTracksViewModel(get(), androidContext())
     }
 
-    viewModel {
-        PlaylistViewModel(get(), get())
+    viewModel { (playlistId: Long) ->
+        PlaylistViewModel(get(), get(), playlistId)
     }
 
 

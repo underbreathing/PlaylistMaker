@@ -15,20 +15,26 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlaylistViewModel(
-    private val playlistsInteractor: PlaylistsInteractor, private val playlistMapper: PlaylistMapper
+    private val playlistsInteractor: PlaylistsInteractor,
+    private val playlistMapper: PlaylistMapper,
+    playlistId: Long
 ) : ViewModel() {
 
     private val _receivedPlaylist: MutableLiveData<PlaylistCompleteDataUi?> = MutableLiveData()
+
+    init {
+        initData(playlistId)
+    }
 
     val receivedPlaylist: LiveData<PlaylistCompleteDataUi?> get() = _receivedPlaylist
 
     private var ownPlaylist: PlaylistUi? = null
 
 
-    fun initData(playlistId: Long) {
+    private fun initData(playlistId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             ownPlaylist = playlistMapper.map(playlistsInteractor.getPlaylist(playlistId))
-            var totalTime = "0"
+            var totalTime: String
             playlistsInteractor.getPlaylistTracks(ownPlaylist?.trackIds ?: emptyList())
                 .collect { updatedTrackList ->
                     totalTime = computeTotalTime(updatedTrackList)

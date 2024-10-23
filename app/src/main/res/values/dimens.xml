@@ -19,4 +19,6 @@
     <dimen name="add_playlist_on_et_text_size">12sp</dimen>
     <dimen name="add_playlist_on_et_padding">4dp</dimen>
     <dimen name="playlist_titles_margin">8dp</dimen>
+    <dimen name="playlist_settings_item_height">60dp</dimen>
+    <dimen name="playlist_settings_item_marginStart">16dp</dimen>
 </resources>

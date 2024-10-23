@@ -138,4 +138,57 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/track_rv_item" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/bs_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/add_to_playlist_background"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:id="@+id/v_tap_settings"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/add_to_playlist_tap"
+            app:layout_constraintEnd_toEndOf="@id/bs_track_frame"
+            app:layout_constraintStart_toStartOf="@id/bs_track_frame"
+            app:layout_constraintTop_toTopOf="@id/bs_track_frame" />
+
+
+        <include
+            android:id="@+id/xml_playlist"
+            layout="@layout/playlist_rv_item_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/tv_share"
+            style="@style/playlist_settings_item"
+            android:text="@string/playlist_settings_share" />
+
+        <TextView
+            android:id="@+id/tv_edit_inf"
+            style="@style/playlist_settings_item"
+            android:text="@string/playlist_settings_edit_information" />
+
+        <TextView
+            android:id="@+id/tv_delete_playlist"
+            style="@style/playlist_settings_item"
+            android:text="@string/playlist_delete_playlist" />
+
+    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
