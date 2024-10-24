@@ -167,7 +167,7 @@ class FragmentPlaylist : Fragment() {
         }
 
         binding.tvEditInf.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentPlaylist_to_fragmentCreatePlaylist,
+            findNavController().navigate(R.id.action_fragmentPlaylist_to_fragmentEditPlaylist,
                 generalInfo?.let { FragmentEditPlaylist.createArgs(it) })
         }
     }

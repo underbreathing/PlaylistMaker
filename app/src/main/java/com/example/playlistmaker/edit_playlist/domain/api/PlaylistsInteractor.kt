@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlaylistsInteractor {
 
+    suspend fun updatePlaylist(playlist: Playlist)
+
     suspend fun savePlaylist(playlist: Playlist)
 
     fun getPlayLists(): Flow<List<Playlist?>>

@@ -28,16 +28,15 @@ import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val PLAYLIST_FRAME_CORNER_RADIUS = 8
-
 open class FragmentCreatePlaylist : Fragment() {
 
     private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
     private var shouldShowDialog = false
 
     protected open val viewModel: CreatePlaylistViewModel by viewModel()
+    private var savedUri: Uri? = null
 
 
     override fun onCreateView(
@@ -79,8 +78,6 @@ open class FragmentCreatePlaylist : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var savedUri: Uri? = null
-
         viewModel.isSavingCompleted.observe(viewLifecycleOwner) { isSavingOver ->
             if (isSavingOver) {
                 findNavController().navigateUp()
@@ -88,19 +85,11 @@ open class FragmentCreatePlaylist : Fragment() {
         }
 
         binding.tbButtonTopBack.setOnClickListener {
-            if (shouldShowDialog) {
-                showExitDialog()
-            } else {
-                findNavController().navigateUp()
-            }
+            navigateUp()
         }
 
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-            if (shouldShowDialog) {
-                showExitDialog()
-            } else {
-                findNavController().navigateUp()
-            }
+            navigateUp()
         }
 
         binding.etTitle.addTextChangedListener(onTextChanged = { charSequence, _, _, _ ->
@@ -133,17 +122,29 @@ open class FragmentCreatePlaylist : Fragment() {
         }
 
         binding.bCreate.setOnClickListener {
-            val playlistName: String = binding.etTitle.text.toString()
-            viewModel.savePlaylist(
-                playlistName, binding.etDescription.text.toString().ifEmpty { null }, savedUri
-            )
-            context?.let {
-                Toast.makeText(
-                    it,
-                    getString(R.string.add_playlist_toast_message, playlistName),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            savePlaylist(savedUri)
+        }
+    }
+
+    protected open fun navigateUp() {
+        if (shouldShowDialog) {
+            showExitDialog()
+        } else {
+            findNavController().navigateUp()
+        }
+    }
+
+    protected open fun savePlaylist(savedUri: Uri?) {
+        val playlistName: String = binding.etTitle.text.toString()
+        viewModel.savePlaylist(
+            playlistName, binding.etDescription.text.toString().ifEmpty { null }, savedUri
+        )
+        context?.let {
+            Toast.makeText(
+                it,
+                getString(R.string.add_playlist_toast_message, playlistName),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -183,5 +184,7 @@ open class FragmentCreatePlaylist : Fragment() {
         _binding = null
     }
 
-
+    companion object{
+        const val PLAYLIST_FRAME_CORNER_RADIUS = 8
+    }
 }

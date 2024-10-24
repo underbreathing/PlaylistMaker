@@ -18,15 +18,15 @@ open class CreatePlaylistViewModel(
     private val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
 
-    private val _isSavingCompletedLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    val isSavingCompleted: LiveData<Boolean> = _isSavingCompletedLiveData
+    protected open val isSavingCompletedLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val isSavingCompleted: LiveData<Boolean> = isSavingCompletedLiveData
 
 
     fun savePlaylist(title: String, description: String?, coverUri: Uri?) {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            val savedFileUri: String? = coverUri?.let { localFileStorage.saveImage(it, title) }
+            saveImage(coverUri)
             Log.d("MYY", "half time")
 
             playlistsInteractor.savePlaylist(
@@ -34,15 +34,21 @@ open class CreatePlaylistViewModel(
                     0L,
                     title,
                     description,
-                    savedFileUri,
+                    coverUri.toString(),
                     emptyList(),
                     0
                 )
             )
 
-            _isSavingCompletedLiveData.postValue(true)
+            isSavingCompletedLiveData.postValue(true)
         }
 
+    }
+
+    protected open suspend fun saveImage(coverUri: Uri?) {
+        coverUri?.let {
+            localFileStorage.saveImage(it)
+        }
     }
 
 }

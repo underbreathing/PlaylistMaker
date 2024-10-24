@@ -11,13 +11,13 @@ import java.io.File
 import java.io.FileOutputStream
 
 class LocalFileStorageImpl(private val appContext: Context) : LocalFileStorage {
-    override suspend fun saveImage(uri: Uri, fileName: String): String {
+    override suspend fun saveImage(uri: Uri) {
         val pathToImages =
             File(appContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "PM_playlists")
         if (!pathToImages.exists()) {
             pathToImages.mkdirs()
         }
-        val outputFile = File(pathToImages, "${fileName}${System.currentTimeMillis()}.jpg")
+        val outputFile = File(pathToImages, "${System.currentTimeMillis()}.jpg")
 
         appContext.contentResolver.openInputStream(uri)?.use {
             BitmapFactory.decodeStream(it)
@@ -27,7 +27,5 @@ class LocalFileStorageImpl(private val appContext: Context) : LocalFileStorage {
                     FileOutputStream(outputFile)
                 )
         }
-
-        return outputFile.toUri().toString()
     }
 }
