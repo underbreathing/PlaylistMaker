@@ -1,6 +1,5 @@
-package com.example.playlistmaker.create_playlist.data.db.entity
+package com.example.playlistmaker.edit_playlist.data.db.entity
 
-import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

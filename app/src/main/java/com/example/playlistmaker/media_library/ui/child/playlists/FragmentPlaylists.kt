@@ -16,9 +16,9 @@ import com.example.playlistmaker.playlist.ui.fragment.FragmentPlaylist
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class PlaylistsFragment : Fragment() {
+class FragmentPlaylists : Fragment() {
     companion object {
-        fun getInstance(): PlaylistsFragment = PlaylistsFragment()
+        fun getInstance(): FragmentPlaylists = FragmentPlaylists()
     }
 
     private var _binding: FragmentPlaylistsBinding? = null

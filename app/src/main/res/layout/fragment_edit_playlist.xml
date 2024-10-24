@@ -12,7 +12,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/new_playlist_button_top_back_title" />
+        app:title="@string/edit_playlist_title" />
 
     <ImageView
         android:id="@+id/iv_add_playlist_cover"
@@ -93,7 +93,7 @@
         android:background="@drawable/b_create_selector"
         android:enabled="false"
         android:fontFamily="@font/ys_display_medium"
-        android:text="@string/add_playlist_b_create"
+        android:text="@string/edit_playlist_button_text"
         android:textColor="@color/white"
         android:textFontWeight="500"
         android:textSize="@dimen/secondary_text_size"

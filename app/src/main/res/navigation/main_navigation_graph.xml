@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentCreatePlaylist"
-        android:name="com.example.playlistmaker.create_playlist.ui.FragmentCreatePlaylist"
+        android:name="com.example.playlistmaker.edit_playlist.ui.FragmentCreatePlaylist"
         android:label="fragment_new_playlist"
         tools:layout="@layout/fragment_create_playlist" />
 
@@ -57,5 +57,8 @@
         <action
             android:id="@+id/action_fragmentPlaylist_to_fragmentMediaPlayer"
             app:destination="@id/fragmentMediaPlayer" />
+        <action
+            android:id="@+id/action_fragmentPlaylist_to_fragmentCreatePlaylist"
+            app:destination="@id/fragmentCreatePlaylist" />
     </fragment>
 </navigation>

@@ -12,24 +12,10 @@ import kotlinx.coroutines.flow.map
 
 class MediaLibraryRepositoryImpl(
     private val trackDatabase: TrackDatabase,
-    private val trackEntityMapper: TrackEntityMapper,
-    private val playlistTrackEntityMapper: PlaylistTrackEntityMapper,
-    private val gsonConverter: GsonConverter
+    private val trackEntityMapper: TrackEntityMapper
 ) : MediaLibraryRepository {
 
-    override suspend fun insertPlaylistTrack(track: Track) {
-        trackDatabase.getPlaylistTrackDao()
-            .insertTrack(playlistTrackEntityMapper.map(track))
-    }
 
-    override suspend fun deleteTrack(track: Track) {
-        if (!isContainedInAnyPlaylist(track.trackId)) {
-            trackDatabase.getPlaylistTrackDao()
-                .deletePlaylistTrack(playlistTrackEntityMapper.map(track))
-        }
-        //если этого идентификатора нет ни в одном из плейлистов - удалить
-        //это сработает, тк мы сначала обновляем плейлист в базе
-    }
 
     override suspend fun putToMediaLibrary(track: Track, additionTime: Long) {
         trackDatabase.getTrackDao().insertTrack(trackEntityMapper.map(track, additionTime))
@@ -49,12 +35,5 @@ class MediaLibraryRepositoryImpl(
 
     override suspend fun deleteFromMediaLibrary(trackId: Long) {
         trackDatabase.getTrackDao().deleteTrackById(trackId)
-    }
-
-
-    //проверить
-    private suspend fun isContainedInAnyPlaylist(trackId: Long): Boolean {
-        return trackDatabase.getPlaylistDao().getPlaylists().map { it.trackIds }
-            .flatMap(gsonConverter::jsonToListLong).contains(trackId)
     }
 }

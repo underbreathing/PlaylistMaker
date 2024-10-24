@@ -12,8 +12,4 @@ interface MediaLibraryRepository {
     fun isTrackInMediaLibrary(trackId: Long): Flow<Boolean>
 
     suspend fun deleteFromMediaLibrary(trackId: Long)
-
-    suspend fun insertPlaylistTrack(track: Track)
-
-    suspend fun deleteTrack(track: Track)
 }

@@ -2,8 +2,8 @@ package com.example.playlistmaker.media_library.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.playlistmaker.create_playlist.data.db.dao.PlaylistDao
-import com.example.playlistmaker.create_playlist.data.db.entity.PlaylistEntity
+import com.example.playlistmaker.edit_playlist.data.db.dao.PlaylistDao
+import com.example.playlistmaker.edit_playlist.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.media_library.data.db.dao.PlaylistTrackDao
 import com.example.playlistmaker.media_library.data.db.dao.TrackDao
 import com.example.playlistmaker.media_library.data.db.entity.PlaylistTrackEntity

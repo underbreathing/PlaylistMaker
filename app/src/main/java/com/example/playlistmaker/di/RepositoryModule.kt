@@ -1,9 +1,9 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.create_playlist.data.impl.LocalFileStorageImpl
-import com.example.playlistmaker.create_playlist.data.impl.PlaylistRepositoryImpl
-import com.example.playlistmaker.create_playlist.domain.api.LocalFileStorage
-import com.example.playlistmaker.create_playlist.domain.api.PlaylistRepository
+import com.example.playlistmaker.edit_playlist.data.impl.LocalFileStorageImpl
+import com.example.playlistmaker.edit_playlist.data.impl.PlaylistRepositoryImpl
+import com.example.playlistmaker.edit_playlist.domain.api.LocalFileStorage
+import com.example.playlistmaker.edit_playlist.domain.api.PlaylistRepository
 import com.example.playlistmaker.media_player.data.impl.AudioPlayerRepositoryImpl
 import com.example.playlistmaker.media_library.data.impl.MediaLibraryRepositoryImpl
 import com.example.playlistmaker.media_player.domain.audio_player.AudioPlayerRepository
@@ -21,7 +21,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get(), get())
+        PlaylistRepositoryImpl(get(), get(), get(), get())
     }
 
     factory<LocalFileStorage> {
@@ -33,7 +33,7 @@ val repositoryModule = module {
     }
 
     single<MediaLibraryRepository> {
-        MediaLibraryRepositoryImpl(get(), get(), get(),get())
+        MediaLibraryRepositoryImpl(get(), get())
     }
 
     single<NetworkRepository> {

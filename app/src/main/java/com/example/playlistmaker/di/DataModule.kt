@@ -4,8 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.application.KEY_THEME_FILE
-import com.example.playlistmaker.create_playlist.data.mappers.PlaylistEntityMapper
-import com.example.playlistmaker.create_playlist.ui.mappers.PlaylistMapper
+import com.example.playlistmaker.edit_playlist.data.mappers.PlaylistEntityMapper
 import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.media_library.data.db.TrackDatabase
 import com.example.playlistmaker.media_library.data.mappers.PlaylistTrackEntityMapper

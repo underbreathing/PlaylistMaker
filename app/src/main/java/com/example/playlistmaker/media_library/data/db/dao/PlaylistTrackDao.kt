@@ -16,7 +16,7 @@ interface PlaylistTrackDao {
     suspend fun insertTrack(playlistTrackEntity: PlaylistTrackEntity)
 
     @Query("SELECT * FROM playlist_track_table")
-    fun getAllPlaylistTracks(): Flow<List<PlaylistTrackEntity>>
+    suspend fun getAllPlaylistTracks(): List<PlaylistTrackEntity>
 
     @Delete(entity = PlaylistTrackEntity::class)
     suspend fun deletePlaylistTrack(playlistTrackEntity: PlaylistTrackEntity)

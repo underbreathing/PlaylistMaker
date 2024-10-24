@@ -1,6 +1,6 @@
-package com.example.playlistmaker.create_playlist.ui.mappers
+package com.example.playlistmaker.edit_playlist.ui.mappers
 
-import com.example.playlistmaker.create_playlist.domain.model.Playlist
+import com.example.playlistmaker.edit_playlist.domain.model.Playlist
 import com.example.playlistmaker.media_library.ui.model.PlaylistUi
 
 class PlaylistMapper {

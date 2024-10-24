@@ -1,4 +1,4 @@
-package com.example.playlistmaker.create_playlist.ui
+package com.example.playlistmaker.edit_playlist.ui
 
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -30,14 +30,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val PLAYLIST_FRAME_CORNER_RADIUS = 8
 
-class FragmentCreatePlaylist : Fragment() {
+open class FragmentCreatePlaylist : Fragment() {
 
     private var _binding: FragmentCreatePlaylistBinding? = null
     private val binding get() = _binding!!
 
     private var shouldShowDialog = false
 
-    private val viewModel: CreatePlaylistViewModel by viewModel()
+    protected open val viewModel: CreatePlaylistViewModel by viewModel()
 
 
     override fun onCreateView(

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.create_playlist.domain.api
+package com.example.playlistmaker.edit_playlist.domain.api
 
 import android.net.Uri
 

@@ -17,24 +17,21 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
+import com.example.playlistmaker.edit_playlist.ui.FragmentEditPlaylist
+import com.example.playlistmaker.media_library.ui.model.PlaylistUi
 import com.example.playlistmaker.media_player.ui.fragment.FragmentMediaPlayer
-import com.example.playlistmaker.playlist.ui.model.PlaylistCompleteDataUi
 import com.example.playlistmaker.playlist.ui.rv.PlaylistTracksAdapter
 import com.example.playlistmaker.playlist.ui.view_model.PlaylistViewModel
+import com.example.playlistmaker.playlist.ui.view_model.model.PlaylistScreenData
 import com.example.playlistmaker.search.domain.model.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class FragmentPlaylist : Fragment() {
-
-    companion object {
-        private const val PLAYLIST_ID_KEY = "playlist data key"
-        fun createArgs(playlist: Long): Bundle {
-            return bundleOf(PLAYLIST_ID_KEY to playlist)
-        }
-    }
 
     private var _binding: FragmentPlaylistBinding? = null
     private val binding get() = _binding!!
@@ -68,13 +65,29 @@ class FragmentPlaylist : Fragment() {
             parametersOf(arguments?.getLong(PLAYLIST_ID_KEY))
         }
 
-        var playlistLastV: PlaylistCompleteDataUi? = null
+        viewModel?.initData()
 
-        viewModel?.receivedPlaylist?.observe(viewLifecycleOwner) { playlist ->
-            playlist?.let {
-                updateAndShowData(it)
-                updateRV(playlist.tracks)
-                playlistLastV = playlist
+        var generalInfo: PlaylistUi? = null
+        var playlistTracks: List<Track> = emptyList()
+        var isGeneralInfoWasDisplayed = false
+        viewModel?.playlistData?.observe(viewLifecycleOwner) { playlistData ->
+            when (playlistData) {
+                is PlaylistScreenData.GeneralInfo -> {
+                    generalInfo = playlistData.generalInfo
+                    if (!isGeneralInfoWasDisplayed) {
+                        playlistData.generalInfo?.let { showGeneralInfo(it) }
+                    }
+                    isGeneralInfoWasDisplayed = true
+                }
+
+                is PlaylistScreenData.Tracks -> {
+                    updateTracks(
+                        playlistData.totalTimeMinutes,
+                        playlistData.tracksCount
+                    )
+                    playlistTracks = playlistData.tracks
+                    updateRV(playlistTracks)
+                }
             }
         }
 
@@ -85,14 +98,15 @@ class FragmentPlaylist : Fragment() {
         binding.rvPlaylistTracks.adapter = adapter
 
         binding.bShare.setOnClickListener {
-            sharePlaylist(playlistLastV)
+            generalInfo?.let {
+                sharePlaylist(it, playlistTracks)
+            }
         }
 
         val bottomSheetSettings = BottomSheetBehavior.from(binding.bsSettings).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
-        val bottomSheetTracks = BottomSheetBehavior.from(binding.bsTrackFrame)
-        binding.bsSettings.setOnClickListener{}
+        binding.bsSettings.setOnClickListener {}
         binding.xmlPlaylist.lPlaylistRoot.isEnabled = false
 
         bottomSheetSettings.addBottomSheetCallback(object :
@@ -101,12 +115,10 @@ class FragmentPlaylist : Fragment() {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         overlayStateChange(false)
-                        bottomSheetTracks.isDraggable = true
                     }
 
                     else -> {
                         overlayStateChange(true)
-                        bottomSheetTracks.isDraggable = true
                     }
                 }
             }
@@ -117,7 +129,8 @@ class FragmentPlaylist : Fragment() {
         })
 
         binding.tvPlaylistTitle.post {
-            bottomSheetSettings.peekHeight = binding.root.height - binding.tvPlaylistTitle.y.toInt() - binding.tvPlaylistTitle.height - 4
+            bottomSheetSettings.peekHeight =
+                binding.root.height - binding.tvPlaylistTitle.y.toInt() - binding.tvPlaylistTitle.height - 4
         }
 
         binding.bMenu.setOnClickListener {
@@ -125,10 +138,61 @@ class FragmentPlaylist : Fragment() {
         }
 
         binding.tvShare.setOnClickListener {
-            sharePlaylist(playlistLastV)
+            generalInfo?.let {
+                sharePlaylist(it, playlistTracks)
+            }
         }
 
+        binding.tvDeletePlaylist.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.playlist_delete_dialog_title))
+                .setMessage(
+                    getString(
+                        R.string.playlist_delete_dialog_message,
+                        generalInfo?.title.orEmpty()
+                    )
+                )
+                .setPositiveButton(getString(R.string.material_dialog_positive)) { _, _ ->
+                    viewModel?.deletePlaylist(playlistTracks)
 
+                }
+                .setNegativeButton(getString(R.string.material_dialog_negative)) { _, _ -> }
+                .show()
+        }
+
+        viewModel?.playlistDeleteState?.observe(viewLifecycleOwner) { isPlaylistDeleted ->
+            if (isPlaylistDeleted) {
+                findNavController().navigateUp()
+            }
+        }
+
+        binding.tvEditInf.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentPlaylist_to_fragmentCreatePlaylist,
+                generalInfo?.let { FragmentEditPlaylist.createArgs(it) })
+        }
+    }
+
+    private fun playlistToString(generalInfo: PlaylistUi, tracks: List<Track>): String {
+        return "${generalInfo.title} ${if (generalInfo.description.isNotBlank()) "\n${generalInfo.description}" else ""} " +
+                "\n${
+                    getString(
+                        R.string.playlist_track_count,
+                        generalInfo.trackCount.toString(),
+                        resources.getQuantityString(
+                            R.plurals.track,
+                            generalInfo.trackCount
+                        )
+                    )
+                }" +
+
+                tracks.mapIndexed { index, track ->
+                    "\n${index + 1}. ${track.artistName} - ${track.trackName} (${
+                        SimpleDateFormat(
+                            "mm:ss",
+                            Locale.getDefault()
+                        ).format(track.trackTimeMillis)
+                    }) "
+                }.joinToString()
     }
 
     private fun overlayStateChange(isVisible: Boolean) {
@@ -136,22 +200,20 @@ class FragmentPlaylist : Fragment() {
         binding.overlay.isClickable = isVisible
     }
 
-    private fun sharePlaylist(playlistLastV: PlaylistCompleteDataUi?) {
+    private fun sharePlaylist(generalInfo: PlaylistUi, playlistTracks: List<Track>) {
         if (adapter.itemCount == 0) {
             Toast.makeText(
                 requireContext(),
-                "В этом плейлисте нет списка треков, которым можно поделиться",
+                getString(R.string.playlist_share_tracks_empty_message),
                 Toast.LENGTH_SHORT
             ).show()
         } else {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
-            val toto = playlistLastV?.toString(requireContext())
-            println(toto)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, playlistLastV?.toString(requireContext()))
+            shareIntent.putExtra(Intent.EXTRA_TEXT, playlistToString(generalInfo, playlistTracks))
             startActivity(
                 Intent.createChooser(
-                    shareIntent, "Отправить плейлист"
+                    shareIntent, getString(R.string.playlist_share_title)
                 )
             )
         }
@@ -162,52 +224,53 @@ class FragmentPlaylist : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun updateAndShowData(completeData: PlaylistCompleteDataUi) {
-        val generalInfo = completeData.generalInfo
-        binding.tvPlaylistTitle.text = generalInfo?.title
-        val description = generalInfo?.description
-        if (!description.isNullOrEmpty()) {
+    private fun showGeneralInfo(generalInfo: PlaylistUi) {
+        binding.tvPlaylistTitle.text = generalInfo.title
+        val description = generalInfo.description
+        if (description.isNotEmpty()) {
             binding.tvPlaylistDesc.isVisible = true
             binding.tvPlaylistDesc.text = description
         }
-        Glide.with(binding.root).load(generalInfo?.coverUriString?.let(Uri::parse))
+        Glide.with(binding.root).load(generalInfo.coverUriString?.let(Uri::parse))
             .error(R.drawable.placeholder_track).placeholder(R.drawable.placeholder_track)
             .into(binding.ivPlaylistCover)
-        binding.tvTracksCount.text = getString(
-            R.string.playlist_track_count,
-            generalInfo?.trackCount.toString(),
-            resources.getQuantityString(R.plurals.track, generalInfo?.trackCount ?: 0)
-        )
-
-
-        binding.tvMinutes.text = getString(
-            R.string.playlist_tracks_total_time,
-            completeData.totalTimeMinutes,
-            resources.getQuantityString(
-                R.plurals.minutes,
-                if (completeData.totalTimeMinutes.isNotEmpty()) completeData.totalTimeMinutes.toInt() else 0
-            )
-        )
 
         binding.root.post {
             BottomSheetBehavior.from(binding.bsTrackFrame).peekHeight =
                 binding.root.height - binding.clPlaylistInfoContainer.height - 16
         }
-
-        binding.xmlPlaylist.tvTitle.text = completeData.generalInfo?.title
         Glide.with(binding.bsSettings)
-            .load(completeData.generalInfo?.coverUriString?.let(Uri::parse))
+            .load(generalInfo.coverUriString?.let(Uri::parse))
             .error(R.drawable.placeholder_track)
             .placeholder(R.drawable.placeholder_track)
             .transform(MultiTransformation(CenterCrop(), RoundedCorners(8)))
             .into(binding.xmlPlaylist.ivCover)
-        val trackCount = completeData.generalInfo?.trackCount ?: 0
-        binding.xmlPlaylist.tvTrackCount.text = getString(
-            R.string.playlist_track_count,
-            trackCount.toString(),
-            resources.getQuantityString(R.plurals.track, trackCount)
-        )
-
+        binding.xmlPlaylist.tvTitle.text = generalInfo.title
     }
 
+    private fun updateTracks(totalTimeMinutes: String, tracksCount: Int) {
+        val tracksCountString = getString(
+            R.string.playlist_track_count,
+            tracksCount.toString(),
+            resources.getQuantityString(R.plurals.track, tracksCount)
+        )
+        binding.tvTracksCount.text = tracksCountString
+        binding.xmlPlaylist.tvTrackCount.text = tracksCountString
+
+        binding.tvMinutes.text = getString(
+            R.string.playlist_tracks_total_time,
+            totalTimeMinutes,
+            resources.getQuantityString(
+                R.plurals.minutes,
+                if (totalTimeMinutes.isNotEmpty()) totalTimeMinutes.toInt() else 0
+            )
+        )
+    }
+
+    companion object {
+        private const val PLAYLIST_ID_KEY = "playlist data key"
+        fun createArgs(playlist: Long): Bundle {
+            return bundleOf(PLAYLIST_ID_KEY to playlist)
+        }
+    }
 }

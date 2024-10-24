@@ -1,4 +1,4 @@
-package com.example.playlistmaker.create_playlist.data.impl
+package com.example.playlistmaker.edit_playlist.data.impl
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import androidx.core.net.toUri
-import com.example.playlistmaker.create_playlist.domain.api.LocalFileStorage
+import com.example.playlistmaker.edit_playlist.domain.api.LocalFileStorage
 import java.io.File
 import java.io.FileOutputStream
 
