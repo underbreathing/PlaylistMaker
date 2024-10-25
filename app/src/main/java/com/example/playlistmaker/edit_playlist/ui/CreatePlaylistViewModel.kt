@@ -36,9 +36,9 @@ open class CreatePlaylistViewModel(
                     0
                 )
             )
-            Log.d("MYY","$playlistId")
+            Log.d("MYY", "$playlistId")
 
-            saveImage(coverUri,playlistId)
+            saveImage(coverUri, playlistId)
 
 
 
@@ -48,9 +48,9 @@ open class CreatePlaylistViewModel(
 
     }
 
-    protected open suspend fun saveImage(coverUri: Uri?,playlistId: Long) {
+    protected open suspend fun saveImage(coverUri: Uri?, playlistId: Long) {
         coverUri?.let {
-            localFileStorage.saveImage(it,playlistId)
+            localFileStorage.saveImage(it, playlistId)
         }
     }
 

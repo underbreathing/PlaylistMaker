@@ -36,8 +36,8 @@ class FragmentEditPlaylist : FragmentCreatePlaylist() {
             arguments?.getParcelable(PLAYLIST_INFO_KEY)
         }
 
-        binding.tbButtonTopBack.title = "Редактировать"
-        binding.bCreate.text = "Сохранить"
+        binding.tbButtonTopBack.title = getString(R.string.edit_playlist_title)
+        binding.bCreate.text = getString(R.string.edit_playlist_button_text)
 
         receivedPlaylistUi?.let { playlistUi ->
             binding.etTitle.setText(playlistUi.title)

@@ -4,5 +4,5 @@ import android.net.Uri
 
 interface LocalFileStorage {
 
-   suspend fun saveImage(uri: Uri, playlistId: Long)
+    suspend fun saveImage(uri: Uri, playlistId: Long)
 }

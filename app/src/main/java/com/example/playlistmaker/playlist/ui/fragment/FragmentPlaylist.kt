@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -139,7 +140,7 @@ class FragmentPlaylist : Fragment() {
 
         binding.tvShare.setOnClickListener {
             generalInfo?.let {
-                sharePlaylist(it, playlistTracks)
+                sharePlaylist(it, playlistTracks, bottomSheetSettings)
             }
         }
 
@@ -203,13 +204,18 @@ class FragmentPlaylist : Fragment() {
         binding.overlay.isClickable = isVisible
     }
 
-    private fun sharePlaylist(generalInfo: PlaylistUi, playlistTracks: List<Track>) {
+    private fun sharePlaylist(
+        generalInfo: PlaylistUi,
+        playlistTracks: List<Track>,
+        bottomSheetSettings: BottomSheetBehavior<LinearLayout>? = null
+    ) {
         if (adapter.itemCount == 0) {
             Toast.makeText(
                 requireContext(),
                 getString(R.string.playlist_share_tracks_empty_message),
                 Toast.LENGTH_SHORT
             ).show()
+            bottomSheetSettings?.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
