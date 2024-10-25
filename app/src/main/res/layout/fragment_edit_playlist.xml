@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.playlistmaker.edit_playlist.ui.FragmentEditPlaylist">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/tb_button_top_back"
+        style="@style/toolbar_top_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/edit_playlist_title" />
+
+    <ImageView
+        android:id="@+id/iv_add_playlist_cover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/dash_panel"
+        android:scaleType="centerInside"
+        android:src="@drawable/add_playlist"
+        app:layout_constraintBottom_toTopOf="@id/et_title"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tb_button_top_back" />
+
+    <EditText
+        android:id="@+id/et_title"
+        style="@style/et_add_playlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/add_playlist_et_margin"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/add_playlist_et_empty"
+        android:hint="@string/add_playlist_edit_text_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_add_playlist_cover" />
+
+    <TextView
+        android:id="@+id/tv_on_et_title"
+        style="@style/tv_add_playlist_on_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/add_playlist_on_et_marginStart"
+        android:gravity="center"
+        android:padding="@dimen/add_playlist_on_et_padding"
+        android:text="@string/add_playlist_edit_text_title"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/et_title"
+        app:layout_constraintStart_toStartOf="@id/et_title"
+        app:layout_constraintTop_toTopOf="@id/et_title" />
+
+    <EditText
+        android:id="@+id/et_description"
+        style="@style/et_add_playlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/add_playlist_et_margin"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/add_playlist_et_empty"
+        android:hint="@string/add_playlist_edit_text_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_title" />
+
+    <TextView
+        android:id="@+id/tv_on_et_description"
+        style="@style/tv_add_playlist_on_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/add_playlist_on_et_marginStart"
+        android:gravity="center"
+        android:padding="@dimen/add_playlist_on_et_padding"
+        android:text="@string/add_playlist_edit_text_description"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/et_description"
+        app:layout_constraintStart_toStartOf="@id/et_description"
+        app:layout_constraintTop_toTopOf="@id/et_description" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/b_create"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/add_playlist_et_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/b_create_selector"
+        android:enabled="false"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/edit_playlist_button_text"
+        android:textColor="@color/white"
+        android:textFontWeight="500"
+        android:textSize="@dimen/secondary_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_description"
+        app:layout_constraintVertical_bias="1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

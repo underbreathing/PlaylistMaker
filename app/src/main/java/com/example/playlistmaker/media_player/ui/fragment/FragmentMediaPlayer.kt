@@ -16,7 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaPlayerBinding
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
+import com.example.playlistmaker.media_library.ui.model.PlaylistUi
 import com.example.playlistmaker.media_library.ui.view_model.state.PlaylistsDataState
 import com.example.playlistmaker.media_player.ui.animations.PlayerAnimations
 import com.example.playlistmaker.media_player.ui.mapper.TimeFormatter
@@ -209,7 +209,7 @@ class FragmentMediaPlayer : Fragment() {
         binding.rvAddToPlaylist.isVisible = false
     }
 
-    private fun showPlaylists(data: List<PlaylistInfo>) {
+    private fun showPlaylists(data: List<PlaylistUi>) {
         binding.rvAddToPlaylist.isVisible = true
         playlistAdapter.setNewItems(data)
         playlistAdapter.notifyDataSetChanged()

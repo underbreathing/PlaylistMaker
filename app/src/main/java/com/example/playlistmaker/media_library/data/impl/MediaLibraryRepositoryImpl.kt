@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media_library.data.impl
 
+import com.example.playlistmaker.gson_converter.GsonConverter
 import com.example.playlistmaker.media_library.data.db.TrackDatabase
 import com.example.playlistmaker.media_library.data.mappers.PlaylistTrackEntityMapper
 import com.example.playlistmaker.media_library.data.mappers.TrackEntityMapper
@@ -11,13 +12,10 @@ import kotlinx.coroutines.flow.map
 
 class MediaLibraryRepositoryImpl(
     private val trackDatabase: TrackDatabase,
-    private val trackEntityMapper: TrackEntityMapper,
-    private val playlistTrackEntityMapper: PlaylistTrackEntityMapper
+    private val trackEntityMapper: TrackEntityMapper
 ) : MediaLibraryRepository {
-    override suspend fun insertPlaylistTrack(track: Track) {
-        trackDatabase.getPlaylistTrackDao()
-            .insertTrack(playlistTrackEntityMapper.map(track))
-    }
+
+
 
     override suspend fun putToMediaLibrary(track: Track, additionTime: Long) {
         trackDatabase.getTrackDao().insertTrack(trackEntityMapper.map(track, additionTime))
@@ -38,5 +36,4 @@ class MediaLibraryRepositoryImpl(
     override suspend fun deleteFromMediaLibrary(trackId: Long) {
         trackDatabase.getTrackDao().deleteTrackById(trackId)
     }
-
 }

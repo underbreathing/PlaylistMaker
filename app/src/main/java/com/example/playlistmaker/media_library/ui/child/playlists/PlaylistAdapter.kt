@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.PlaylistRvItemBinding
-import com.example.playlistmaker.media_library.ui.model.PlaylistInfo
+import com.example.playlistmaker.media_library.ui.model.PlaylistUi
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(private val onClick: (PlaylistUi) -> Unit) :
+    RecyclerView.Adapter<PlaylistViewHolder>() {
 
-    private val playlists: MutableList<PlaylistInfo> = mutableListOf()
+    private val playlists: MutableList<PlaylistUi> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         return PlaylistViewHolder(
@@ -25,10 +26,12 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlists[position])
+        val current = playlists[position]
+        holder.bind(current)
+        holder.itemView.setOnClickListener { onClick(current) }
     }
 
-    fun setNewPlaylists(playlists: List<PlaylistInfo>) {
+    fun setNewPlaylists(playlists: List<PlaylistUi>) {
         this.playlists.clear()
         this.playlists.addAll(playlists)
     }
