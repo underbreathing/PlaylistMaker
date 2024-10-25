@@ -26,10 +26,7 @@ open class CreatePlaylistViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            saveImage(coverUri)
-            Log.d("MYY", "half time")
-
-            playlistsInteractor.savePlaylist(
+            val playlistId = playlistsInteractor.savePlaylist(
                 Playlist(
                     0L,
                     title,
@@ -39,15 +36,21 @@ open class CreatePlaylistViewModel(
                     0
                 )
             )
+            Log.d("MYY","$playlistId")
+
+            saveImage(coverUri,playlistId)
+
+
+
 
             isSavingCompletedLiveData.postValue(true)
         }
 
     }
 
-    protected open suspend fun saveImage(coverUri: Uri?) {
+    protected open suspend fun saveImage(coverUri: Uri?,playlistId: Long) {
         coverUri?.let {
-            localFileStorage.saveImage(it)
+            localFileStorage.saveImage(it,playlistId)
         }
     }
 

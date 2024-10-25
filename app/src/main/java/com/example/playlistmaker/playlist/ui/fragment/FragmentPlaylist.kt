@@ -170,6 +170,9 @@ class FragmentPlaylist : Fragment() {
             findNavController().navigate(R.id.action_fragmentPlaylist_to_fragmentEditPlaylist,
                 generalInfo?.let { FragmentEditPlaylist.createArgs(it) })
         }
+        binding.overlay.setOnClickListener {
+            bottomSheetSettings.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     private fun playlistToString(generalInfo: PlaylistUi, tracks: List<Track>): String {

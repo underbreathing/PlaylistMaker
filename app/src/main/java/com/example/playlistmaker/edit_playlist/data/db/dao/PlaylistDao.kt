@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface PlaylistDao {
 
     @Insert(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlaylist(playlistEntity: PlaylistEntity)
+    suspend fun insertPlaylist(playlistEntity: PlaylistEntity): Long
 
     @Query("UPDATE playlist_table SET trackIds = :trackIds WHERE id = :playlistId")
     suspend fun updatePlaylistTrackIds(playlistId: Long, trackIds: String)

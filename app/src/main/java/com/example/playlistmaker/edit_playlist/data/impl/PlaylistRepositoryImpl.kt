@@ -40,8 +40,8 @@ class PlaylistRepositoryImpl(
         }
     }
 
-    override suspend fun savePlaylist(playlist: Playlist) {
-        playlistDb.getPlaylistDao().insertPlaylist(playlistEntityMapper.map(playlist))
+    override suspend fun savePlaylist(playlist: Playlist): Long {
+        return playlistDb.getPlaylistDao().insertPlaylist(playlistEntityMapper.map(playlist))
     }
 
     override fun getPlayLists(): Flow<List<Playlist?>> {

@@ -14,8 +14,8 @@ class PlaylistsInteractorImpl(
         playlistRepository.updatePlaylist(playlist)
     }
 
-    override suspend fun savePlaylist(playlist: Playlist) {
-        playlistRepository.savePlaylist(playlist)
+    override suspend fun savePlaylist(playlist: Playlist): Long {
+        return playlistRepository.savePlaylist(playlist)
     }
 
 

@@ -10,7 +10,7 @@ interface PlaylistsInteractor {
 
     suspend fun updatePlaylist(playlist: Playlist)
 
-    suspend fun savePlaylist(playlist: Playlist)
+    suspend fun savePlaylist(playlist: Playlist): Long
 
     fun getPlayLists(): Flow<List<Playlist?>>
 

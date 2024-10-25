@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
 
-    suspend fun savePlaylist(playlist: Playlist)
+    suspend fun savePlaylist(playlist: Playlist): Long
 
     fun getPlayLists(): Flow<List<Playlist?>>
 

@@ -23,12 +23,12 @@ class EditPlaylistViewModel(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             var isNeedToUpdate = false
-            oldPlaylist?.let { _oldPlaylist ->
-                if (_oldPlaylist.title != uri.toString()) {
-                    saveImage(uri)
+            oldPlaylist?.let { playlist ->
+                if (playlist.coverUriString != uri.toString()) {
+                    saveImage(uri, playlist.id)
                     isNeedToUpdate = true
                 }
-                if (_oldPlaylist.title != title || _oldPlaylist.description != description) {
+                if (playlist.title != title || playlist.description != description) {
                     isNeedToUpdate = true
                 }
                 if (isNeedToUpdate) {
